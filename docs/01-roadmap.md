@@ -1,0 +1,117 @@
+# Roadmap triển khai
+
+Lộ trình được sắp theo **thứ tự phụ thuộc kỹ thuật**, không phải theo mức độ hào hứng. Làm sai thứ tự sẽ phải làm lại.
+
+## Nguyên tắc sắp xếp
+
+Ba ràng buộc quyết định thứ tự:
+
+1. **Currency phải chốt trước theme.** Đổi USD → VND làm thay đổi cách hiển thị giá (số chữ số thập phân, vị trí ký hiệu, độ dài chuỗi). Nếu làm theme trước, toàn bộ layout giá phải chỉnh lại.
+2. **Cấu trúc variant phải chốt trước khi nhập catalog.** Sửa property group sau khi đã có 500 sản phẩm là việc rất tốn kém.
+3. **Thanh toán phải xong trước khi test checkout.** Không thể nghiệm thu luồng mua hàng nếu chưa có cổng thanh toán.
+
+---
+
+## Phase 0 — Nền tảng thị trường VN (chặn mọi thứ khác)
+
+**Mục tiêu:** hệ thống hiểu đúng "bán hàng tại Việt Nam".
+
+| Việc | Vì sao ưu tiên |
+|---|---|
+| Tạo currency VND, đặt làm mặc định cho `anivele` | Hiện chỉ có USD — đang bán sai tiền |
+| Sửa biểu thuế 19%/7% → VAT VN 10% | Đang dùng thuế Đức |
+| Tắt ~250 quốc gia, chỉ để VN | Khách đang có thể chọn giao đi bất kỳ đâu |
+| Cấu hình định dạng địa chỉ VN (Tỉnh/Huyện/Xã) | Shopware mặc định theo chuẩn châu Âu |
+| Đặt timezone `Asia/Ho_Chi_Minh`, định dạng ngày dd/mm/yyyy | |
+
+**Rủi ro:** VND không có đơn vị nhỏ hơn (không có "xu"). Cần đặt `decimal_precision = 0`, nếu để mặc định 2 sẽ hiển thị `250.000,00 ₫` — sai chuẩn VN.
+
+Chi tiết thao tác: [runbook/01-cau-hinh-vnd.md](runbook/01-cau-hinh-vnd.md)
+
+---
+
+## Phase 1 — Thanh toán & Vận chuyển
+
+**Mục tiêu:** khách đặt được hàng và trả được tiền.
+
+**Cảnh báo quan trọng:** khảo sát Packagist cho thấy **không có plugin Shopware 6 chính thức cho VNPay, MoMo, ZaloPay, GHN, GHTK**. Kết quả tìm kiếm chỉ ra thư viện Laravel/Magento/Omnipay — không dùng trực tiếp được cho Shopware. Đây là hạng mục tốn công nhất của cả dự án.
+
+Ba hướng xử lý, xem phân tích tại [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md):
+
+| Hướng | Chi phí | Rủi ro |
+|---|---|---|
+| Tự viết plugin payment handler | Cao (công dev) | Chủ động, không phụ thuộc bên thứ ba |
+| Thuê agency VN làm tích hợp | Trung bình–cao (tiền) | Phụ thuộc nhà cung cấp khi Shopware lên version |
+| Giai đoạn đầu chỉ COD + chuyển khoản | Thấp | Mất khách muốn trả online, nhưng **go-live được sớm** |
+
+**Khuyến nghị:** giai đoạn đầu chạy COD + chuyển khoản (đã có sẵn), song song phát triển VNPay. COD chiếm tỷ trọng rất lớn trong TMĐT Việt Nam nên đây không phải lựa chọn tệ để mở bán.
+
+Vận chuyển: tương tự, cần tự tích hợp API GHN/GHTK hoặc giai đoạn đầu dùng bảng phí phẳng theo khu vực (nội thành / ngoại thành / tỉnh).
+
+---
+
+## Phase 2 — Catalog thời trang
+
+**Mục tiêu:** cấu trúc dữ liệu sản phẩm đúng đặc thù ngành thời trang.
+
+| Việc | Ghi chú |
+|---|---|
+| Thiết kế property group: Size, Màu, Chất liệu, Kiểu dáng | Đã có sẵn Colour/Size/Material — cần Việt hóa và chuẩn hóa giá trị |
+| Chuẩn hóa bảng size VN | Size VN khác EU/US — xem [05-catalog-fashion.md](05-catalog-fashion.md) |
+| Cấu hình variant matrix (màu × size) | Đặc thù fashion: 1 mẫu áo có thể 40+ biến thể |
+| Xóa toàn bộ demo data | 16 sản phẩm demo phải đi trước khi nhập hàng thật |
+| Quy trình nhập liệu / import | |
+
+**Rủi ro lớn nhất của phase này:** nếu chốt sai cấu trúc variant, sửa về sau cực đắt. Phải làm kỹ ngay từ đầu.
+
+---
+
+## Phase 3 — Theme thương hiệu
+
+**Mục tiêu:** giao diện mang bản sắc brand, tối ưu cho thời trang.
+
+Đã chốt hướng: **tự làm theme riêng kế thừa Storefront**.
+
+Trọng tâm cho fashion:
+- Trang sản phẩm ảnh lớn, gallery nhiều góc
+- Bộ chọn màu/size trực quan (swatch màu thay vì dropdown)
+- Bảng size chart (khách VN rất hay cần)
+- Mobile-first — tỷ trọng mua sắm qua mobile ở VN rất cao
+- Tối ưu tốc độ tải ảnh
+
+Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md](runbook/02-tao-theme.md)
+
+---
+
+## Phase 4 — Marketing & Vận hành
+
+| Việc | Ghi chú |
+|---|---|
+| SEO (URL tiếng Việt không dấu, meta, sitemap) | |
+| Tích hợp Zalo OA / Facebook Messenger | Kênh CSKH chủ đạo tại VN |
+| Email transactional (xác nhận đơn, vận chuyển) | Cần SMTP thật, hiện chưa cấu hình |
+| Analytics (GA4, Facebook Pixel) | Lưu ý tuân thủ quy định dữ liệu cá nhân |
+| Chương trình khuyến mãi, mã giảm giá | Shopware có sẵn Rule Builder |
+
+---
+
+## Phase 5 — Go-live
+
+Xem checklist đầy đủ tại [06-golive.md](06-golive.md). Tóm tắt các hạng mục chặn:
+
+- [ ] HTTPS thật (hiện mới có `http://shopware.test`)
+- [ ] Xóa sạch demo data
+- [ ] Đổi `SwagLanguagePack` khỏi `dev-master` nếu đã có bản release ổn định
+- [x] ✅ MySQL — đã migrate 9.7.1 → 8.0.33 (26/07/2026)
+- [ ] Backup tự động + phương án khôi phục **đã test thật**
+- [ ] Cấu hình mail server
+- [ ] Đổi APP_SECRET, rà soát thông tin nhạy cảm
+- [ ] Kiểm thử toàn bộ luồng mua hàng bằng đơn thật
+
+---
+
+## Về ước lượng thời gian
+
+Tài liệu này **cố tình không ghi số ngày/tuần** cho từng phase. Thời gian thực tế phụ thuộc quy mô đội ngũ, việc tự làm hay thuê ngoài phần thanh toán, và số lượng SKU cần nhập — những thông tin chưa có. Đưa ra con số lúc này sẽ là phỏng đoán vô căn cứ.
+
+Khi đã chốt được hướng ở Phase 1 (tự làm hay thuê agency) và biết quy mô catalog, có thể bổ sung timeline cụ thể.
