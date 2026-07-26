@@ -12,21 +12,27 @@ Ba ràng buộc quyết định thứ tự:
 
 ---
 
-## Phase 0 — Nền tảng thị trường VN (chặn mọi thứ khác)
+## Phase 0 — Nền tảng thị trường VN ✅ **HOÀN TẤT** (26/07/2026)
 
 **Mục tiêu:** hệ thống hiểu đúng "bán hàng tại Việt Nam".
 
-| Việc | Vì sao ưu tiên |
+| Việc | Trạng thái |
 |---|---|
-| Tạo currency VND, đặt làm mặc định cho `anivele` | Hiện chỉ có USD — đang bán sai tiền |
-| Sửa biểu thuế 19%/7% → VAT VN 10% | Đang dùng thuế Đức |
-| Tắt ~250 quốc gia, chỉ để VN | Khách đang có thể chọn giao đi bất kỳ đâu |
-| Cấu hình định dạng địa chỉ VN (Tỉnh/Huyện/Xã) | Shopware mặc định theo chuẩn châu Âu |
-| Đặt timezone `Asia/Ho_Chi_Minh`, định dạng ngày dd/mm/yyyy | |
+| Currency VND, factor=1, decimals=0, ký hiệu sau số | ✅ |
+| Biểu thuế VN: 10% / 8% / 0% | ✅ |
+| Tắt 250 quốc gia → chỉ còn Việt Nam | ✅ |
+| Tên "Việt Nam" tiếng Việt cho storefront | ✅ |
+| Mã bưu chính không bắt buộc, SĐT bắt buộc | ✅ |
+| 34 tỉnh/thành phố kèm bản dịch | ✅ |
+| Thứ tự trường địa chỉ `city-state-zip` | ✅ |
+| Xoá demo data cũ + tạo 12 sản phẩm thời trang giá VND | ✅ |
 
-**Rủi ro:** VND không có đơn vị nhỏ hơn (không có "xu"). Cần đặt `decimal_precision = 0`, nếu để mặc định 2 sẽ hiển thị `250.000,00 ₫` — sai chuẩn VN.
+**Kết quả kiểm chứng:** giá render `1.250.000 ₫` đúng chuẩn VN, menu tiếng Việt, form đăng ký hiện "Việt Nam" và 34 tỉnh.
 
-Chi tiết thao tác: [runbook/01-cau-hinh-vnd.md](runbook/01-cau-hinh-vnd.md)
+Chi tiết đã thực hiện: [runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md)
+Dữ liệu demo: [runbook/05-demo-data.md](runbook/05-demo-data.md)
+
+> **Còn lại cần xác nhận:** mức VAT áp dụng (10% hay 8%) với kế toán, và danh mục tỉnh/thành theo nguồn chính thức tại thời điểm go-live.
 
 ---
 

@@ -15,6 +15,8 @@ Bộ tài liệu triển khai shop thời trang cho thị trường Việt Nam.
 | Chuẩn bị go-live | [06-golive.md](06-golive.md) |
 | **Tra cứu lệnh Symfony/Shopware** | **[07-lenh-thuong-dung.md](07-lenh-thuong-dung.md)** |
 | Chạy lệnh cụ thể theo quy trình | [runbook/](runbook/) |
+| **Phase 0 đã làm gì** | **[runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md)** |
+| Dữ liệu demo thời trang | [runbook/05-demo-data.md](runbook/05-demo-data.md) |
 | Hiểu vì sao chọn giải pháp X | [decisions/](decisions/) |
 
 ## Nguyên tắc của bộ tài liệu này

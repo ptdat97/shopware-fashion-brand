@@ -27,35 +27,38 @@ Tiếng Việt đã được cài và đang hoạt động:
 
 | Bảng | Số lượng | Đánh giá |
 |---|---|---|
-| product | 16 | Demo data, **không phải hàng thật** |
-| category | 9 | Demo |
-| customer | 1 | Demo |
+| product | 12 | Demo thời trang tự tạo, giá VND |
+| category | 5 | Danh mục chính + Đầm/Áo/Chân váy/Bộ sưu tập |
+| customer | 0 | |
 | order | 0 | Chưa có đơn nào |
-| property_group | 5 | Target group, Colour, Ingredients, Size, Material |
+| property_group | 2 | Màu sắc (7 giá trị), Kích cỡ (S/M/L/XL) |
+| media | 85 | 66 ảnh sản phẩm + ảnh hệ thống |
 | theme | 1 | Chỉ có Storefront mặc định |
 
-Toàn bộ catalog hiện tại đến từ plugin `SwagPlatformDemoData`. **Cần xóa sạch trước khi go-live.**
+Demo data cũ (`SwagPlatformDemoData`) **đã gỡ bỏ hoàn toàn**. Catalog hiện tại do plugin tự viết `AniveleDemoData` sinh ra từ ảnh thật của brand — xem [runbook/05-demo-data.md](runbook/05-demo-data.md). **Vẫn cần thay bằng hàng thật trước go-live.**
 
 ## Cấu hình thương mại — đây là phần cần sửa nhiều nhất
 
-### Tiền tệ: chỉ có USD
+### Tiền tệ: VND ✅ (đã xử lý 26/07/2026)
 
 ```
-iso_code  factor
-USD       1
+iso_code  factor  symbol  position  decimals
+VND       1       ₫       sau số    0
 ```
 
-**Không có VND trong hệ thống.** Sales channel `anivele` đang bán bằng USD dù country đã đặt là Viet Nam. Đây là vấn đề nghiêm trọng nhất phải xử lý trước tiên — xem [04-thi-truong-vn.md](04-thi-truong-vn.md).
+Trước đó hệ thống chỉ có USD. Đã chuyển đổi **chính row `Defaults::CURRENCY`** thành VND (không tạo row mới) — xem lý do tại [runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md). Storefront render `1.250.000 ₫` đúng chuẩn VN.
 
-### Thuế: đang là biểu thuế Đức
+### Thuế: VAT Việt Nam ✅ (đã xử lý)
 
 ```
-Standard rate     19.000%
-Reduced rate       7.000%
-Reduced rate 2     0.000%
+VAT 10%                10.000%
+VAT 8%                  8.000%
+Không chịu thuế (0%)    0.000%
 ```
 
-19% và 7% là VAT Đức. VAT Việt Nam cho hàng may mặc là **10%** (một số giai đoạn có chính sách giảm còn 8% theo nghị quyết Quốc hội — cần xác nhận hiệu lực tại thời điểm go-live với kế toán).
+Trước đó là biểu thuế Đức (19%/7%). `display_gross = 1` — giá hiển thị đã gồm VAT, đúng thói quen bán lẻ VN.
+
+> ⚠️ **Vẫn cần xác nhận với kế toán** mức áp dụng cho hàng may mặc tại thời điểm go-live.
 
 ### Thanh toán: chỉ có phương thức offline
 
@@ -77,16 +80,16 @@ Express    active
 
 Đây là shipping method generic, chưa nối với đơn vị vận chuyển VN nào (GHN, GHTK, Viettel Post, J&T...).
 
-### Quốc gia
+### Quốc gia ✅ (đã xử lý)
 
-Gần như **toàn bộ ~250 quốc gia đang active**. Với shop bán nội địa VN, đây là cấu hình sai: khách có thể chọn giao hàng đi Antarctica. Cần tắt bớt, chỉ để VN (và một số nước nếu có kế hoạch bán quốc tế).
+Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên tiếng Việt "Việt Nam", nạp **34 tỉnh/thành phố**, bỏ bắt buộc mã bưu chính và bắt buộc chọn Tỉnh/Thành phố khi đăng ký.
 
 ## Sales channel
 
 | Tên | Currency | Country | Ngôn ngữ |
 |---|---|---|---|
-| anivele | USD | Viet Nam | vi-VN, en-US |
-| Headless | USD | Germany | de-DE, en-US |
+| anivele | VND | Việt Nam | vi-VN, en-US |
+| Headless | VND | Việt Nam | de-DE, en-US |
 
 `anivele` là storefront chính. `Headless` là API channel mặc định của Shopware.
 
@@ -97,21 +100,21 @@ Gần như **toàn bộ ~250 quốc gia đang active**. Với shop bán nội đ
 | SwagExtensionStore | 4.2.2 | Yes |
 | SwagLanguagePack | dev-master | Yes |
 | SwagPayPal | 10.7.0 | **No** |
-| SwagPlatformDemoData | 2.1.0 | Yes |
+| AniveleDemoData | 1.0.0 | Yes (plugin tự viết) |
 
 `custom/apps/` rỗng — chưa có app nào.
 
 ## Tổng kết khoảng cách
 
-Hệ thống hiện là **bản cài Shopware demo đã Việt hóa giao diện**, chưa phải shop thương mại. Để bán được hàng thật cần:
+Hệ thống đã là **shop tiếng Việt với nền tảng thị trường VN hoàn chỉnh** (VND, VAT, địa chỉ, catalog mẫu). Để bán được hàng thật còn cần:
 
-1. VND + thuế VN + tắt bớt quốc gia — *chặn mọi thứ khác*
-2. Cổng thanh toán nội địa
+1. ~~VND + thuế VN + tắt bớt quốc gia~~ — ✅ **đã xong (Phase 0)**
+2. Cổng thanh toán nội địa — *hạng mục tốn kém nhất*
 3. Đơn vị vận chuyển nội địa
 4. Theme thương hiệu
 5. Catalog thật thay demo data
 6. Hạ tầng production (HTTPS, mail, backup tự động)
 
-> ✅ Rủi ro phiên bản MySQL đã được xử lý — không còn nằm trong danh sách chặn.
+> ✅ Rủi ro phiên bản MySQL và nền tảng thị trường VN đã xử lý — không còn nằm trong danh sách chặn.
 
 Chi tiết lộ trình: [01-roadmap.md](01-roadmap.md).
