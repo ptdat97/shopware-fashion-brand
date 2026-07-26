@@ -6,6 +6,7 @@ Bộ tài liệu triển khai shop thời trang cho thị trường Việt Nam.
 
 | Nếu bạn muốn... | Đọc file |
 |---|---|
+| ⚠️ **Quy tắc phát triển (BẮT BUỘC đọc trước khi code)** | **[08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md)** |
 | Hiểu hiện trạng hệ thống đang ở đâu | [00-hien-trang.md](00-hien-trang.md) |
 | Xem lộ trình tổng thể theo phase | [01-roadmap.md](01-roadmap.md) |
 | Làm theme riêng cho brand | [02-theme.md](02-theme.md) |
@@ -18,6 +19,14 @@ Bộ tài liệu triển khai shop thời trang cho thị trường Việt Nam.
 | **Phase 0 đã làm gì** | **[runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md)** |
 | Dữ liệu demo thời trang | [runbook/05-demo-data.md](runbook/05-demo-data.md) |
 | Hiểu vì sao chọn giải pháp X | [decisions/](decisions/) |
+
+## Quy tắc quan trọng nhất
+
+> **Không can thiệp core Shopware.** Mọi thay đổi phải viết qua Plugin, App hoặc Theme — không sửa `vendor/`.
+>
+> Lý do: `composer update` ghi đè toàn bộ `vendor/`, git không track thư mục này, và sửa core khoá chặt khả năng nâng cấp Shopware về sau.
+>
+> Chi tiết và cách làm đúng cho từng nhu cầu: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md)
 
 ## Nguyên tắc của bộ tài liệu này
 

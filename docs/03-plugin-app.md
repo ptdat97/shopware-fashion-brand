@@ -1,5 +1,7 @@
 # Plugin & App
 
+> ⚠️ **Nhắc lại quy tắc bắt buộc:** mọi tuỳ biến phải viết qua Plugin, App hoặc Theme — **không sửa `vendor/`**. Xem [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md).
+
 ## Đọc phần này trước
 
 Khảo sát thực tế trên Packagist ngày 26/07/2026 cho các từ khóa `vnpay`, `momo`, `zalopay`, `onepay`, `ghn`, `ghtk`, `viettelpost`:

@@ -19,6 +19,8 @@ Với brand fashion, khác biệt thị giác là tài sản. Theme mua sẵn kh
 
 Theme mới phải kế thừa `Storefront` chứ không chỉnh sửa file trong `vendor/`. Mọi thay đổi trong `vendor/` sẽ mất khi chạy `composer update`.
 
+> Đây là hệ quả của quy tắc bắt buộc toàn dự án — xem [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md).
+
 Cơ chế của Shopware: khai báo `extends Storefront` → chỉ cần override đúng block Twig cần đổi, phần còn lại tự kế thừa.
 
 ### Chỉ override block cần thiết

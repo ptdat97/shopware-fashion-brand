@@ -66,6 +66,18 @@ Các mục đánh dấu 🔴 là **chặn go-live** — không được bỏ qua
 - [ ] Thông tin doanh nghiệp (tên, mã số thuế, địa chỉ, điện thoại)
 - [ ] Tham vấn tư vấn pháp lý về nghĩa vụ đăng ký website TMĐT và bảo vệ dữ liệu cá nhân
 
+## Toàn vẹn core
+
+- [ ] 🔴 **Xác nhận không có thay đổi nào trong `vendor/`** — xem [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md)
+
+```bash
+# Cách kiểm tra: cài lại sạch vendor rồi chạy thử toàn bộ luồng
+composer install
+php bin/console cache:clear && php bin/console theme:compile
+```
+
+Nếu sau lệnh trên có tính năng nào hỏng → nghĩa là tính năng đó phụ thuộc vào code đã sửa trong `vendor/` và **sẽ hỏng ngay lần nâng cấp Shopware đầu tiên**. Phải viết lại qua plugin/theme trước khi go-live.
+
 ## Plugin
 
 - [ ] Rà soát `SwagLanguagePack` còn ở `dev-master` không — nếu đã có bản release ổn định hỗ trợ 6.7 thì chuyển sang
