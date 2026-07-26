@@ -3,7 +3,6 @@
     "type": "project",
     "require": {
         "composer-runtime-api": "^2.0",
-        "anivele/demo-data": "*",
         "shopware/administration": "*",
         "shopware/core": "v6.7.12.2",
         "shopware/elasticsearch": "*",

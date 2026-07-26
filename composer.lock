@@ -4,41 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ccd8335b4dd81ac52a25c22377a01f35",
+    "content-hash": "f69fb34ac6f2f4099da18093de07f5fb",
     "packages": [
-        {
-            "name": "anivele/demo-data",
-            "version": "1.0.0",
-            "dist": {
-                "type": "path",
-                "url": "custom/static-plugins/AniveleDemoData",
-                "reference": "94462076f1a9e607df3d0899782b5ad37eb91dc9"
-            },
-            "require": {
-                "shopware/core": "~6.7"
-            },
-            "type": "shopware-platform-plugin",
-            "extra": {
-                "shopware-plugin-class": "Anivele\\DemoData\\AniveleDemoData",
-                "label": {
-                    "en-GB": "Anivele Demo Data",
-                    "de-DE": "Anivele Demo Data"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Anivele\\DemoData\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "Dữ liệu demo thời trang cho Anivele",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
         {
             "name": "async-aws/core",
             "version": "1.29.1",

@@ -5,7 +5,7 @@ Plugin tự viết để tạo sản phẩm demo thời trang từ bộ ảnh th
 ## Vị trí
 
 ```
-custom/static-plugins/AniveleDemoData/
+custom/plugins/AniveleDemoData/
 ├── composer.json
 └── src/
     ├── AniveleDemoData.php
@@ -16,6 +16,26 @@ custom/static-plugins/AniveleDemoData/
 ```
 
 Ảnh được **đóng gói kèm plugin**, không phụ thuộc `SwagPlatformDemoData` (đã gỡ). Plugin tự chứa, chạy được trên máy khác.
+
+## Plugin thường — xoá được từ Administration
+
+Plugin nằm trong `custom/plugins/` và **không khai báo trong `composer.json`**, nên Shopware ghi nhận `managed_by_composer = 0`:
+
+```
+name: AniveleDemoData
+path: custom/plugins/AniveleDemoData/
+managed_by_composer: 0          ← nút Xoá trong Admin hoạt động
+```
+
+> **Vì sao điều này quan trọng:** nếu plugin được cài qua `composer require` (nằm ở `vendor/` và có trong `composer.json`), Shopware đặt `managed_by_composer = 1` và **khoá nút Xoá trong Administration** — bắt buộc phải gỡ bằng `composer remove` trên dòng lệnh. Đây là lý do plugin này được chuyển từ `custom/static-plugins/` (quản lý bằng composer) sang `custom/plugins/` (quản lý thủ công).
+
+So sánh trong hệ thống hiện tại:
+
+| Plugin | Vị trí | managed_by_composer | Xoá từ Admin |
+|---|---|---|---|
+| AniveleDemoData | `custom/plugins/` | 0 | ✅ Được |
+| SwagExtensionStore | `custom/plugins/` | 0 | ✅ Được |
+| SwagLanguagePack | `vendor/` | 1 | ❌ Phải dùng `composer remove` |
 
 ## Cách dùng
 
@@ -104,13 +124,29 @@ Kết quả thực tế đã kiểm chứng:
 
 ## Gỡ bỏ khi nhập catalog thật
 
+**Cách 1 — từ Administration (đơn giản nhất)**
+
+Settings → System → Plugins → AniveleDemoData → Gỡ cài đặt → Xoá.
+
+**Cách 2 — dòng lệnh**
+
 ```bash
 php bin/console plugin:deactivate AniveleDemoData
 php bin/console plugin:uninstall AniveleDemoData
-composer remove anivele/demo-data
+rm -rf custom/plugins/AniveleDemoData
+php bin/console plugin:refresh
+php bin/console cache:clear
 ```
 
-> Plugin này **không tự xoá sản phẩm** khi gỡ (khác `SwagPlatformDemoData`). Cần xoá thủ công sản phẩm mã `ANV-*` nếu muốn dọn sạch.
+Không cần `composer remove` vì plugin không được composer quản lý.
+
+> ⚠️ Plugin này **không tự xoá sản phẩm** khi gỡ (khác `SwagPlatformDemoData`). Đã kiểm chứng: sau `plugin:uninstall`, 12 sản phẩm vẫn còn nguyên. Muốn dọn sạch phải xoá thủ công sản phẩm mã `ANV-*`:
+>
+> ```sql
+> DELETE FROM product WHERE product_number LIKE 'ANV-%';
+> ```
+>
+> Đây là chủ ý: dữ liệu demo vẫn dùng được để test theme kể cả khi đã gỡ plugin sinh ra nó.
 
 ---
 
