@@ -15,7 +15,7 @@ custom/plugins/AniveleDemoData/
         └── media/demo/              ← 66 ảnh + 1 video (78 MB)
 ```
 
-Ảnh được **đóng gói kèm plugin**, không phụ thuộc `SwagPlatformDemoData` (đã gỡ). Plugin tự chứa, chạy được trên máy khác.
+Ảnh được **đóng gói kèm plugin**, không phụ thuộc `SwagPlatformDemoData`. Plugin tự chứa, chạy được trên máy khác.
 
 ## Plugin thường — xoá được từ Administration
 

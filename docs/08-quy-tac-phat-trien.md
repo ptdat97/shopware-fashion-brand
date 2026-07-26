@@ -183,3 +183,9 @@ Tuyệt đối không sửa tay trực tiếp rồi để đó.
 *"Sau khi chạy `composer update`, thay đổi này còn không?"*
 
 Nếu câu trả lời là **không** → đang làm sai chỗ.
+
+---
+
+## Nguyên tắc kỹ thuật chi tiết
+
+Tài liệu này quy định **được sửa ở đâu**. Còn **sửa như thế nào** — phạm vi thay đổi, kiến trúc PHP, migration, viết test, code Administration — nằm ở [09-nguyen-tac-ky-thuat.md](09-nguyen-tac-ky-thuat.md).

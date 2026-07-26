@@ -60,15 +60,22 @@ Vận chuyển: tương tự, cần tự tích hợp API GHN/GHTK hoặc giai đ
 
 **Mục tiêu:** cấu trúc dữ liệu sản phẩm đúng đặc thù ngành thời trang.
 
+> ⚠️ **Hệ thống hiện có 0 variant.** 12 sản phẩm đều là sản phẩm đơn lẻ; Size/Màu chỉ gắn dưới dạng nhãn mô tả nên khách **không chọn được size khi mua** và tồn kho tính chung cho cả mẫu. Đây là hạng mục chặn go-live.
+
 | Việc | Ghi chú |
 |---|---|
-| Thiết kế property group: Size, Màu, Chất liệu, Kiểu dáng | Đã có sẵn Colour/Size/Material — cần Việt hóa và chuẩn hóa giá trị |
-| Chuẩn hóa bảng size VN | Size VN khác EU/US — xem [05-catalog-fashion.md](05-catalog-fashion.md) |
-| Cấu hình variant matrix (màu × size) | Đặc thù fashion: 1 mẫu áo có thể 40+ biến thể |
-| Xóa toàn bộ demo data | 16 sản phẩm demo phải đi trước khi nhập hàng thật |
-| Quy trình nhập liệu / import | |
+| Chốt dải size theo loại hàng | **Chặn mọi việc sau** — cần người bán hàng quyết |
+| Chốt quy tắc mã SKU cho variant | Đi vào đơn hàng/hoá đơn, không nên đổi về sau |
+| Tách "Hoa nhiều màu" khỏi nhóm Màu sắc | Hoạ tiết không phải màu — làm hỏng bộ lọc |
+| Cấu hình variant matrix (màu × size) | Đặc thù fashion: 1 mẫu có thể 28+ biến thể |
+| Bật `is_closeout` chặn bán quá tồn kho | Hiện đang tắt |
+| Size chart | Dùng CMS block, không cần plugin |
+
+**Property group đã Việt hoá sẵn** ("Màu sắc", "Kích cỡ") — việc này coi như xong. **Không cần plugin nào** cho phase này: variant generator, swatch màu, import/export đều có sẵn trong core 6.7.
 
 **Rủi ro lớn nhất của phase này:** nếu chốt sai cấu trúc variant, sửa về sau cực đắt. Phải làm kỹ ngay từ đầu.
+
+Đánh giá đầy đủ, thứ tự thực hiện và câu hỏi cần chốt: [10-phase2-catalog.md](10-phase2-catalog.md)
 
 ---
 

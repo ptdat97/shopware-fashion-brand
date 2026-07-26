@@ -11,7 +11,7 @@ mysqldump  Ver 8.0.33 for macos13 on arm64
 Server version: 8.0.33
 ```
 
-> ✅ **Client và server đã khớp phiên bản.** Trước đây server chạy 9.7.1 trong khi `mysqldump` là 8.0.33 — chênh một major version khiến backup không đáng tin. Đã xử lý bằng cách migrate về 8.0.33, xem [../decisions/ADR-001-mysql.md](../decisions/ADR-001-mysql.md).
+> ✅ **Client và server cùng phiên bản 8.0.33.** Đây là điều kiện bắt buộc: `mysqldump` lệch major version so với server tạo ra bản dump không đáng tin. Lý do chọn 8.0.33: [../decisions/ADR-001-mysql.md](../decisions/ADR-001-mysql.md).
 
 Dù vậy nguyên tắc vẫn giữ nguyên: **backup chưa từng được khôi phục thử thì không phải backup.** Xem mục test khôi phục bên dưới.
 

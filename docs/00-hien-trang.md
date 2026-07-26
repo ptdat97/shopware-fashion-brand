@@ -11,16 +11,16 @@ Khảo sát ngày 26/07/2026. Tất cả số liệu dưới đây lấy trực 
 | MySQL | 8.0.33 | ✅ Nằm trong ma trận hỗ trợ |
 | APP_URL | http://shopware.test | chưa có HTTPS thật |
 
-> ✅ **Đã xử lý (26/07/2026):** hệ thống trước đó chạy MySQL 9.7.1 — ngoài ma trận hỗ trợ của Shopware 6.7, đồng thời `mysqldump` cũ hơn server khiến backup không đáng tin. Đã migrate sang **MySQL 8.0.33**, kiểm chứng đủ 260 bảng và test khôi phục thành công. Chi tiết: [decisions/ADR-001-mysql.md](decisions/ADR-001-mysql.md).
+> ✅ **MySQL 8.0.33** nằm trong ma trận hỗ trợ của Shopware 6.7, và `mysqldump` client cùng phiên bản với server nên backup đáng tin cậy. Đã kiểm chứng đủ 260 bảng và test khôi phục thành công. Lý do chọn phiên bản này: [decisions/ADR-001-mysql.md](decisions/ADR-001-mysql.md).
 
-## Ngôn ngữ (đã hoàn thành)
+## Ngôn ngữ ✅
 
 Tiếng Việt đã được cài và đang hoạt động:
 
 - Plugin `swag/language-pack` bản `dev-master` — **đây là nhánh dev, không phải release ổn định**. Bản release mới nhất (5.63.0) chỉ hỗ trợ `>=6.6.0 <6.7` nên không dùng được.
 - Ngôn ngữ `vi-VN` bật cho cả Storefront lẫn Administration.
 - Snippet set `LanguagePack vi-VN`, 811 key storefront.
-- Domain `http://shopware.test` và `https://shopware.test` đã chuyển sang `vi-VN`.
+- Domain `http://shopware.test` và `https://shopware.test` dùng `vi-VN`.
 - Domain `default.headless0` (API) vẫn giữ `en-US` — đúng như mong muốn.
 
 ## Dữ liệu hiện có
@@ -35,20 +35,22 @@ Tiếng Việt đã được cài và đang hoạt động:
 | media | 85 | 66 ảnh sản phẩm + ảnh hệ thống |
 | theme | 1 | Chỉ có Storefront mặc định |
 
-Demo data cũ (`SwagPlatformDemoData`) **đã gỡ bỏ hoàn toàn**. Catalog hiện tại do plugin tự viết `AniveleDemoData` sinh ra từ ảnh thật của brand — xem [runbook/05-demo-data.md](runbook/05-demo-data.md). **Vẫn cần thay bằng hàng thật trước go-live.**
+Catalog hiện tại do plugin tự viết `AniveleDemoData` sinh ra từ ảnh thật của brand — xem [runbook/05-demo-data.md](runbook/05-demo-data.md). Hệ thống **không dùng** `SwagPlatformDemoData`. **Vẫn cần thay bằng hàng thật trước go-live.**
+
+> ⚠️ **Chưa có variant.** Cả 12 sản phẩm là sản phẩm đơn lẻ (`parent_id` rỗng, `product_configurator_setting` = 0 dòng). Size/Màu chỉ gắn dưới dạng nhãn mô tả, nên khách **không chọn được size khi mua** và tồn kho tính chung cho cả mẫu — `ANV-1001` có `stock = 78` mà không biết còn bao nhiêu size M. Kế hoạch xử lý: [10-phase2-catalog.md](10-phase2-catalog.md).
 
 ## Cấu hình thương mại — đây là phần cần sửa nhiều nhất
 
-### Tiền tệ: VND ✅ (đã xử lý 26/07/2026)
+### Tiền tệ: VND ✅
 
 ```
 iso_code  factor  symbol  position  decimals
 VND       1       ₫       sau số    0
 ```
 
-Trước đó hệ thống chỉ có USD. Đã chuyển đổi **chính row `Defaults::CURRENCY`** thành VND (không tạo row mới) — xem lý do tại [runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md). Storefront render `1.250.000 ₫` đúng chuẩn VN.
+VND nằm ở **chính row `Defaults::CURRENCY`**, không phải row mới thêm vào — đây là điều kiện để mọi entity mặc định tham chiếu đúng tiền tệ. Storefront render `1.250.000 ₫` đúng chuẩn VN. Cách thực hiện: [runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md).
 
-### Thuế: VAT Việt Nam ✅ (đã xử lý)
+### Thuế: VAT Việt Nam ✅
 
 ```
 VAT 10%                10.000%
@@ -56,7 +58,7 @@ VAT 8%                  8.000%
 Không chịu thuế (0%)    0.000%
 ```
 
-Trước đó là biểu thuế Đức (19%/7%). `display_gross = 1` — giá hiển thị đã gồm VAT, đúng thói quen bán lẻ VN.
+`display_gross = 1` — giá hiển thị đã gồm VAT, đúng thói quen bán lẻ VN.
 
 > ⚠️ **Vẫn cần xác nhận với kế toán** mức áp dụng cho hàng may mặc tại thời điểm go-live.
 
@@ -80,7 +82,7 @@ Express    active
 
 Đây là shipping method generic, chưa nối với đơn vị vận chuyển VN nào (GHN, GHTK, Viettel Post, J&T...).
 
-### Quốc gia ✅ (đã xử lý)
+### Quốc gia ✅
 
 Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên tiếng Việt "Việt Nam", nạp **34 tỉnh/thành phố**, bỏ bắt buộc mã bưu chính và bắt buộc chọn Tỉnh/Thành phố khi đăng ký.
 
@@ -108,13 +110,13 @@ Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên ti
 
 Hệ thống đã là **shop tiếng Việt với nền tảng thị trường VN hoàn chỉnh** (VND, VAT, địa chỉ, catalog mẫu). Để bán được hàng thật còn cần:
 
-1. ~~VND + thuế VN + tắt bớt quốc gia~~ — ✅ **đã xong (Phase 0)**
+1. ~~VND + thuế VN + tắt bớt quốc gia~~ — ✅ **xong ở Phase 0**
 2. Cổng thanh toán nội địa — *hạng mục tốn kém nhất*
 3. Đơn vị vận chuyển nội địa
 4. Theme thương hiệu
 5. Catalog thật thay demo data
 6. Hạ tầng production (HTTPS, mail, backup tự động)
 
-> ✅ Rủi ro phiên bản MySQL và nền tảng thị trường VN đã xử lý — không còn nằm trong danh sách chặn.
+> ✅ Phiên bản MySQL và nền tảng thị trường VN không nằm trong danh sách rủi ro chặn go-live.
 
 Chi tiết lộ trình: [01-roadmap.md](01-roadmap.md).
