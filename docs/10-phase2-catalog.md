@@ -91,42 +91,30 @@ Việc Việt hoá property group coi như xong. Việc thật của phase này 
 
 ---
 
-## 5. Quyết định phải chốt trước khi làm
+## 5. Quyết định đã chốt
 
-Đây là phần **đắt nhất nếu chốt sai** — sửa cấu trúc variant sau khi đã nhập hàng trăm SKU rất tốn kém.
+Chi tiết và lý do: [decisions/ADR-003-cau-truc-variant.md](decisions/ADR-003-cau-truc-variant.md)
 
-### 5.1 Trục variant: chỉ Màu × Size
-
-Khuyến nghị **không** đưa Chất liệu / Kiểu dáng thành trục variant. Lý do: mỗi trục nhân số SKU lên.
-
-```
-Màu (7) × Size (4)              =  28 SKU/mẫu
-Màu (7) × Size (4) × Chất liệu (3) = 84 SKU/mẫu  ← quá tải vận hành
-```
-
-Chất liệu và Kiểu dáng nên là **property mô tả + bộ lọc**, giữ nguyên như hiện tại.
-
-### 5.2 Bảng size chuẩn VN
-
-Size VN nhỏ hơn EU/US khoảng 1–2 bậc. Cần chốt dải size **theo từng loại hàng**, vì đầm và áo không cùng thang:
-
-| Loại | Dải size đề xuất |
+| # | Quyết định |
 |---|---|
-| Áo / Đầm | S, M, L, XL (đang có) |
-| Quần / Chân váy | 26, 27, 28, 29, 30 *(theo số eo)* |
-| Free size | Một giá trị riêng — rất phổ biến ở VN |
+| 1 | **Trục variant: Màu × Size.** Chất liệu/Kiểu dáng/Hoạ tiết giữ làm property lọc |
+| 2 | **Hai thang size:** Đầm/Áo/Set dùng `S–XL`; Chân váy/Quần dùng số eo `26–30` |
+| 3 | **Giá khác theo size:** cho phép, mỗi variant đặt giá riêng được |
+| 4 | **SKU:** `ANV-1001-DEN-M` (mã mẫu – màu 3 ký tự không dấu – size) |
+| 5 | **Tách "Hoa nhiều màu"** sang nhóm Hoạ tiết mới |
 
-> **Cần chốt với người bán hàng**, không phải quyết định kỹ thuật. Đây là câu hỏi mở của phase này.
+### Quy mô SKU
 
-### 5.3 Quy tắc mã SKU
-
-Hiện tại `ANV-1001` là mã mẫu. Khi có variant cần quy tắc mở rộng, đề xuất:
+Với **3 màu trung bình mỗi mẫu**:
 
 ```
-ANV-1001-DEN-M     (mã mẫu - màu - size)
+3 màu × 4 size  =  12 SKU/mẫu
+100 mẫu thật    =  ~1.200 SKU   ← nằm trong khả năng xử lý của Shopware
 ```
 
-Chốt sớm vì mã SKU đi vào đơn hàng, hoá đơn, và không nên đổi về sau.
+Nếu thêm trục Chất liệu: 36 SKU/mẫu → 3.600 SKU. Đây là lý do giữ đúng 2 trục.
+
+> Dữ liệu demo hiện chỉ gắn 1–2 màu mỗi sản phẩm, nhưng kế hoạch tính theo **3 màu** như hàng thật.
 
 ---
 
@@ -134,20 +122,58 @@ Chốt sớm vì mã SKU đi vào đơn hàng, hoá đơn, và không nên đổ
 
 Sắp theo phụ thuộc — làm sai thứ tự phải làm lại.
 
-| # | Việc | Ghi chú |
-|---|---|---|
-| 1 | Chốt dải size theo loại hàng (5.2) | **Chặn mọi việc sau** — cần người bán hàng quyết |
-| 2 | Chốt quy tắc SKU (5.3) | |
-| 3 | Tách "Hoa nhiều màu" khỏi nhóm Màu sắc → nhóm Hoạ tiết | Làm trước khi sinh variant |
-| 4 | Bổ sung giá trị size còn thiếu (quần, free size) | |
-| 5 | **Backup** | Bắt buộc — xem [runbook/00-backup.md](runbook/00-backup.md) |
-| 6 | Sinh variant cho 1 sản phẩm thử | Kiểm chứng trước khi làm hàng loạt |
-| 7 | Kiểm tra storefront: chọn được size/màu, tồn kho đúng | |
-| 8 | Bật `is_closeout` để chặn bán quá tồn kho | |
-| 9 | Nhân ra toàn bộ catalog | |
-| 10 | Dựng size chart bằng CMS block | |
+Mục 5 đã chốt, bắt đầu được từ bước 1.
 
-Bước 6–7 là **cổng kiểm chứng**: nếu variant đầu tiên không chạy đúng, dừng lại xem xét thay vì nhân rộng lỗi.
+| # | Việc | Trạng thái |
+|---|---|---|
+| 1 | **Backup** | ✅ `phase2-before-20260726-190525.sql`, 260 bảng |
+| 2 | Tạo nhóm **Hoạ tiết**, chuyển "Hoa nhiều màu" sang | ✅ 5 giá trị, 64 liên kết `product_property` nguyên vẹn |
+| 3 | Thêm thang size số eo `26–30` | ⏸ Hoãn — catalog chưa có quần/chân váy đủ nhiều |
+| 4 | Sinh variant cho `ANV-1004` | ✅ 1 màu × 4 size = 4 variant, tồn kho 18/variant |
+| 5 | Kiểm chứng storefront + chặn bán khi hết hàng | ✅ Xem kết quả bên dưới |
+| 6 | Bật `is_closeout` cho toàn bộ catalog | ✅ 16/16 sản phẩm |
+| 7 | Sinh variant cho mẫu **nhiều màu** (`ANV-1005`) | ✅ 2 màu × 4 size = 8 variant |
+| 8 | Nhân ra toàn bộ catalog | ✅ 12 mẫu → **64 variant**, tồn kho khớp 12/12 |
+| 9 | Size chart bằng CMS block | ⬜ Còn lại |
+
+Quy trình và lệnh: [runbook/06-sinh-variant.md](runbook/06-sinh-variant.md)
+
+### Kết quả kiểm chứng bước 5
+
+| Trường hợp | Kết quả |
+|---|---|
+| Trang sản phẩm hiện bộ chọn size | ✅ S / M / L / XL + màu Đen, giá `1.390.000 ₫` |
+| Thêm size M (tồn 18) vào giỏ | ✅ Vào giỏ, 1 dòng, `1.390.000 ₫` |
+| Thêm size S (tồn 0) vào giỏ | ✅ **Bị chặn** — `"no longer available"`, giỏ trống |
+| Trang variant hết hàng | ✅ Không có nút mua, hiện "Không còn khả dụng nữa" |
+
+Tồn kho sản phẩm cha được Shopware tự tính lại = tổng tồn kho variant (72).
+
+### Kết quả kiểm chứng bước 6–7
+
+| Trường hợp | Kết quả |
+|---|---|
+| `ANV-1005` — swatch màu trên storefront | ✅ Kem `#f0e6d2`, Be `#d9c9b0` + 4 size, giá `1.690.000 ₫` |
+| Thêm `ANV-1005-BEI-M` ×2 vào giỏ | ✅ Đúng variant `[M, Be]`, tổng `3.380.000 ₫` |
+| Thêm `ANV-1005-KEM-M` ×2 vào giỏ | ✅ Đúng variant `[M, Kem]` — chọn màu ra đúng hàng |
+| Đặt 50 cái khi chỉ còn 8 | ✅ **Cắt còn 8** — `"is only available 8 times"` |
+
+`is_closeout` bật cho cả 16 sản phẩm; không sản phẩm nào bị ẩn ngoài ý muốn (không có sản phẩm nào tồn kho 0).
+
+### Kết quả bước 8 — toàn catalog
+
+12 mẫu → **64 variant**, không SKU trùng, `is_closeout` bật cho cả 76 dòng sản phẩm.
+
+| Kiểm tra | Kết quả |
+|---|---|
+| Tổng tồn kho variant = tồn kho cha | ✅ **12/12 mẫu khớp chính xác** |
+| SKU trùng | ✅ Không có |
+| Storefront `ANV-1001`, `ANV-1008`, `ANV-1011` | ✅ HTTP 200, hiện đủ bộ chọn màu + size |
+| Mua thử `ANV-1008-XPA-L` | ✅ Vào giỏ đúng variant `[L, Xanh pastel]`, `590.000 ₫` |
+
+> **`ANV-1001` từng không sinh được variant.** Sản phẩm này chỉ có "Hoa nhiều màu" làm màu, mà giá trị đó đã chuyển sang nhóm Hoạ tiết ở bước 2 nên còn **0 màu**. Đã gán màu nền **Kem** (đối chiếu ảnh thật: váy nền kem in hoa nhiều màu) rồi mới sinh variant được. Đây là hệ quả trực tiếp của bước 2, cần lưu ý khi nhập hàng thật: sản phẩm hoạ tiết vẫn phải có màu nền.
+
+> ⚠️ Bộ chọn size vẫn cho **chọn** size hết hàng, chỉ chặn ở bước thêm vào giỏ — hành vi mặc định của Shopware. Muốn gạch/mờ ngay trên bộ chọn thì tuỳ biến theme ở Phase 3.
 
 ---
 
@@ -155,26 +181,24 @@ Bước 6–7 là **cổng kiểm chứng**: nếu variant đầu tiên không c
 
 | Rủi ro | Mức | Xử lý |
 |---|---|---|
-| Chốt sai trục variant, phải làm lại sau khi có nhiều SKU | **Cao** | Chốt mục 5.1 trước, thử 1 sản phẩm ở bước 6 |
 | 12 sản phẩm hiện tại là demo, sẽ bị thay bằng hàng thật | Trung bình | Không đầu tư công sức vào dữ liệu demo — chỉ dùng để kiểm chứng cấu trúc |
-| Dải size chốt sai với thực tế hàng | Trung bình | Cần người bán hàng xác nhận, không tự quyết |
-| Số SKU phình to ngoài tầm vận hành | Trung bình | Giữ đúng 2 trục variant |
+| Cấu trúc variant chốt sai, phải làm lại khi đã nhiều SKU | Trung bình | Đã chốt ở [ADR-003](decisions/ADR-003-cau-truc-variant.md); thử 1 sản phẩm ở bước 4 trước khi nhân rộng |
+| Số SKU phình to ngoài tầm vận hành | Thấp | Giữ đúng 2 trục — 3 màu × 4 size = 12 SKU/mẫu |
 
 ---
 
-## 8. Câu hỏi mở
+## 8. Còn treo
 
-Cần trả lời trước khi bắt đầu bước 1:
+Hai điểm chưa chốt, **không chặn** việc bắt đầu (chi tiết ở [ADR-003](decisions/ADR-003-cau-truc-variant.md)):
 
-1. **Dải size thực tế** của từng loại hàng là gì? Có bán Free size không?
-2. Quần/chân váy dùng **số eo** (26–30) hay **chữ** (S–XL)?
-3. Giá có **khác nhau theo size** không? (XL đắt hơn S là chuyện bình thường)
-4. Một mẫu áo trung bình có bao nhiêu màu — để ước lượng số SKU thật?
+1. **Free size** — có bán không? Thêm được bất cứ lúc nào trước khi nhập hàng thật.
+2. **Thang số eo `26–30`** — chỉ cần khi dòng hàng thật có quần/chân váy. Catalog hiện chỉ có 1 chân váy.
 
 ---
 
 ## Liên quan
 
+- Quyết định cấu trúc variant: [decisions/ADR-003-cau-truc-variant.md](decisions/ADR-003-cau-truc-variant.md)
 - Thiết kế catalog chi tiết: [05-catalog-fashion.md](05-catalog-fashion.md)
 - Dữ liệu demo hiện tại: [runbook/05-demo-data.md](runbook/05-demo-data.md)
 - Quy tắc khi viết code: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md), [09-nguyen-tac-ky-thuat.md](09-nguyen-tac-ky-thuat.md)

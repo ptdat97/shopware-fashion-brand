@@ -45,6 +45,8 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 | Xoá demo data | [runbook/03-xoa-demo-data.md](runbook/03-xoa-demo-data.md) |
 | Tái lập Phase 0 trên môi trường khác | [runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md) |
 | Dữ liệu demo thời trang | [runbook/05-demo-data.md](runbook/05-demo-data.md) |
+| Sinh variant Màu × Size | [runbook/06-sinh-variant.md](runbook/06-sinh-variant.md) |
+| Theme thương hiệu AniveleTheme | [runbook/07-theme-anivele.md](runbook/07-theme-anivele.md) |
 
 **Quyết định kỹ thuật** — [decisions/](decisions/)
 
@@ -52,6 +54,7 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 |---|---|
 | Chọn MySQL 8.0.33 | [decisions/ADR-001-mysql.md](decisions/ADR-001-mysql.md) |
 | Hướng đi cho thanh toán | [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md) |
+| Cấu trúc variant catalog | [decisions/ADR-003-cau-truc-variant.md](decisions/ADR-003-cau-truc-variant.md) |
 
 ## Quy tắc quan trọng nhất
 

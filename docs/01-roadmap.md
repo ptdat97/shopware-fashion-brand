@@ -60,16 +60,16 @@ Vận chuyển: tương tự, cần tự tích hợp API GHN/GHTK hoặc giai đ
 
 **Mục tiêu:** cấu trúc dữ liệu sản phẩm đúng đặc thù ngành thời trang.
 
-> ⚠️ **Hệ thống hiện có 0 variant.** 12 sản phẩm đều là sản phẩm đơn lẻ; Size/Màu chỉ gắn dưới dạng nhãn mô tả nên khách **không chọn được size khi mua** và tồn kho tính chung cho cả mẫu. Đây là hạng mục chặn go-live.
+> ✅ **Cấu trúc variant đã xong (26/07/2026).** 12 mẫu → 64 variant màu × size, khách chọn được size/màu, tồn kho tách riêng, chặn bán quá tồn kho. Còn lại: size chart.
 
-| Việc | Ghi chú |
+| Việc | Trạng thái |
 |---|---|
-| Chốt dải size theo loại hàng | **Chặn mọi việc sau** — cần người bán hàng quyết |
-| Chốt quy tắc mã SKU cho variant | Đi vào đơn hàng/hoá đơn, không nên đổi về sau |
-| Tách "Hoa nhiều màu" khỏi nhóm Màu sắc | Hoạ tiết không phải màu — làm hỏng bộ lọc |
-| Cấu hình variant matrix (màu × size) | Đặc thù fashion: 1 mẫu có thể 28+ biến thể |
-| Bật `is_closeout` chặn bán quá tồn kho | Hiện đang tắt |
-| Size chart | Dùng CMS block, không cần plugin |
+| Chốt thang size + quy tắc SKU | ✅ [ADR-003](decisions/ADR-003-cau-truc-variant.md) |
+| Tách "Hoa nhiều màu" sang nhóm Hoạ tiết | ✅ |
+| Cấu hình variant matrix (màu × size) | ✅ 64 variant |
+| Bật `is_closeout` chặn bán quá tồn kho | ✅ 76/76 |
+| Size chart | ⬜ Dùng CMS block, không cần plugin |
+| Thang size số eo cho quần/chân váy | ⏸ Hoãn tới khi có dòng hàng thật |
 
 **Property group đã Việt hoá sẵn** ("Màu sắc", "Kích cỡ") — việc này coi như xong. **Không cần plugin nào** cho phase này: variant generator, swatch màu, import/export đều có sẵn trong core 6.7.
 
@@ -83,14 +83,27 @@ Vận chuyển: tương tự, cần tự tích hợp API GHN/GHTK hoặc giai đ
 
 **Mục tiêu:** giao diện mang bản sắc brand, tối ưu cho thời trang.
 
-Đã chốt hướng: **tự làm theme riêng kế thừa Storefront**.
+> ✅ **Nền theme đã dựng (26/07/2026).** `AniveleTheme` kế thừa Storefront, đã gán cho sales channel `anivele` và biên dịch thành công.
 
-Trọng tâm cho fashion:
-- Trang sản phẩm ảnh lớn, gallery nhiều góc
-- Bộ chọn màu/size trực quan (swatch màu thay vì dropdown)
-- Bảng size chart (khách VN rất hay cần)
-- Mobile-first — tỷ trọng mua sắm qua mobile ở VN rất cao
-- Tối ưu tốc độ tải ảnh
+| Việc | Trạng thái |
+|---|---|
+| Dựng theme kế thừa Storefront | ✅ `custom/plugins/AniveleTheme/` |
+| Bảng màu thương hiệu (kem/be/nâu) | ✅ 6 biến chỉnh được trong Admin |
+| Swatch màu tròn | ✅ |
+| Size hết hàng mờ + gạch chéo | ✅ Bù hạn chế của Phase 2 |
+| Vùng bấm ≥44px trên mobile | ✅ |
+| Trang chủ: hero, 2 slider, câu chuyện, 3 cam kết | ✅ Dùng CMS block core |
+| Trang sản phẩm: cột mua hàng dính khi cuộn ảnh | ✅ |
+| Thanh toán 1 trang | ✅ Core 6.7 vốn đã 1 trang, theme làm rõ thị giác |
+| Megamenu (14 danh mục cấp 3) | ✅ Tính năng core, cần depth ≥ 3 |
+| Ảnh teaser trong megamenu | ✅ 4 danh mục, dùng `category.media` của core |
+| Footer 3 cột | ✅ Trỏ `footer_category_id` vào cây riêng |
+| Logo thương hiệu | ⬜ Cần file logo thật, hiện còn "Demostore" |
+| Gallery ảnh theo màu | ⬜ Cần gắn ảnh theo variant trước |
+| Bảng size chart | ⬜ Cần số đo thật |
+| Tối ưu tốc độ tải ảnh (WebP/AVIF) | ⬜ |
+
+Thao tác: [runbook/07-theme-anivele.md](runbook/07-theme-anivele.md)
 
 Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md](runbook/02-tao-theme.md)
 

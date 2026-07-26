@@ -1,0 +1,98 @@
+{
+  "name": "AniveleTheme",
+  "author": "Anivele",
+  "description": {
+    "vi-VN": "Theme thương hiệu Anivele — tông trung tính, ưu tiên ảnh sản phẩm",
+    "en-GB": "Anivele brand theme — neutral tones, product imagery first"
+  },
+  "views": [
+     "@Storefront",
+     "@Plugins",
+     "@AniveleTheme"
+  ],
+  "style": [
+    "app/storefront/src/scss/overrides.scss",
+    "@Storefront",
+    "app/storefront/src/scss/base.scss"
+  ],
+  "script": [
+    "@Storefront",
+    "app/storefront/dist/storefront/js/anivele-theme/anivele-theme.js"
+  ],
+  "asset": [
+    "@Storefront",
+    "app/storefront/src/assets"
+  ],
+  "config": {
+    "blocks": {
+      "aniveleBrand": {
+        "label": {
+          "vi-VN": "Màu thương hiệu",
+          "en-GB": "Brand colours"
+        }
+      }
+    },
+    "fields": {
+      "sw-color-brand-primary": {
+        "value": "#6b4a34",
+        "type": "color",
+        "editable": true,
+        "block": "aniveleBrand",
+        "label": {
+          "vi-VN": "Màu chính",
+          "en-GB": "Primary colour"
+        }
+      },
+      "sw-color-brand-secondary": {
+        "value": "#8a7256",
+        "type": "color",
+        "editable": true,
+        "block": "aniveleBrand",
+        "label": {
+          "vi-VN": "Màu phụ",
+          "en-GB": "Secondary colour"
+        }
+      },
+      "anivele-color-surface": {
+        "value": "#faf7f2",
+        "type": "color",
+        "editable": true,
+        "block": "aniveleBrand",
+        "label": {
+          "vi-VN": "Màu nền trang",
+          "en-GB": "Page background"
+        }
+      },
+      "anivele-color-accent": {
+        "value": "#b08d57",
+        "type": "color",
+        "editable": true,
+        "block": "aniveleBrand",
+        "label": {
+          "vi-VN": "Màu nhấn (giá, nút)",
+          "en-GB": "Accent (price, buttons)"
+        }
+      },
+      "sw-color-buy-button": {
+        "value": "#6b4a34",
+        "type": "color",
+        "editable": true,
+        "block": "aniveleBrand",
+        "label": {
+          "vi-VN": "Màu nút Thêm vào giỏ",
+          "en-GB": "Buy button colour"
+        }
+      },
+      "sw-color-buy-button-text": {
+        "value": "#ffffff",
+        "type": "color",
+        "editable": true,
+        "block": "aniveleBrand",
+        "label": {
+          "vi-VN": "Màu chữ nút Thêm vào giỏ",
+          "en-GB": "Buy button text colour"
+        }
+      }
+    }
+  }
+}

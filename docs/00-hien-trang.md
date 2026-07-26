@@ -27,17 +27,19 @@ Tiếng Việt đã được cài và đang hoạt động:
 
 | Bảng | Số lượng | Đánh giá |
 |---|---|---|
-| product | 12 | Demo thời trang tự tạo, giá VND |
-| category | 5 | Danh mục chính + Đầm/Áo/Chân váy/Bộ sưu tập |
+| product | 76 | 12 mẫu demo + 64 variant (màu × size) |
+| category | 33 | 5 danh mục chính + 14 cấp 3 (megamenu) + 14 footer |
 | customer | 0 | |
 | order | 0 | Chưa có đơn nào |
-| property_group | 2 | Màu sắc (7 giá trị), Kích cỡ (S/M/L/XL) |
+| property_group | 3 | Màu sắc (6), Kích cỡ (S/M/L/XL), Hoạ tiết (5) |
+| product_configurator_setting | 64 | Trục chọn màu/size trên storefront |
 | media | 85 | 66 ảnh sản phẩm + ảnh hệ thống |
-| theme | 1 | Chỉ có Storefront mặc định |
+| theme | 2 | Storefront mặc định + `AniveleTheme` (đang dùng) |
+| cms_page | 13 | +1 trang chủ Anivele (5 block) |
 
 Catalog hiện tại do plugin tự viết `AniveleDemoData` sinh ra từ ảnh thật của brand — xem [runbook/05-demo-data.md](runbook/05-demo-data.md). Hệ thống **không dùng** `SwagPlatformDemoData`. **Vẫn cần thay bằng hàng thật trước go-live.**
 
-> ⚠️ **Chưa có variant.** Cả 12 sản phẩm là sản phẩm đơn lẻ (`parent_id` rỗng, `product_configurator_setting` = 0 dòng). Size/Màu chỉ gắn dưới dạng nhãn mô tả, nên khách **không chọn được size khi mua** và tồn kho tính chung cho cả mẫu — `ANV-1001` có `stock = 78` mà không biết còn bao nhiêu size M. Kế hoạch xử lý: [10-phase2-catalog.md](10-phase2-catalog.md).
+**Cấu trúc variant đã hoàn tất cho cả 12 mẫu** — khách chọn được màu/size, tồn kho tách riêng từng biến thể, `is_closeout` chặn bán quá tồn kho trên toàn bộ 76 dòng sản phẩm. Tổng tồn kho variant khớp chính xác tồn kho mẫu cha ở cả 12/12. Chi tiết: [10-phase2-catalog.md](10-phase2-catalog.md).
 
 ## Cấu hình thương mại — đây là phần cần sửa nhiều nhất
 
@@ -103,6 +105,7 @@ Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên ti
 | SwagLanguagePack | dev-master | Yes |
 | SwagPayPal | 10.7.0 | **No** |
 | AniveleDemoData | 1.0.0 | Yes (plugin tự viết) |
+| AniveleTheme | 1.0.0 | Yes (theme tự viết) |
 
 `custom/apps/` rỗng — chưa có app nào.
 
@@ -113,7 +116,7 @@ Hệ thống đã là **shop tiếng Việt với nền tảng thị trường V
 1. ~~VND + thuế VN + tắt bớt quốc gia~~ — ✅ **xong ở Phase 0**
 2. Cổng thanh toán nội địa — *hạng mục tốn kém nhất*
 3. Đơn vị vận chuyển nội địa
-4. Theme thương hiệu
+4. Theme thương hiệu — *nền đã có, còn logo + size chart + ảnh theo màu*
 5. Catalog thật thay demo data
 6. Hạ tầng production (HTTPS, mail, backup tự động)
 

@@ -1,0 +1,32 @@
+{
+  "name": "anivele/theme",
+  "description": "Theme thương hiệu Anivele — thời trang nữ, thị trường Việt Nam",
+  "version": "1.0.0",
+  "type": "shopware-platform-plugin",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Anivele"
+    }
+  ],
+  "require": {
+    "shopware/core": "~6.7.0",
+    "shopware/storefront": "~6.7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "AniveleTheme\\": "src/"
+    }
+  },
+  "extra": {
+    "shopware-plugin-class": "AniveleTheme\\AniveleTheme",
+    "label": {
+      "vi-VN": "Theme Anivele",
+      "en-GB": "Anivele Theme"
+    },
+    "description": {
+      "vi-VN": "Theme thương hiệu Anivele, kế thừa Storefront mặc định",
+      "en-GB": "Anivele brand theme extending the default Storefront"
+    }
+  }
+}

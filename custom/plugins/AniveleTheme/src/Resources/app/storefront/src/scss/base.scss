@@ -1,0 +1,263 @@
+/*
+Quy tắc riêng của theme Anivele.
+
+Nạp SAU @Storefront nên ghi đè được CSS của core.
+Biến màu lấy từ theme.json, chỉnh được trong Administration.
+*/
+
+// ==================================================
+// Nền trang
+// ==================================================
+body {
+    background-color: $anivele-color-surface;
+}
+
+// ==================================================
+// Bộ chọn biến thể — trọng tâm của theme thời trang
+// ==================================================
+//
+// Core đánh dấu lựa chọn còn hàng bằng class `is-combinable`.
+// Lựa chọn hết hàng KHÔNG có class đó, nên chọn ngược lại để làm mờ + gạch chéo.
+//
+// Lý do: ẩn size hết hàng là lỗi UX phổ biến — khách không biết brand có
+// size đó hay không nên không quay lại. Hiện rõ nhưng không bấm được.
+
+.product-detail-configurator-option-label {
+    min-width: 3rem;
+    padding: 0.6rem 1rem;
+    border-color: rgba(0, 0, 0, 0.15);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+
+    &:not(.is-combinable) {
+        position: relative;
+        opacity: 0.4;
+        cursor: not-allowed;
+
+        // Gạch chéo báo hết hàng
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top left,
+                transparent calc(50% - 1px),
+                currentColor calc(50% - 1px),
+                currentColor calc(50% + 1px),
+                transparent calc(50% + 1px)
+            );
+            pointer-events: none;
+        }
+    }
+}
+
+// Swatch màu: hình tròn để phân biệt rõ với nút size
+.product-detail-configurator-option-label.is-display-color {
+    width: 2.5rem;
+    height: 2.5rem;
+    min-width: 0;
+    padding: 0;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.product-detail-configurator-option-input:checked + .product-detail-configurator-option-label {
+    border-color: $anivele-color-accent;
+    border-width: 2px;
+}
+
+.product-detail-configurator-group-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+// ==================================================
+// Giá — chuỗi VND dài, cần đủ chỗ và dễ đọc
+// ==================================================
+.product-detail-price,
+.product-price {
+    color: $anivele-color-accent;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+
+    // Không cho xuống dòng giữa số và ký hiệu ₫
+    white-space: nowrap;
+}
+
+// ==================================================
+// Khung sản phẩm — ảnh là yếu tố bán hàng
+// ==================================================
+.product-box {
+    background-color: transparent;
+
+    .product-image-wrapper {
+        overflow: hidden;
+    }
+
+    .product-image {
+        transition: transform 0.4s ease;
+    }
+
+    &:hover .product-image {
+        transform: scale(1.03);
+    }
+
+    .product-name {
+        font-weight: 400;
+        letter-spacing: 0.01em;
+    }
+}
+
+// ==================================================
+// Trang sản phẩm: ảnh cuộn, cột thông tin dính
+// ==================================================
+//
+// Core chia 2 cột: .product-detail-media (col-lg-7) và .product-detail-buy (col-lg-5).
+// Cho cột ảnh cuộn tự nhiên, cột mua hàng dính lại để nút "Thêm vào giỏ"
+// luôn trong tầm mắt — khách xem hết gallery vẫn mua được ngay.
+//
+// Chỉ bật từ lg trở lên: trên mobile hai cột xếp chồng, sticky sẽ che nội dung.
+
+@include media-breakpoint-up(lg) {
+    .product-detail-buy {
+        position: sticky;
+        top: 2rem;
+        align-self: flex-start;
+
+        // Dự phòng khi cột thông tin dài hơn màn hình
+        max-height: calc(100vh - 4rem);
+        overflow-y: auto;
+
+        // Ẩn thanh cuộn cho gọn, vẫn cuộn được
+        scrollbar-width: thin;
+    }
+}
+
+// ==================================================
+// Thanh toán — gom về một trang, giảm bước bỏ giỏ
+// ==================================================
+//
+// Shopware 6.7 vốn đã là checkout 1 trang (cart → confirm → finish):
+// địa chỉ, vận chuyển, thanh toán, xem lại đơn nằm chung trang confirm.
+// Phần dưới chỉ làm rõ thị giác, không đổi luồng.
+
+.checkout-main {
+    .card {
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        margin-bottom: 1.25rem;
+    }
+
+    .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+}
+
+// Tổng tiền dính lại khi cuộn danh sách sản phẩm dài
+@include media-breakpoint-up(lg) {
+    .checkout-aside-container {
+        position: sticky;
+        top: 2rem;
+    }
+}
+
+// Nút đặt hàng: to, rõ, không lẫn với nút phụ
+.checkout-main .btn-primary {
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+    font-size: 1.05rem;
+}
+
+// ==================================================
+// Megamenu — flyout nhiều cột có sẵn của core
+// ==================================================
+//
+// Core tự render flyout khi category có con và navigation_category_depth >= 3.
+// Phần dưới chỉ chỉnh thị giác cho hợp tông brand.
+
+.navigation-flyout {
+    background-color: $anivele-color-surface;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+}
+
+.navigation-flyout-link {
+    padding: 0.35rem 0;
+    color: rgba(0, 0, 0, 0.75);
+    transition: color 0.15s ease;
+
+    &:hover {
+        color: $anivele-color-accent;
+    }
+
+    // Danh mục cha trong flyout: đậm hơn để tách khỏi danh sách con
+    &.is-level-0 {
+        font-weight: 500;
+        letter-spacing: 0.02em;
+    }
+}
+
+.navigation-flyout-categories.is-level-1 .navigation-flyout-link {
+    font-size: 0.9375rem;
+}
+
+// Ảnh teaser: core tự hiện khi category có media, cột link co còn col-8
+.navigation-flyout-teaser-image-container {
+    display: block;
+    overflow: hidden;
+}
+
+.navigation-flyout-teaser-image {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+
+    &:hover {
+        transform: scale(1.04);
+    }
+}
+
+// ==================================================
+// Footer
+// ==================================================
+.footer-column-headline {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.footer-link {
+    color: rgba(0, 0, 0, 0.7);
+
+    &:hover {
+        color: $anivele-color-accent;
+    }
+}
+
+// ==================================================
+// Nút
+// ==================================================
+.btn-primary {
+    letter-spacing: 0.04em;
+}
+
+// ==================================================
+// Mobile-first — tỷ trọng mua sắm qua điện thoại ở VN rất cao
+// ==================================================
+@include media-breakpoint-down(md) {
+    // Vùng bấm tối thiểu ~44px theo hướng dẫn tiếp cận trên cảm ứng
+    .product-detail-configurator-option-label {
+        min-height: 2.75rem;
+        min-width: 2.75rem;
+    }
+
+    .product-detail-configurator-option-label.is-display-color {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+}

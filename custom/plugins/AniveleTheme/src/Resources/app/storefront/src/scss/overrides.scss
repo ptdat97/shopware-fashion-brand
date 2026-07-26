@@ -1,0 +1,27 @@
+/*
+Ghi đè biến mặc định của Storefront / Bootstrap.
+
+File này nạp TRƯỚC @Storefront nên giá trị ở đây thắng các biến !default của core.
+Chỉ đặt biến ở đây; quy tắc CSS thật nằm ở base.scss.
+*/
+
+// --- Bo góc: brand thời trang dùng góc gần vuông, tinh giản ---
+$border-radius: 2px;
+$border-radius-sm: 2px;
+$border-radius-lg: 4px;
+
+// --- Nút: thoáng hơn mặc định, tạo cảm giác cao cấp ---
+$btn-font-weight: 500;
+$btn-padding-y: 0.75rem;
+$btn-padding-x: 1.75rem;
+$btn-border-radius: 2px;
+$btn-border-radius-sm: 2px;
+$btn-border-radius-lg: 2px;
+
+// --- Chữ ---
+$headings-font-weight: 500;
+$line-height-base: 1.6;
+
+// --- Khung sản phẩm: bỏ viền để ảnh tự nói ---
+$card-border-width: 0;
+$card-border-radius: 2px;
