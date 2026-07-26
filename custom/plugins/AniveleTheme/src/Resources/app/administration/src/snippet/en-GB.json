@@ -1,0 +1,57 @@
+{
+  "anivele-navigation": {
+    "general": {
+      "mainMenuItem": "Menu & Footer",
+      "description": "Build storefront megamenu and footer"
+    },
+    "action": {
+      "build": "Rebuild",
+      "addItem": "Add item",
+      "addChild": "Add child",
+      "add": "Add",
+      "hide": "Hide",
+      "show": "Show"
+    },
+    "build": {
+      "title": "Build menu and footer",
+      "hint": "Only creates missing items; never deletes or overwrites. Safe to run repeatedly.",
+      "menu": "Build megamenu",
+      "footer": "Build footer",
+      "images": "Assign megamenu teaser images",
+      "imagesHelp": "Uses a product cover image from the category. Demo data only — upload real imagery in Catalogues.",
+      "assignProducts": "Assign products to subcategories",
+      "assignProductsHelp": "Matches keywords in product names to avoid empty categories. Assign real stock manually."
+    },
+    "menu": {
+      "title": "Megamenu",
+      "empty": "No menu items yet"
+    },
+    "footer": {
+      "title": "Footer",
+      "empty": "No footer columns yet"
+    },
+    "label": {
+      "hasImage": "Has image",
+      "hidden": "Hidden"
+    },
+    "add": {
+      "title": "Add new item",
+      "name": "Item name",
+      "placeholder": "e.g. Wool coats"
+    },
+    "warning": {
+      "depth": "Menu depth is {depth}. The megamenu needs at least 3 to expand — click \"Rebuild\" to set it."
+    },
+    "notification": {
+      "buildSuccess": "Built {menu} menu items and {footer} footer items.",
+      "buildError": "Could not build menu/footer.",
+      "loadError": "Could not load the menu structure.",
+      "unmatched": "{count} products matched no keyword, so their subcategories stay empty: {names}",
+      "hidden": "Hid \"{name}\" from the storefront.",
+      "shown": "\"{name}\" is visible again.",
+      "visibilityError": "Could not change visibility.",
+      "itemAdded": "Added \"{name}\".",
+      "addError": "Could not add the item."
+    }
+  }
+}

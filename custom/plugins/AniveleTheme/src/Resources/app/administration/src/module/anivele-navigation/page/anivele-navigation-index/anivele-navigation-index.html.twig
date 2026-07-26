@@ -1,0 +1,247 @@
+{% block anivele_navigation_index %}
+<sw-page class="anivele-navigation">
+
+    {% block anivele_navigation_index_smart_bar_header %}
+        <template #smart-bar-header>
+            <h2>{{ $tc('anivele-navigation.general.mainMenuItem') }}</h2>
+        </template>
+    {% endblock %}
+
+    {% block anivele_navigation_index_smart_bar_actions %}
+        <template #smart-bar-actions>
+            <sw-button
+                variant="primary"
+                :isLoading="isBuilding"
+                :disabled="!acl.can('category.editor')"
+                @click="onBuild">
+                {{ $tc('anivele-navigation.action.build') }}
+            </sw-button>
+        </template>
+    {% endblock %}
+
+    {% block anivele_navigation_index_content %}
+        <template #content>
+            <sw-card-view>
+
+                {% block anivele_navigation_index_depth_warning %}
+                    <sw-alert
+                        v-if="depthWarning"
+                        variant="warning"
+                        class="anivele-navigation__alert">
+                        {{ $tc('anivele-navigation.warning.depth', 0, { depth: depth }) }}
+                    </sw-alert>
+                {% endblock %}
+
+                {% block anivele_navigation_index_build_card %}
+                    <sw-card
+                        :title="$tc('anivele-navigation.build.title')"
+                        :isLoading="isLoading">
+
+                        <p class="anivele-navigation__hint">
+                            {{ $tc('anivele-navigation.build.hint') }}
+                        </p>
+
+                        <sw-checkbox-field
+                            v-model:value="buildMenu"
+                            :label="$tc('anivele-navigation.build.menu')" />
+
+                        <sw-checkbox-field
+                            v-model:value="buildFooter"
+                            :label="$tc('anivele-navigation.build.footer')" />
+
+                        <sw-checkbox-field
+                            v-model:value="buildImages"
+                            :label="$tc('anivele-navigation.build.images')"
+                            :helpText="$tc('anivele-navigation.build.imagesHelp')" />
+
+                        <sw-checkbox-field
+                            v-model:value="assignProducts"
+                            :label="$tc('anivele-navigation.build.assignProducts')"
+                            :helpText="$tc('anivele-navigation.build.assignProductsHelp')" />
+                    </sw-card>
+                {% endblock %}
+
+                {% block anivele_navigation_index_menu_card %}
+                    <sw-card
+                        :title="$tc('anivele-navigation.menu.title')"
+                        :isLoading="isLoading">
+
+                        <template #context-actions>
+                            <sw-context-menu-item
+                                :disabled="!acl.can('category.creator')"
+                                @click="onOpenAddModal(null)">
+                                {{ $tc('anivele-navigation.action.addItem') }}
+                            </sw-context-menu-item>
+                        </template>
+
+                        <sw-empty-state
+                            v-if="!isLoading && menu.length === 0"
+                            :title="$tc('anivele-navigation.menu.empty')"
+                            :absolute="false" />
+
+                        <ul v-else class="anivele-navigation__tree">
+                            <li v-for="item in menu" :key="item.id" class="anivele-navigation__node">
+                                <div class="anivele-navigation__row">
+                                    <span
+                                        class="anivele-navigation__name"
+                                        :class="{ 'is--hidden': !item.visible }">
+                                        {{ item.name }}
+                                    </span>
+
+                                    <sw-label v-if="item.hasImage" size="small" variant="info">
+                                        {{ $tc('anivele-navigation.label.hasImage') }}
+                                    </sw-label>
+
+                                    <sw-label v-if="!item.visible" size="small">
+                                        {{ $tc('anivele-navigation.label.hidden') }}
+                                    </sw-label>
+
+                                    <div class="anivele-navigation__actions">
+                                        <sw-button
+                                            size="x-small"
+                                            :disabled="!acl.can('category.editor')"
+                                            @click="onToggleVisibility(item)">
+                                            {{ item.visible
+                                                ? $tc('anivele-navigation.action.hide')
+                                                : $tc('anivele-navigation.action.show') }}
+                                        </sw-button>
+
+                                        <sw-button
+                                            size="x-small"
+                                            :disabled="!acl.can('category.creator')"
+                                            @click="onOpenAddModal(item.id)">
+                                            {{ $tc('anivele-navigation.action.addChild') }}
+                                        </sw-button>
+                                    </div>
+                                </div>
+
+                                <ul v-if="item.children.length" class="anivele-navigation__children">
+                                    <li v-for="child in item.children" :key="child.id">
+                                        <div class="anivele-navigation__row">
+                                            <span
+                                                class="anivele-navigation__name"
+                                                :class="{ 'is--hidden': !child.visible }">
+                                                {{ child.name }}
+                                            </span>
+
+                                            <sw-label v-if="!child.visible" size="small">
+                                                {{ $tc('anivele-navigation.label.hidden') }}
+                                            </sw-label>
+
+                                            <div class="anivele-navigation__actions">
+                                                <sw-button
+                                                    size="x-small"
+                                                    :disabled="!acl.can('category.editor')"
+                                                    @click="onToggleVisibility(child)">
+                                                    {{ child.visible
+                                                        ? $tc('anivele-navigation.action.hide')
+                                                        : $tc('anivele-navigation.action.show') }}
+                                                </sw-button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </sw-card>
+                {% endblock %}
+
+                {% block anivele_navigation_index_footer_card %}
+                    <sw-card
+                        :title="$tc('anivele-navigation.footer.title')"
+                        :isLoading="isLoading">
+
+                        <sw-empty-state
+                            v-if="!isLoading && footer.length === 0"
+                            :title="$tc('anivele-navigation.footer.empty')"
+                            :absolute="false" />
+
+                        <ul v-else class="anivele-navigation__tree">
+                            <li v-for="column in footer" :key="column.id" class="anivele-navigation__node">
+                                <div class="anivele-navigation__row">
+                                    <span
+                                        class="anivele-navigation__name"
+                                        :class="{ 'is--hidden': !column.visible }">
+                                        {{ column.name }}
+                                    </span>
+
+                                    <div class="anivele-navigation__actions">
+                                        <sw-button
+                                            size="x-small"
+                                            :disabled="!acl.can('category.editor')"
+                                            @click="onToggleVisibility(column)">
+                                            {{ column.visible
+                                                ? $tc('anivele-navigation.action.hide')
+                                                : $tc('anivele-navigation.action.show') }}
+                                        </sw-button>
+
+                                        <sw-button
+                                            size="x-small"
+                                            :disabled="!acl.can('category.creator')"
+                                            @click="onOpenAddModal(column.id)">
+                                            {{ $tc('anivele-navigation.action.addChild') }}
+                                        </sw-button>
+                                    </div>
+                                </div>
+
+                                <ul v-if="column.children.length" class="anivele-navigation__children">
+                                    <li v-for="link in column.children" :key="link.id">
+                                        <div class="anivele-navigation__row">
+                                            <span
+                                                class="anivele-navigation__name"
+                                                :class="{ 'is--hidden': !link.visible }">
+                                                {{ link.name }}
+                                            </span>
+
+                                            <div class="anivele-navigation__actions">
+                                                <sw-button
+                                                    size="x-small"
+                                                    :disabled="!acl.can('category.editor')"
+                                                    @click="onToggleVisibility(link)">
+                                                    {{ link.visible
+                                                        ? $tc('anivele-navigation.action.hide')
+                                                        : $tc('anivele-navigation.action.show') }}
+                                                </sw-button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </sw-card>
+                {% endblock %}
+
+                {% block anivele_navigation_index_add_modal %}
+                    <sw-modal
+                        v-if="showAddModal"
+                        :title="addModalTitle"
+                        variant="small"
+                        @modal-close="onCloseAddModal">
+
+                        <sw-text-field
+                            v-model:value="newItemName"
+                            :label="$tc('anivele-navigation.add.name')"
+                            :placeholder="$tc('anivele-navigation.add.placeholder')" />
+
+                        <template #modal-footer>
+                            <sw-button size="small" @click="onCloseAddModal">
+                                {{ $tc('global.default.cancel') }}
+                            </sw-button>
+
+                            <sw-button
+                                variant="primary"
+                                size="small"
+                                :disabled="!newItemName.trim()"
+                                @click="onAddItem">
+                                {{ $tc('anivele-navigation.action.add') }}
+                            </sw-button>
+                        </template>
+                    </sw-modal>
+                {% endblock %}
+
+            </sw-card-view>
+        </template>
+    {% endblock %}
+
+</sw-page>
+{% endblock %}

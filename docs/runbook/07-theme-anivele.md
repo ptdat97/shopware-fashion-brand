@@ -120,7 +120,57 @@ Lệnh **chạy lại được**: xoá trang cũ rồi dựng lại. Sửa nội
 
 ---
 
-## Megamenu và Footer
+## Module Administration: Menu & Footer
+
+Giao diện quản lý trong Admin: **Content → Menu & Footer**.
+
+| Làm được gì | Cách dùng |
+|---|---|
+| Dựng lại menu/footer | Nút **Dựng lại** ở thanh trên, có checkbox chọn dựng menu / footer / ảnh teaser |
+| **Ẩn một mục** khỏi storefront | Nút **Ẩn** cạnh từng mục — đặt `visible = false`, mục vẫn truy cập được bằng URL trực tiếp |
+| Thêm mục mới | Nút **Thêm mục con** ở từng danh mục |
+| Xem mục nào có ảnh teaser | Nhãn "Có ảnh" |
+
+Module cảnh báo khi `navigation_category_depth < 3` — megamenu sẽ không xổ.
+
+> **Ẩn (`visible`) khác tắt (`active`).** Ẩn chỉ gỡ khỏi menu, URL vẫn vào được — hợp khi tạm ngưng bán một dòng hàng. Tắt hẳn thì dùng Catalogues → Categories → Active.
+
+### Kiến trúc
+
+Cả CLI lẫn module Admin đều gọi chung `Service\NavigationBuilder`, nên hai đường không lệch hành vi.
+
+```
+src/
+├── Service/NavigationBuilder.php          # toàn bộ logic
+├── Controller/NavigationBuilderController.php  # 4 route Admin API
+├── Command/BuildNavigationCommand.php     # CLI
+└── Resources/app/administration/src/
+    ├── main.js
+    ├── service/anivele-navigation.api.service.js
+    ├── snippet/{vi-VN,en-GB}.json
+    └── module/anivele-navigation/
+```
+
+Route Admin API (đều có ACL `category:*`):
+
+| Method | Path |
+|---|---|
+| GET | `/api/_action/anivele/navigation` |
+| POST | `/api/_action/anivele/navigation/build` |
+| POST | `/api/_action/anivele/navigation/visibility` |
+| POST | `/api/_action/anivele/navigation/item` |
+
+> ⚠️ **Sửa code Administration xong phải build lại**, nếu không module không hiện trong Admin:
+>
+> ```bash
+> bash bin/build-administration.sh
+> ```
+>
+> Kiểm tra bundle đã đăng ký: `GET /api/_info/config` phải có `AniveleTheme` trong `bundles`.
+
+---
+
+## Megamenu và Footer (CLI)
 
 ```bash
 php bin/console anivele:theme:build-navigation              # cả hai

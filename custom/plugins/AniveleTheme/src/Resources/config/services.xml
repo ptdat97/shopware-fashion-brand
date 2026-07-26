@@ -4,6 +4,18 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="AniveleTheme\Service\NavigationBuilder">
+            <argument type="service" id="category.repository"/>
+            <argument type="service" id="sales_channel.repository"/>
+            <argument type="service" id="language.repository"/>
+            <argument type="service" id="product.repository"/>
+            <argument>019f9d8157c5724999d4b32d220a5b41</argument>
+        </service>
+
+        <service id="AniveleTheme\Controller\NavigationBuilderController" public="true">
+            <argument type="service" id="AniveleTheme\Service\NavigationBuilder"/>
+        </service>
+
         <service id="AniveleTheme\Command\BuildHomepageCommand">
             <argument type="service" id="cms_page.repository"/>
             <argument type="service" id="category.repository"/>

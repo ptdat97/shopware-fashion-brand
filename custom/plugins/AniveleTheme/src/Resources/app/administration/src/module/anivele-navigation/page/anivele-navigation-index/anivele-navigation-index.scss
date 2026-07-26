@@ -1,0 +1,56 @@
+.anivele-navigation {
+    &__alert {
+        margin-bottom: 20px;
+    }
+
+    &__hint {
+        margin-bottom: 16px;
+        color: #52667a;
+    }
+
+    &__tree {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    &__node {
+        border-bottom: 1px solid #e0e6eb;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+
+    &__row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 0;
+    }
+
+    &__name {
+        font-weight: 600;
+
+        &.is--hidden {
+            color: #8ab;
+            text-decoration: line-through;
+        }
+    }
+
+    &__actions {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+    }
+
+    &__children {
+        list-style: none;
+        margin: 0 0 8px 0;
+        padding-left: 24px;
+
+        .anivele-navigation__name {
+            font-weight: 400;
+        }
+    }
+}

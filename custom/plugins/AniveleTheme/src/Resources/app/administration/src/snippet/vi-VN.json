@@ -1,0 +1,57 @@
+{
+  "anivele-navigation": {
+    "general": {
+      "mainMenuItem": "Menu & Footer",
+      "description": "Dựng megamenu và footer cho storefront"
+    },
+    "action": {
+      "build": "Dựng lại",
+      "addItem": "Thêm mục",
+      "addChild": "Thêm mục con",
+      "add": "Thêm",
+      "hide": "Ẩn",
+      "show": "Hiện"
+    },
+    "build": {
+      "title": "Dựng menu và footer",
+      "hint": "Chỉ tạo mục còn thiếu, không xoá hay ghi đè mục đã có. Chạy lại nhiều lần được.",
+      "menu": "Dựng megamenu",
+      "footer": "Dựng footer",
+      "images": "Gán ảnh teaser cho megamenu",
+      "imagesHelp": "Lấy ảnh bìa của sản phẩm trong danh mục. Chỉ hợp dữ liệu demo — ảnh thật nên tải lên trong Catalogues.",
+      "assignProducts": "Gán sản phẩm vào danh mục con",
+      "assignProductsHelp": "Gán theo từ khoá trong tên sản phẩm, tránh danh mục rỗng. Hàng thật nên gán tay."
+    },
+    "menu": {
+      "title": "Megamenu",
+      "empty": "Chưa có mục menu nào"
+    },
+    "footer": {
+      "title": "Footer",
+      "empty": "Chưa có cột footer nào"
+    },
+    "label": {
+      "hasImage": "Có ảnh",
+      "hidden": "Đang ẩn"
+    },
+    "add": {
+      "title": "Thêm mục mới",
+      "name": "Tên mục",
+      "placeholder": "Ví dụ: Áo khoác dạ"
+    },
+    "warning": {
+      "depth": "Độ sâu menu đang là {depth}. Megamenu cần độ sâu tối thiểu 3 mới xổ được — bấm \"Dựng lại\" để tự đặt."
+    },
+    "notification": {
+      "buildSuccess": "Đã dựng xong: {menu} mục menu, {footer} mục footer.",
+      "buildError": "Không dựng được menu/footer.",
+      "loadError": "Không tải được cấu trúc menu.",
+      "unmatched": "{count} sản phẩm chưa khớp từ khoá nào nên danh mục con tương ứng sẽ rỗng: {names}",
+      "hidden": "Đã ẩn \"{name}\" khỏi storefront.",
+      "shown": "Đã hiện lại \"{name}\".",
+      "visibilityError": "Không đổi được trạng thái hiển thị.",
+      "itemAdded": "Đã thêm \"{name}\".",
+      "addError": "Không thêm được mục mới."
+    }
+  }
+}
