@@ -129,7 +129,11 @@ Giao diện quản lý trong Admin: **Content → Menu & Footer**.
 | Dựng lại menu/footer | Nút **Dựng lại** ở thanh trên, có checkbox chọn dựng menu / footer / ảnh teaser |
 | **Ẩn một mục** khỏi storefront | Nút **Ẩn** cạnh từng mục — đặt `visible = false`, mục vẫn truy cập được bằng URL trực tiếp |
 | Thêm mục mới | Nút **Thêm mục con** ở từng danh mục |
+| **Xoá mục** | Nút **Xoá** — chặn lại và hỏi xác nhận nếu mục còn danh mục con |
+| **Đổi ảnh teaser** | Nút **Ảnh** ở danh mục cấp 1 → chọn từ lưới 66 ảnh sản phẩm |
 | Xem mục nào có ảnh teaser | Nhãn "Có ảnh" |
+
+> ⚠️ **Xoá danh mục là cascade.** DAL xoá luôn toàn bộ danh mục con và liên kết sản phẩm. Backend chặn lần gọi đầu khi mục còn con, trả về danh sách con để module hỏi lại — chỉ xoá khi người dùng bấm "Xoá tất cả".
 
 Module cảnh báo khi `navigation_category_depth < 3` — megamenu sẽ không xổ.
 
@@ -159,6 +163,9 @@ Route Admin API (đều có ACL `category:*`):
 | POST | `/api/_action/anivele/navigation/build` |
 | POST | `/api/_action/anivele/navigation/visibility` |
 | POST | `/api/_action/anivele/navigation/item` |
+| POST | `/api/_action/anivele/navigation/item/delete` |
+| GET | `/api/_action/anivele/navigation/media` |
+| POST | `/api/_action/anivele/navigation/image` |
 
 > ⚠️ **Sửa code Administration xong phải build lại**, nếu không module không hiện trong Admin:
 >

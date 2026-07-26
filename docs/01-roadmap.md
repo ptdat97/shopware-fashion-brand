@@ -97,7 +97,7 @@ Vận chuyển: tương tự, cần tự tích hợp API GHN/GHTK hoặc giai đ
 | Thanh toán 1 trang | ✅ Core 6.7 vốn đã 1 trang, theme làm rõ thị giác |
 | Megamenu (14 danh mục cấp 3) | ✅ Tính năng core, cần depth ≥ 3 |
 | Ảnh teaser trong megamenu | ✅ 4 danh mục, dùng `category.media` của core |
-| Module Admin quản lý menu/footer | ✅ Content → Menu & Footer: dựng lại, ẩn mục, thêm mục |
+| Module Admin quản lý menu/footer | ✅ Content → Menu & Footer: dựng lại, ẩn/thêm/xoá mục, đổi ảnh teaser |
 | Footer 3 cột | ✅ Trỏ `footer_category_id` vào cây riêng |
 | Logo thương hiệu | ⬜ Cần file logo thật, hiện còn "Demostore" |
 | Gallery ảnh theo màu | ⬜ Cần gắn ảnh theo variant trước |

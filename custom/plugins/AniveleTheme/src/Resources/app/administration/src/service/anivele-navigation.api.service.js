@@ -41,6 +41,36 @@ class AniveleNavigationApiService extends ApiService {
             )
             .then((response) => ApiService.handleResponse(response));
     }
+
+    /**
+     * Gọi lần đầu không force: nếu mục còn con, backend trả needsConfirmation
+     * kèm danh sách con thay vì xoá.
+     */
+    deleteItem(categoryId, force = false) {
+        return this.httpClient
+            .post(
+                `${this.getApiBasePath()}/item/delete`,
+                { categoryId, force },
+                { headers: this.getBasicHeaders() },
+            )
+            .then((response) => ApiService.handleResponse(response));
+    }
+
+    listMedia() {
+        return this.httpClient
+            .get(`${this.getApiBasePath()}/media`, { headers: this.getBasicHeaders() })
+            .then((response) => ApiService.handleResponse(response));
+    }
+
+    setImage(categoryId, mediaId) {
+        return this.httpClient
+            .post(
+                `${this.getApiBasePath()}/image`,
+                { categoryId, mediaId },
+                { headers: this.getBasicHeaders() },
+            )
+            .then((response) => ApiService.handleResponse(response));
+    }
 }
 
 Application.addServiceProvider('aniveleNavigationApiService', (container) => {

@@ -112,6 +112,21 @@
                                             @click="onOpenAddModal(item.id)">
                                             {{ $tc('anivele-navigation.action.addChild') }}
                                         </sw-button>
+
+                                        <sw-button
+                                            size="x-small"
+                                            :disabled="!acl.can('category.editor')"
+                                            @click="onOpenImageModal(item)">
+                                            {{ $tc('anivele-navigation.action.image') }}
+                                        </sw-button>
+
+                                        <sw-button
+                                            size="x-small"
+                                            variant="danger"
+                                            :disabled="!acl.can('category.deleter')"
+                                            @click="onDelete(item)">
+                                            {{ $tc('anivele-navigation.action.delete') }}
+                                        </sw-button>
                                     </div>
                                 </div>
 
@@ -136,6 +151,14 @@
                                                     {{ child.visible
                                                         ? $tc('anivele-navigation.action.hide')
                                                         : $tc('anivele-navigation.action.show') }}
+                                                </sw-button>
+
+                                                <sw-button
+                                                    size="x-small"
+                                                    variant="danger"
+                                                    :disabled="!acl.can('category.deleter')"
+                                                    @click="onDelete(child)">
+                                                    {{ $tc('anivele-navigation.action.delete') }}
                                                 </sw-button>
                                             </div>
                                         </div>
@@ -181,6 +204,14 @@
                                             @click="onOpenAddModal(column.id)">
                                             {{ $tc('anivele-navigation.action.addChild') }}
                                         </sw-button>
+
+                                        <sw-button
+                                            size="x-small"
+                                            variant="danger"
+                                            :disabled="!acl.can('category.deleter')"
+                                            @click="onDelete(column)">
+                                            {{ $tc('anivele-navigation.action.delete') }}
+                                        </sw-button>
                                     </div>
                                 </div>
 
@@ -202,6 +233,14 @@
                                                         ? $tc('anivele-navigation.action.hide')
                                                         : $tc('anivele-navigation.action.show') }}
                                                 </sw-button>
+
+                                                <sw-button
+                                                    size="x-small"
+                                                    variant="danger"
+                                                    :disabled="!acl.can('category.deleter')"
+                                                    @click="onDelete(link)">
+                                                    {{ $tc('anivele-navigation.action.delete') }}
+                                                </sw-button>
                                             </div>
                                         </div>
                                     </li>
@@ -209,6 +248,76 @@
                             </li>
                         </ul>
                     </sw-card>
+                {% endblock %}
+
+                {% block anivele_navigation_index_delete_modal %}
+                    <sw-modal
+                        v-if="showDeleteModal"
+                        :title="$tc('anivele-navigation.delete.title')"
+                        variant="small"
+                        @modal-close="onCloseDeleteModal">
+
+                        <sw-alert variant="warning">
+                            {{ $tc('anivele-navigation.delete.warning', 0, {
+                                name: deleteTarget ? deleteTarget.name : '',
+                                count: deleteChildNames.length
+                            }) }}
+                        </sw-alert>
+
+                        <ul class="anivele-navigation__delete-list">
+                            <li v-for="name in deleteChildNames" :key="name">{{ name }}</li>
+                        </ul>
+
+                        <template #modal-footer>
+                            <sw-button size="small" @click="onCloseDeleteModal">
+                                {{ $tc('global.default.cancel') }}
+                            </sw-button>
+
+                            <sw-button variant="danger" size="small" @click="onConfirmDelete">
+                                {{ $tc('anivele-navigation.delete.confirm') }}
+                            </sw-button>
+                        </template>
+                    </sw-modal>
+                {% endblock %}
+
+                {% block anivele_navigation_index_image_modal %}
+                    <sw-modal
+                        v-if="showImageModal"
+                        :title="$tc('anivele-navigation.image.title', 0, {
+                            name: imageTarget ? imageTarget.name : ''
+                        })"
+                        @modal-close="onCloseImageModal">
+
+                        <sw-loader v-if="isLoadingMedia" />
+
+                        <template v-else>
+                            <p class="anivele-navigation__hint">
+                                {{ $tc('anivele-navigation.image.hint') }}
+                            </p>
+
+                            <div class="anivele-navigation__media-grid">
+                                <button
+                                    v-for="media in mediaList"
+                                    :key="media.id"
+                                    type="button"
+                                    class="anivele-navigation__media-item"
+                                    :title="media.fileName"
+                                    @click="onSelectImage(media.id)">
+                                    <img :src="media.url" :alt="media.fileName" loading="lazy" />
+                                </button>
+                            </div>
+                        </template>
+
+                        <template #modal-footer>
+                            <sw-button size="small" @click="onCloseImageModal">
+                                {{ $tc('global.default.cancel') }}
+                            </sw-button>
+
+                            <sw-button size="small" variant="danger" @click="onSelectImage(null)">
+                                {{ $tc('anivele-navigation.image.clear') }}
+                            </sw-button>
+                        </template>
+                    </sw-modal>
                 {% endblock %}
 
                 {% block anivele_navigation_index_add_modal %}

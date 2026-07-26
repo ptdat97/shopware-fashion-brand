@@ -9,6 +9,7 @@
             <argument type="service" id="sales_channel.repository"/>
             <argument type="service" id="language.repository"/>
             <argument type="service" id="product.repository"/>
+            <argument type="service" id="media.repository"/>
             <argument>019f9d8157c5724999d4b32d220a5b41</argument>
         </service>
 

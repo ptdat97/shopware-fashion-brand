@@ -60,6 +60,7 @@ class NavigationBuilder
         private readonly EntityRepository $salesChannelRepository,
         private readonly EntityRepository $languageRepository,
         private readonly EntityRepository $productRepository,
+        private readonly EntityRepository $mediaRepository,
         private readonly string $defaultSalesChannelId
     ) {
     }
@@ -357,6 +358,69 @@ class NavigationBuilder
             'id' => $categoryId,
             'mediaId' => $mediaId,
         ]], $context);
+    }
+
+    /**
+     * Xoá một mục menu/footer.
+     *
+     * DAL xoá category theo kiểu cascade: xoá danh mục cha là mất luôn toàn bộ
+     * danh mục con và liên kết sản phẩm. Nên mặc định chặn khi còn con, buộc
+     * người dùng xác nhận rõ ràng bằng $force.
+     *
+     * @return array{deleted: int, childNames: array<string>}
+     */
+    public function deleteItem(Context $context, string $categoryId, bool $force = false): array
+    {
+        $childNames = $this->collectDescendantNames($context, $categoryId);
+
+        if ($childNames !== [] && !$force) {
+            return ['deleted' => 0, 'childNames' => $childNames];
+        }
+
+        $this->categoryRepository->delete([['id' => $categoryId]], $context);
+
+        return ['deleted' => 1 + count($childNames), 'childNames' => $childNames];
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function collectDescendantNames(Context $context, string $parentId): array
+    {
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('parentId', $parentId));
+
+        $names = [];
+        foreach ($this->categoryRepository->search($criteria, $context) as $child) {
+            $names[] = (string) $child->getTranslation('name');
+            $names = array_merge($names, $this->collectDescendantNames($context, $child->getId()));
+        }
+
+        return $names;
+    }
+
+    /**
+     * Danh sách ảnh để chọn trong module Administration.
+     *
+     * @return array<int, array{id: string, fileName: string, url: string}>
+     */
+    public function listMedia(Context $context, int $limit = 100): array
+    {
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('mediaFolder.defaultFolder.entity', 'product'));
+        $criteria->addSorting(new FieldSorting('fileName'));
+        $criteria->setLimit($limit);
+
+        $items = [];
+        foreach ($this->mediaRepository->search($criteria, $context) as $media) {
+            $items[] = [
+                'id' => $media->getId(),
+                'fileName' => (string) $media->getFileName(),
+                'url' => (string) $media->getUrl(),
+            ];
+        }
+
+        return $items;
     }
 
     private function findCoverMediaIdInCategory(Context $context, string $categoryId): ?string

@@ -10,7 +10,9 @@
       "addChild": "Thêm mục con",
       "add": "Thêm",
       "hide": "Ẩn",
-      "show": "Hiện"
+      "show": "Hiện",
+      "image": "Ảnh",
+      "delete": "Xoá"
     },
     "build": {
       "title": "Dựng menu và footer",
@@ -51,7 +53,24 @@
       "shown": "Đã hiện lại \"{name}\".",
       "visibilityError": "Không đổi được trạng thái hiển thị.",
       "itemAdded": "Đã thêm \"{name}\".",
-      "addError": "Không thêm được mục mới."
+      "addError": "Không thêm được mục mới.",
+      "deleted": "Đã xoá \"{name}\".",
+      "deletedWithChildren": "Đã xoá \"{name}\" và các mục con ({count} mục).",
+      "deleteError": "Không xoá được mục.",
+      "mediaError": "Không tải được danh sách ảnh.",
+      "imageSet": "Đã đổi ảnh cho \"{name}\".",
+      "imageCleared": "Đã gỡ ảnh của \"{name}\".",
+      "imageError": "Không đổi được ảnh."
+    },
+    "delete": {
+      "title": "Xoá mục này?",
+      "confirm": "Xoá tất cả",
+      "warning": "\"{name}\" còn {count} mục con. Xoá mục này sẽ xoá luôn toàn bộ mục con bên dưới:"
+    },
+    "image": {
+      "title": "Chọn ảnh cho \"{name}\"",
+      "clear": "Gỡ ảnh",
+      "hint": "Bấm vào ảnh để đặt làm ảnh teaser hiện trong megamenu."
     }
   }
 }

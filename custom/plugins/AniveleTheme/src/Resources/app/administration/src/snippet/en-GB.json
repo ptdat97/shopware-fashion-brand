@@ -10,7 +10,9 @@
       "addChild": "Add child",
       "add": "Add",
       "hide": "Hide",
-      "show": "Show"
+      "show": "Show",
+      "image": "Image",
+      "delete": "Delete"
     },
     "build": {
       "title": "Build menu and footer",
@@ -51,7 +53,24 @@
       "shown": "\"{name}\" is visible again.",
       "visibilityError": "Could not change visibility.",
       "itemAdded": "Added \"{name}\".",
-      "addError": "Could not add the item."
+      "addError": "Could not add the item.",
+      "deleted": "Deleted \"{name}\".",
+      "deletedWithChildren": "Deleted \"{name}\" and its children ({count} items).",
+      "deleteError": "Could not delete the item.",
+      "mediaError": "Could not load images.",
+      "imageSet": "Image updated for \"{name}\".",
+      "imageCleared": "Removed the image from \"{name}\".",
+      "imageError": "Could not change the image."
+    },
+    "delete": {
+      "title": "Delete this item?",
+      "confirm": "Delete all",
+      "warning": "\"{name}\" has {count} child items. Deleting it removes every item below as well:"
+    },
+    "image": {
+      "title": "Choose an image for \"{name}\"",
+      "clear": "Remove image",
+      "hint": "Click an image to use it as the megamenu teaser."
     }
   }
 }

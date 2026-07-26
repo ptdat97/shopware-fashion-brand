@@ -24,6 +24,15 @@ Component.register('anivele-navigation-index', {
             newItemName: '',
             newItemParentId: null,
             showAddModal: false,
+
+            deleteTarget: null,
+            deleteChildNames: [],
+            showDeleteModal: false,
+
+            imageTarget: null,
+            mediaList: [],
+            isLoadingMedia: false,
+            showImageModal: false,
         };
     },
 
@@ -162,6 +171,128 @@ Component.register('anivele-navigation-index', {
                         message: error.message || this.$tc('anivele-navigation.notification.addError'),
                     });
                 });
+        },
+
+        /**
+         * Gọi xoá không force trước. Backend chặn và trả danh sách con nếu có,
+         * lúc đó mới mở modal xác nhận.
+         */
+        onDelete(item) {
+            return this.aniveleNavigationApiService
+                .deleteItem(item.id, false)
+                .then((result) => {
+                    if (result.needsConfirmation) {
+                        this.deleteTarget = item;
+                        this.deleteChildNames = result.childNames || [];
+                        this.showDeleteModal = true;
+
+                        return null;
+                    }
+
+                    this.createNotificationSuccess({
+                        message: this.$tc('anivele-navigation.notification.deleted', 0, { name: item.name }),
+                    });
+
+                    return this.loadNavigation();
+                })
+                .catch((error) => {
+                    this.createNotificationError({
+                        message: error.message || this.$tc('anivele-navigation.notification.deleteError'),
+                    });
+                });
+        },
+
+        onConfirmDelete() {
+            const target = this.deleteTarget;
+
+            if (!target) {
+                return Promise.resolve();
+            }
+
+            return this.aniveleNavigationApiService
+                .deleteItem(target.id, true)
+                .then((result) => {
+                    this.createNotificationSuccess({
+                        message: this.$tc('anivele-navigation.notification.deletedWithChildren', 0, {
+                            name: target.name,
+                            count: result.deleted,
+                        }),
+                    });
+                    this.onCloseDeleteModal();
+
+                    return this.loadNavigation();
+                })
+                .catch((error) => {
+                    this.createNotificationError({
+                        message: error.message || this.$tc('anivele-navigation.notification.deleteError'),
+                    });
+                });
+        },
+
+        onCloseDeleteModal() {
+            this.showDeleteModal = false;
+            this.deleteTarget = null;
+            this.deleteChildNames = [];
+        },
+
+        onOpenImageModal(item) {
+            this.imageTarget = item;
+            this.showImageModal = true;
+
+            if (this.mediaList.length > 0) {
+                return Promise.resolve();
+            }
+
+            this.isLoadingMedia = true;
+
+            return this.aniveleNavigationApiService
+                .listMedia()
+                .then((result) => {
+                    this.mediaList = result.media || [];
+                })
+                .catch((error) => {
+                    this.createNotificationError({
+                        message: error.message || this.$tc('anivele-navigation.notification.mediaError'),
+                    });
+                })
+                .finally(() => {
+                    this.isLoadingMedia = false;
+                });
+        },
+
+        onSelectImage(mediaId) {
+            const target = this.imageTarget;
+
+            if (!target) {
+                return Promise.resolve();
+            }
+
+            return this.aniveleNavigationApiService
+                .setImage(target.id, mediaId)
+                .then(() => {
+                    this.createNotificationSuccess({
+                        message: this.$tc(
+                            mediaId
+                                ? 'anivele-navigation.notification.imageSet'
+                                : 'anivele-navigation.notification.imageCleared',
+                            0,
+                            { name: target.name },
+                        ),
+                    });
+                    this.onCloseImageModal();
+
+                    return this.loadNavigation();
+                })
+                .catch((error) => {
+                    this.createNotificationError({
+                        message: error.message || this.$tc('anivele-navigation.notification.imageError'),
+                    });
+                });
+        },
+
+        onCloseImageModal() {
+            this.showImageModal = false;
+            this.imageTarget = null;
         },
     },
 });

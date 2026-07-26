@@ -6,7 +6,6 @@ use AniveleTheme\Service\NavigationBuilder;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Routing\RoutingException;
 use Shopware\Core\PlatformRequest;
-use Shopware\Core\Framework\Api\Context\AdminApiSource;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -119,5 +118,82 @@ class NavigationBuilderController
         );
 
         return new JsonResponse(['id' => $id]);
+    }
+
+    /**
+     * Xoá một mục menu/footer.
+     *
+     * Khi mục còn danh mục con, lần gọi đầu trả về danh sách con và không xoá —
+     * module hỏi lại người dùng rồi gọi lại với force=true.
+     */
+    #[Route(
+        path: '/api/_action/anivele/navigation/item/delete',
+        name: 'api.action.anivele.navigation.item.delete',
+        defaults: [PlatformRequest::ATTRIBUTE_ACL => ['category:delete']],
+        methods: [Request::METHOD_POST]
+    )]
+    public function deleteItem(Request $request, Context $context): JsonResponse
+    {
+        $payload = $request->toArray();
+        $categoryId = $payload['categoryId'] ?? null;
+
+        if (!\is_string($categoryId) || $categoryId === '') {
+            throw RoutingException::missingRequestParameter('categoryId');
+        }
+
+        $result = $this->navigationBuilder->deleteItem(
+            $context,
+            $categoryId,
+            (bool) ($payload['force'] ?? false)
+        );
+
+        return new JsonResponse([
+            'deleted' => $result['deleted'],
+            'needsConfirmation' => $result['deleted'] === 0 && $result['childNames'] !== [],
+            'childNames' => $result['childNames'],
+        ]);
+    }
+
+    /**
+     * Danh sách ảnh để chọn làm teaser megamenu.
+     */
+    #[Route(
+        path: '/api/_action/anivele/navigation/media',
+        name: 'api.action.anivele.navigation.media',
+        defaults: [PlatformRequest::ATTRIBUTE_ACL => ['media:read']],
+        methods: [Request::METHOD_GET]
+    )]
+    public function media(Context $context): JsonResponse
+    {
+        return new JsonResponse(['media' => $this->navigationBuilder->listMedia($context)]);
+    }
+
+    /**
+     * Gán hoặc gỡ ảnh teaser của một danh mục.
+     */
+    #[Route(
+        path: '/api/_action/anivele/navigation/image',
+        name: 'api.action.anivele.navigation.image',
+        defaults: [PlatformRequest::ATTRIBUTE_ACL => ['category:update']],
+        methods: [Request::METHOD_POST]
+    )]
+    public function image(Request $request, Context $context): JsonResponse
+    {
+        $payload = $request->toArray();
+        $categoryId = $payload['categoryId'] ?? null;
+
+        if (!\is_string($categoryId) || $categoryId === '') {
+            throw RoutingException::missingRequestParameter('categoryId');
+        }
+
+        $mediaId = $payload['mediaId'] ?? null;
+
+        $this->navigationBuilder->setImage(
+            $context,
+            $categoryId,
+            \is_string($mediaId) && $mediaId !== '' ? $mediaId : null
+        );
+
+        return new JsonResponse(['success' => true]);
     }
 }
