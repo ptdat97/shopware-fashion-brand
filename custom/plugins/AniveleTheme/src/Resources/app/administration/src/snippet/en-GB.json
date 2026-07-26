@@ -12,7 +12,8 @@
       "hide": "Hide",
       "show": "Show",
       "image": "Image",
-      "delete": "Delete"
+      "delete": "Delete",
+      "edit": "Edit"
     },
     "build": {
       "title": "Build menu and footer",
@@ -34,7 +35,8 @@
     },
     "label": {
       "hasImage": "Has image",
-      "hidden": "Hidden"
+      "hidden": "Hidden",
+      "hasLink": "Has link"
     },
     "add": {
       "title": "Add new item",
@@ -60,7 +62,9 @@
       "mediaError": "Could not load images.",
       "imageSet": "Image updated for \"{name}\".",
       "imageCleared": "Removed the image from \"{name}\".",
-      "imageError": "Could not change the image."
+      "imageError": "Could not change the image.",
+      "updated": "Updated \"{name}\".",
+      "updateError": "Could not update the item."
     },
     "delete": {
       "title": "Delete this item?",
@@ -71,6 +75,25 @@
       "title": "Choose an image for \"{name}\"",
       "clear": "Remove image",
       "hint": "Click an image to use it as the megamenu teaser."
+    },
+    "edit": {
+      "title": "Edit menu item",
+      "name": "Item name",
+      "badge": "Badge",
+      "badgePlaceholder": "New, Sale, Hot...",
+      "badgeHelp": "Shown next to the item name on the storefront. Leave empty to remove.",
+      "linkType": "Link type",
+      "linkNone": "None — use the category page",
+      "linkExternal": "External URL",
+      "linkCategory": "Another category",
+      "linkProduct": "Product",
+      "linkLandingPage": "Landing page",
+      "link": "Link",
+      "linkIdPlaceholder": "Paste the target ID",
+      "linkExternalHelp": "Enter the full URL including https://",
+      "linkInternalHelp": "Enter the category/product/landing page ID",
+      "linkNewTab": "Open in a new tab",
+      "save": "Save"
     }
   }
 }

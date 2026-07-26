@@ -1,0 +1,11 @@
+{% sw_extends '@Storefront/storefront/layout/navbar/navbar.html.twig' %}
+
+{# Badge cạnh mục menu cấp 1. Core không có field này nên lấy từ custom field. #}
+{% block layout_navbar_menu_item_link_content %}
+    {{ parent() }}
+
+    {% set aniveleBadge = category.translated.customFields.anivele_menu_badge %}
+    {% if aniveleBadge %}
+        <span class="anivele-menu-badge">{{ aniveleBadge }}</span>
+    {% endif %}
+{% endblock %}

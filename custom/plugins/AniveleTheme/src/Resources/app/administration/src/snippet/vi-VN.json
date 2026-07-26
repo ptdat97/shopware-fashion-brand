@@ -12,7 +12,8 @@
       "hide": "Ẩn",
       "show": "Hiện",
       "image": "Ảnh",
-      "delete": "Xoá"
+      "delete": "Xoá",
+      "edit": "Sửa"
     },
     "build": {
       "title": "Dựng menu và footer",
@@ -34,7 +35,8 @@
     },
     "label": {
       "hasImage": "Có ảnh",
-      "hidden": "Đang ẩn"
+      "hidden": "Đang ẩn",
+      "hasLink": "Có liên kết"
     },
     "add": {
       "title": "Thêm mục mới",
@@ -60,7 +62,9 @@
       "mediaError": "Không tải được danh sách ảnh.",
       "imageSet": "Đã đổi ảnh cho \"{name}\".",
       "imageCleared": "Đã gỡ ảnh của \"{name}\".",
-      "imageError": "Không đổi được ảnh."
+      "imageError": "Không đổi được ảnh.",
+      "updated": "Đã cập nhật \"{name}\".",
+      "updateError": "Không cập nhật được mục."
     },
     "delete": {
       "title": "Xoá mục này?",
@@ -71,6 +75,25 @@
       "title": "Chọn ảnh cho \"{name}\"",
       "clear": "Gỡ ảnh",
       "hint": "Bấm vào ảnh để đặt làm ảnh teaser hiện trong megamenu."
+    },
+    "edit": {
+      "title": "Sửa mục menu",
+      "name": "Tên mục",
+      "badge": "Nhãn (badge)",
+      "badgePlaceholder": "Mới, Sale, Hot...",
+      "badgeHelp": "Hiện cạnh tên mục trên storefront. Để trống để gỡ.",
+      "linkType": "Loại liên kết",
+      "linkNone": "Không — dùng trang danh mục",
+      "linkExternal": "URL ngoài",
+      "linkCategory": "Danh mục khác",
+      "linkProduct": "Sản phẩm",
+      "linkLandingPage": "Landing page",
+      "link": "Liên kết",
+      "linkIdPlaceholder": "Dán ID của mục đích",
+      "linkExternalHelp": "Nhập URL đầy đủ kèm https://",
+      "linkInternalHelp": "Nhập ID của danh mục/sản phẩm/landing page",
+      "linkNewTab": "Mở trong tab mới",
+      "save": "Lưu"
     }
   }
 }

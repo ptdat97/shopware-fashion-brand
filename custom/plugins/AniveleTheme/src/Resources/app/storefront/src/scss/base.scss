@@ -261,3 +261,26 @@ body {
         height: 2.75rem;
     }
 }
+
+// ==================================================
+// Badge cạnh mục menu
+// ==================================================
+// Core không có field badge — lấy từ custom field anivele_menu_badge.
+.anivele-menu-badge {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    background-color: $anivele-color-accent;
+    color: #fff;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+    line-height: 1.4;
+
+    &--flyout {
+        margin-left: 0.3rem;
+    }
+}

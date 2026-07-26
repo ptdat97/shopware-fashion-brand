@@ -1,0 +1,11 @@
+{% sw_extends '@Storefront/storefront/layout/navbar/categories.html.twig' %}
+
+{# Badge cho mục trong flyout megamenu. #}
+{% block layout_navbar_categories_item_link %}
+    {{ parent() }}
+
+    {% set aniveleBadge = category.translated.customFields.anivele_menu_badge %}
+    {% if aniveleBadge %}
+        <span class="anivele-menu-badge anivele-menu-badge--flyout">{{ aniveleBadge }}</span>
+    {% endif %}
+{% endblock %}

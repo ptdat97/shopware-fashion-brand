@@ -29,6 +29,10 @@ Component.register('anivele-navigation-index', {
             deleteChildNames: [],
             showDeleteModal: false,
 
+            editTarget: null,
+            editForm: { name: '', badge: '', linkType: '', link: '', linkNewTab: false },
+            showEditModal: false,
+
             imageTarget: null,
             mediaList: [],
             isLoadingMedia: false,
@@ -44,6 +48,16 @@ Component.register('anivele-navigation-index', {
 
         addModalTitle() {
             return this.$tc('anivele-navigation.add.title');
+        },
+
+        linkTypeOptions() {
+            return [
+                { value: '', label: this.$tc('anivele-navigation.edit.linkNone') },
+                { value: 'external', label: this.$tc('anivele-navigation.edit.linkExternal') },
+                { value: 'category', label: this.$tc('anivele-navigation.edit.linkCategory') },
+                { value: 'product', label: this.$tc('anivele-navigation.edit.linkProduct') },
+                { value: 'landing_page', label: this.$tc('anivele-navigation.edit.linkLandingPage') },
+            ];
         },
     },
 
@@ -293,6 +307,55 @@ Component.register('anivele-navigation-index', {
         onCloseImageModal() {
             this.showImageModal = false;
             this.imageTarget = null;
+        },
+
+        onOpenEditModal(item) {
+            this.editTarget = item;
+            this.editForm = {
+                name: item.name || '',
+                badge: item.badge || '',
+                linkType: item.linkType || '',
+                link: item.link || '',
+                linkNewTab: !!item.linkNewTab,
+            };
+            this.showEditModal = true;
+        },
+
+        onCloseEditModal() {
+            this.showEditModal = false;
+            this.editTarget = null;
+        },
+
+        onSaveEdit() {
+            const target = this.editTarget;
+
+            if (!target) {
+                return Promise.resolve();
+            }
+
+            return this.aniveleNavigationApiService
+                .updateItem(target.id, {
+                    name: this.editForm.name,
+                    badge: this.editForm.badge,
+                    linkType: this.editForm.linkType || null,
+                    link: this.editForm.link,
+                    linkNewTab: this.editForm.linkNewTab,
+                })
+                .then(() => {
+                    this.createNotificationSuccess({
+                        message: this.$tc('anivele-navigation.notification.updated', 0, {
+                            name: this.editForm.name || target.name,
+                        }),
+                    });
+                    this.onCloseEditModal();
+
+                    return this.loadNavigation();
+                })
+                .catch((error) => {
+                    this.createNotificationError({
+                        message: error.message || this.$tc('anivele-navigation.notification.updateError'),
+                    });
+                });
         },
     },
 });

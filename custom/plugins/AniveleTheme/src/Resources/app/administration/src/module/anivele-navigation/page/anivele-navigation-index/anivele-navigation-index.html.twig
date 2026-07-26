@@ -92,11 +92,26 @@
                                         {{ $tc('anivele-navigation.label.hasImage') }}
                                     </sw-label>
 
+                                    <sw-label v-if="item.badge" size="small" variant="warning">
+                                        {{ item.badge }}
+                                    </sw-label>
+
+                                    <sw-label v-if="item.linkType" size="small" variant="neutral">
+                                        {{ $tc('anivele-navigation.label.hasLink') }}
+                                    </sw-label>
+
                                     <sw-label v-if="!item.visible" size="small">
                                         {{ $tc('anivele-navigation.label.hidden') }}
                                     </sw-label>
 
                                     <div class="anivele-navigation__actions">
+                                        <sw-button
+                                            size="x-small"
+                                            :disabled="!acl.can('category.editor')"
+                                            @click="onOpenEditModal(item)">
+                                            {{ $tc('anivele-navigation.action.edit') }}
+                                        </sw-button>
+
                                         <sw-button
                                             size="x-small"
                                             :disabled="!acl.can('category.editor')"
@@ -139,11 +154,29 @@
                                                 {{ child.name }}
                                             </span>
 
+                                            <sw-label v-if="child.badge" size="small" variant="warning">
+                                                {{ child.badge }}
+                                            </sw-label>
+
                                             <sw-label v-if="!child.visible" size="small">
                                                 {{ $tc('anivele-navigation.label.hidden') }}
                                             </sw-label>
 
                                             <div class="anivele-navigation__actions">
+                                                <sw-button
+                                                    size="x-small"
+                                                    :disabled="!acl.can('category.editor')"
+                                                    @click="onOpenEditModal(child)">
+                                                    {{ $tc('anivele-navigation.action.edit') }}
+                                                </sw-button>
+
+                                                <sw-button
+                                                    size="x-small"
+                                                    :disabled="!acl.can('category.editor')"
+                                                    @click="onOpenImageModal(child)">
+                                                    {{ $tc('anivele-navigation.action.image') }}
+                                                </sw-button>
+
                                                 <sw-button
                                                     size="x-small"
                                                     :disabled="!acl.can('category.editor')"
@@ -188,7 +221,22 @@
                                         {{ column.name }}
                                     </span>
 
+                                    <sw-label v-if="column.badge" size="small" variant="warning">
+                                        {{ column.badge }}
+                                    </sw-label>
+
+                                    <sw-label v-if="column.linkType" size="small" variant="neutral">
+                                        {{ $tc('anivele-navigation.label.hasLink') }}
+                                    </sw-label>
+
                                     <div class="anivele-navigation__actions">
+                                        <sw-button
+                                            size="x-small"
+                                            :disabled="!acl.can('category.editor')"
+                                            @click="onOpenEditModal(column)">
+                                            {{ $tc('anivele-navigation.action.edit') }}
+                                        </sw-button>
+
                                         <sw-button
                                             size="x-small"
                                             :disabled="!acl.can('category.editor')"
@@ -228,6 +276,20 @@
                                                 <sw-button
                                                     size="x-small"
                                                     :disabled="!acl.can('category.editor')"
+                                                    @click="onOpenEditModal(link)">
+                                                    {{ $tc('anivele-navigation.action.edit') }}
+                                                </sw-button>
+
+                                                <sw-button
+                                                    size="x-small"
+                                                    :disabled="!acl.can('category.editor')"
+                                                    @click="onOpenImageModal(link)">
+                                                    {{ $tc('anivele-navigation.action.image') }}
+                                                </sw-button>
+
+                                                <sw-button
+                                                    size="x-small"
+                                                    :disabled="!acl.can('category.editor')"
                                                     @click="onToggleVisibility(link)">
                                                     {{ link.visible
                                                         ? $tc('anivele-navigation.action.hide')
@@ -248,6 +310,56 @@
                             </li>
                         </ul>
                     </sw-card>
+                {% endblock %}
+
+                {% block anivele_navigation_index_edit_modal %}
+                    <sw-modal
+                        v-if="showEditModal"
+                        :title="$tc('anivele-navigation.edit.title')"
+                        variant="small"
+                        @modal-close="onCloseEditModal">
+
+                        <sw-text-field
+                            v-model:value="editForm.name"
+                            :label="$tc('anivele-navigation.edit.name')" />
+
+                        <sw-text-field
+                            v-model:value="editForm.badge"
+                            :label="$tc('anivele-navigation.edit.badge')"
+                            :placeholder="$tc('anivele-navigation.edit.badgePlaceholder')"
+                            :helpText="$tc('anivele-navigation.edit.badgeHelp')" />
+
+                        <sw-single-select
+                            v-model:value="editForm.linkType"
+                            :options="linkTypeOptions"
+                            :label="$tc('anivele-navigation.edit.linkType')" />
+
+                        <sw-text-field
+                            v-if="editForm.linkType"
+                            v-model:value="editForm.link"
+                            :label="$tc('anivele-navigation.edit.link')"
+                            :placeholder="editForm.linkType === 'external'
+                                ? 'https://anivele.vn/trang'
+                                : $tc('anivele-navigation.edit.linkIdPlaceholder')"
+                            :helpText="editForm.linkType === 'external'
+                                ? $tc('anivele-navigation.edit.linkExternalHelp')
+                                : $tc('anivele-navigation.edit.linkInternalHelp')" />
+
+                        <sw-checkbox-field
+                            v-if="editForm.linkType"
+                            v-model:value="editForm.linkNewTab"
+                            :label="$tc('anivele-navigation.edit.linkNewTab')" />
+
+                        <template #modal-footer>
+                            <sw-button size="small" @click="onCloseEditModal">
+                                {{ $tc('global.default.cancel') }}
+                            </sw-button>
+
+                            <sw-button variant="primary" size="small" @click="onSaveEdit">
+                                {{ $tc('anivele-navigation.edit.save') }}
+                            </sw-button>
+                        </template>
+                    </sw-modal>
                 {% endblock %}
 
                 {% block anivele_navigation_index_delete_modal %}

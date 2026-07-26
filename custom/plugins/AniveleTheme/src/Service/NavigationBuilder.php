@@ -97,12 +97,23 @@ class NavigationBuilder
 
         $items = [];
         foreach ($this->categoryRepository->search($criteria, $context) as $category) {
+            $customFields = $category->getTranslation('customFields') ?? [];
+            $linkType = $category->getTranslation('linkType');
+
             $items[] = [
                 'id' => $category->getId(),
                 'name' => $category->getTranslation('name'),
                 'visible' => $category->getVisible(),
                 'active' => $category->getActive(),
                 'hasImage' => $category->getMediaId() !== null,
+                'imageUrl' => $category->getMedia()?->getUrl(),
+                'badge' => $customFields['anivele_menu_badge'] ?? null,
+                'type' => $category->getType(),
+                'linkType' => $linkType,
+                'link' => $linkType === 'external'
+                    ? $category->getTranslation('externalLink')
+                    : $category->getTranslation('internalLink'),
+                'linkNewTab' => (bool) $category->getTranslation('linkNewTab'),
                 'children' => $this->describeChildren($context, $category->getId()),
             ];
         }
@@ -350,6 +361,78 @@ class NavigationBuilder
         ]], $context);
 
         return $id;
+    }
+
+    /**
+     * Cập nhật một mục: tên, badge, và liên kết.
+     *
+     * `type = link` cùng `linkType/externalLink/internalLink` là cơ chế có sẵn
+     * của core để mục menu trỏ tới URL ngoài hoặc trang nội bộ.
+     *
+     * Badge không có trong core nên lưu ở custom field `anivele_menu_badge`.
+     *
+     * @param array<string, mixed> $data
+     */
+    public function updateItem(Context $context, string $categoryId, array $data): void
+    {
+        $languageIds = $this->resolveLanguageIds($context);
+        $payload = ['id' => $categoryId];
+        $translations = [];
+
+        foreach ($languageIds as $languageId) {
+            $translations[$languageId] = [];
+        }
+
+        if (isset($data['name']) && trim((string) $data['name']) !== '') {
+            foreach ($languageIds as $languageId) {
+                $translations[$languageId]['name'] = trim((string) $data['name']);
+            }
+        }
+
+        // Badge: chuỗi rỗng nghĩa là gỡ badge.
+        if (\array_key_exists('badge', $data)) {
+            $badge = trim((string) ($data['badge'] ?? ''));
+            foreach ($languageIds as $languageId) {
+                $translations[$languageId]['customFields'] = [
+                    'anivele_menu_badge' => $badge !== '' ? $badge : null,
+                ];
+            }
+        }
+
+        if (\array_key_exists('linkType', $data)) {
+            $linkType = $data['linkType'] ?? null;
+
+            if ($linkType === null || $linkType === '') {
+                // Gỡ liên kết → quay lại trang danh mục thường.
+                $payload['type'] = 'page';
+                foreach ($languageIds as $languageId) {
+                    $translations[$languageId]['linkType'] = null;
+                    $translations[$languageId]['externalLink'] = null;
+                    $translations[$languageId]['internalLink'] = null;
+                }
+            } else {
+                $payload['type'] = 'link';
+                foreach ($languageIds as $languageId) {
+                    $translations[$languageId]['linkType'] = $linkType;
+                    $translations[$languageId]['linkNewTab'] = (bool) ($data['linkNewTab'] ?? false);
+
+                    if ($linkType === 'external') {
+                        $translations[$languageId]['externalLink'] = (string) ($data['link'] ?? '');
+                        $translations[$languageId]['internalLink'] = null;
+                    } else {
+                        $translations[$languageId]['internalLink'] = (string) ($data['link'] ?? '');
+                        $translations[$languageId]['externalLink'] = null;
+                    }
+                }
+            }
+        }
+
+        $translations = array_filter($translations, static fn (array $values): bool => $values !== []);
+        if ($translations !== []) {
+            $payload['translations'] = $translations;
+        }
+
+        $this->categoryRepository->update([$payload], $context);
     }
 
     public function setImage(Context $context, string $categoryId, ?string $mediaId): void

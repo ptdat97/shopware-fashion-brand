@@ -56,6 +56,16 @@ class AniveleNavigationApiService extends ApiService {
             .then((response) => ApiService.handleResponse(response));
     }
 
+    updateItem(categoryId, data) {
+        return this.httpClient
+            .post(
+                `${this.getApiBasePath()}/item/update`,
+                { categoryId, ...data },
+                { headers: this.getBasicHeaders() },
+            )
+            .then((response) => ApiService.handleResponse(response));
+    }
+
     listMedia() {
         return this.httpClient
             .get(`${this.getApiBasePath()}/media`, { headers: this.getBasicHeaders() })

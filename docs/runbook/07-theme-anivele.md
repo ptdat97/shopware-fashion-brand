@@ -130,7 +130,8 @@ Giao diện quản lý trong Admin: **Content → Menu & Footer**.
 | **Ẩn một mục** khỏi storefront | Nút **Ẩn** cạnh từng mục — đặt `visible = false`, mục vẫn truy cập được bằng URL trực tiếp |
 | Thêm mục mới | Nút **Thêm mục con** ở từng danh mục |
 | **Xoá mục** | Nút **Xoá** — chặn lại và hỏi xác nhận nếu mục còn danh mục con |
-| **Đổi ảnh teaser** | Nút **Ảnh** ở danh mục cấp 1 → chọn từ lưới 66 ảnh sản phẩm |
+| **Đổi ảnh teaser** | Nút **Ảnh** → chọn từ lưới ảnh sản phẩm (có ở cả cấp 1 và cấp con) |
+| **Sửa tên, badge, URL** | Nút **Sửa** ở mọi cấp — mở modal chỉnh tên, nhãn badge, và liên kết |
 | Xem mục nào có ảnh teaser | Nhãn "Có ảnh" |
 
 > ⚠️ **Xoá danh mục là cascade.** DAL xoá luôn toàn bộ danh mục con và liên kết sản phẩm. Backend chặn lần gọi đầu khi mục còn con, trả về danh sách con để module hỏi lại — chỉ xoá khi người dùng bấm "Xoá tất cả".
@@ -166,6 +167,23 @@ Route Admin API (đều có ACL `category:*`):
 | POST | `/api/_action/anivele/navigation/item/delete` |
 | GET | `/api/_action/anivele/navigation/media` |
 | POST | `/api/_action/anivele/navigation/image` |
+| POST | `/api/_action/anivele/navigation/item/update` |
+
+### Badge và URL
+
+**Badge** (nhãn "Mới", "Sale"…) — core **không có** field này. Plugin tạo custom field `anivele_menu_badge` khi cài/update, và override 2 block Twig để render:
+
+```
+src/Resources/views/storefront/layout/navbar/
+├── navbar.html.twig      → block layout_navbar_menu_item_link_content
+└── categories.html.twig  → block layout_navbar_categories_item_link
+```
+
+Chỉ override đúng block cần, dùng `{{ parent() }}` để giữ nội dung gốc.
+
+**URL** — dùng cơ chế có sẵn của core: `type = link` cùng `linkType` (`external` / `category` / `product` / `landing_page`), `externalLink` hoặc `internalLink`, và `linkNewTab`. Chọn "Không" trong modal sẽ trả mục về `type = page` (trang danh mục thường).
+
+> ⚠️ Với liên kết nội bộ (`category`/`product`/`landing_page`) phải nhập **ID** của mục đích, không phải URL.
 
 > ⚠️ **Sửa code Administration xong phải build lại**, nếu không module không hiện trong Admin:
 >

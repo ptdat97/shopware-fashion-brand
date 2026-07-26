@@ -155,6 +155,30 @@ class NavigationBuilderController
     }
 
     /**
+     * Cập nhật tên, badge và liên kết của một mục.
+     */
+    #[Route(
+        path: '/api/_action/anivele/navigation/item/update',
+        name: 'api.action.anivele.navigation.item.update',
+        defaults: [PlatformRequest::ATTRIBUTE_ACL => ['category:update']],
+        methods: [Request::METHOD_POST]
+    )]
+    public function updateItem(Request $request, Context $context): JsonResponse
+    {
+        $payload = $request->toArray();
+        $categoryId = $payload['categoryId'] ?? null;
+
+        if (!\is_string($categoryId) || $categoryId === '') {
+            throw RoutingException::missingRequestParameter('categoryId');
+        }
+
+        unset($payload['categoryId']);
+        $this->navigationBuilder->updateItem($context, $categoryId, $payload);
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    /**
      * Danh sách ảnh để chọn làm teaser megamenu.
      */
     #[Route(
