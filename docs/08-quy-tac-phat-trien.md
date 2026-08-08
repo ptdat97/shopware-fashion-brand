@@ -29,6 +29,75 @@
 
 ---
 
+## Quy tắc số 2 — Không sửa `composer.json` gốc cho plugin tự viết
+
+**Plugin tự viết đặt trong `custom/plugins/` là đủ. Không thêm vào `composer.json` của dự án.**
+
+❌ **Sai:**
+
+```bash
+composer require "anivele/vietnam:*"     # thêm dòng vào require của dự án
+```
+
+```json
+"require": {
+    "anivele/vietnam": "*",              ← không cần dòng này
+    "shopware/core": "v6.7.12.2"
+}
+```
+
+✅ **Đúng:** tạo thư mục `custom/plugins/TenPlugin/` rồi:
+
+```bash
+php bin/console plugin:refresh
+php bin/console plugin:install --activate TenPlugin
+```
+
+### Vì sao
+
+Shopware **tự quét** `custom/plugins/` để tìm plugin — không đọc qua `composer.json` của dự án. Cơ chế nằm ở `PluginFinder::loadLocalPlugins()` (`vendor/shopware/core/Framework/Plugin/Util/PluginFinder.php`): nó duyệt thư mục và đọc `composer.json` **của từng plugin**, hoàn toàn độc lập với `require` cấp dự án.
+
+Đã kiểm chứng trên chính dự án này: gỡ `anivele/vietnam` khỏi `composer.json`, chạy `plugin:refresh` → plugin vẫn **Installed + Active**, storefront vẫn render `690.000 ₫` bình thường. Cột duy nhất đổi là *"Required by composer"* → `No`. Plugin `AniveleDemoData` chưa từng có trong `composer.json` mà vẫn chạy suốt từ đầu.
+
+Tác hại nếu cứ thêm vào:
+
+| Vấn đề | Hệ quả |
+|---|---|
+| **Khoá nút Xoá trong Admin** | `composer require` đặt `managed_by_composer = 1` → Administration **chặn xoá plugin**, bắt buộc phải `composer remove` trên dòng lệnh |
+| **Xung đột khi merge** | `composer.json` và `composer.lock` là file dùng chung; mỗi plugin thêm một dòng là mỗi lần merge phải xử lý tay |
+| **`composer.lock` phình vô ích** | Mỗi lần require ghi thêm ~39 dòng metadata cho thứ vốn đã nằm sẵn trong repo |
+| **Nhầm lẫn nguồn gốc** | Đọc `require` sẽ tưởng plugin tải từ Packagist, thực ra là symlink tới thư mục ngay trong repo |
+| **Gỡ plugin thành hai bước** | Phải nhớ `composer remove` ngoài việc `plugin:uninstall`, quên là lỗi khi cài lại |
+
+Kiểm tra cột này bất cứ lúc nào:
+
+```bash
+mysql -h 127.0.0.1 -u root shopware -e "SELECT name, managed_by_composer FROM plugin ORDER BY name;"
+```
+
+Plugin tự viết phải là `0`. Hiện trạng đúng của dự án:
+
+```
+AniveleDemoData      0     ← tự viết, xoá được từ Admin
+AniveleVietnam       0     ← tự viết, xoá được từ Admin
+SwagLanguagePack     1     ← bên thứ ba, đúng là phải qua composer
+SwagPayPal           1     ← bên thứ ba
+```
+
+> Chi tiết bối cảnh của bài học này: [runbook/05-demo-data.md](runbook/05-demo-data.md) — `AniveleDemoData` từng phải chuyển từ `custom/static-plugins/` sang `custom/plugins/` chính vì lý do bị khoá nút Xoá.
+
+### Khi nào **được** đụng `composer.json`
+
+| Trường hợp | Lý do |
+|---|---|
+| Cài plugin **bên thứ ba** từ Packagist / Shopware Store | Không có sẵn trong repo, buộc phải tải về |
+| Nâng version `shopware/core` và các gói core | Đây đúng là phụ thuộc của dự án |
+| Plugin tự viết cần **thư viện ngoài** | Khai báo trong `composer.json` **của plugin đó**, không phải của dự án |
+
+> Trường hợp cuối cần chú ý: thư viện khai báo trong plugin không tự động được cài. Xem [03-plugin-app.md](03-plugin-app.md) trước khi thêm phụ thuộc ngoài cho plugin.
+
+---
+
 ## Vì sao quy tắc này quan trọng
 
 ### 1. Mọi thay đổi trong `vendor/` sẽ bị xoá sạch
@@ -150,9 +219,14 @@ git status --short vendor/ 2>/dev/null
 
 # Xác nhận file mình sửa có được git track không
 git check-ignore -v <đường-dẫn-file>
+
+# composer.json chỉ được đổi khi cài plugin BÊN THỨ BA hoặc nâng version core
+git --no-pager diff composer.json composer.lock
 ```
 
 Nếu `git check-ignore` báo file bị ignore mà bạn vừa sửa nó để thay đổi hành vi hệ thống → **đang vi phạm quy tắc, phải làm lại qua plugin/theme.**
+
+Nếu `composer.json` có thêm dòng trỏ tới plugin nằm trong `custom/plugins/` → **vi phạm Quy tắc số 2**, gỡ bằng `composer remove <ten-goi>` rồi `plugin:refresh`.
 
 ---
 
@@ -176,13 +250,15 @@ Tuyệt đối không sửa tay trực tiếp rồi để đó.
 | ✅ Viết code trong | `custom/plugins/`, `custom/static-plugins/`, `custom/apps/` |
 | ✅ Mở rộng bằng | Theme kế thừa, event subscriber, decorator, custom entity |
 | ✅ Đọc core để | Hiểu cơ chế, tìm điểm mở rộng đúng |
+| ✅ Cài plugin tự viết bằng | `plugin:refresh` + `plugin:install --activate` |
 | ❌ Không sửa | `vendor/`, `public/bundles/`, `public/theme/` |
 | ❌ Không copy | Nguyên file template rồi sửa vài dòng |
+| ❌ Không `composer require` | Plugin tự viết trong `custom/plugins/` |
 
-**Câu hỏi tự kiểm tra trước mỗi thay đổi:**
-*"Sau khi chạy `composer update`, thay đổi này còn không?"*
+**Hai câu hỏi tự kiểm tra trước mỗi thay đổi:**
 
-Nếu câu trả lời là **không** → đang làm sai chỗ.
+1. *"Sau khi chạy `composer update`, thay đổi này còn không?"* — Nếu **không** → đang sửa nhầm chỗ, phải làm qua plugin/theme.
+2. *"Thay đổi này có buộc phải sửa file dùng chung (`composer.json`, `composer.lock`) không?"* — Nếu **có** mà chỉ để cài plugin tự viết → thừa, bỏ đi.
 
 ---
 

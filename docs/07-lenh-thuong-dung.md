@@ -90,6 +90,18 @@ php bin/console plugin:update:all
 
 **Quy trình chuẩn khi cài plugin mới:**
 
+Plugin **tự viết** — đặt thư mục vào `custom/plugins/` rồi:
+
+```bash
+php bin/console plugin:refresh
+php bin/console plugin:install --activate TenPlugin
+php bin/console cache:clear
+```
+
+> ⚠️ **Không chạy `composer require` cho plugin tự viết.** Shopware tự quét `custom/plugins/`, thêm vào `composer.json` chỉ gây xung đột merge và phình `composer.lock`. Xem [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) — Quy tắc số 2.
+
+Plugin **bên thứ ba** từ Packagist / Shopware Store — buộc phải tải về:
+
 ```bash
 composer require nha-cung-cap/ten-plugin
 php bin/console plugin:refresh
