@@ -27,9 +27,10 @@ Các mục đánh dấu 🔴 là **chặn go-live** — không được bỏ qua
 - [ ] 🔴 Gỡ plugin `AniveleDemoData` (xoá được trực tiếp từ Administration)
 - [ ] Xóa khách hàng demo
 - [ ] Catalog thật đã nhập đầy đủ, có ảnh
-- [ ] 🔴 **Mọi sản phẩm đã có variant** màu × size — xem [10-phase2-catalog.md](10-phase2-catalog.md)
-- [ ] 🔴 Bật `is_closeout` để chặn bán quá tồn kho
-- [ ] Tồn kho khớp thực tế **theo từng variant**
+- [x] ✅ **Mọi sản phẩm đã có variant** màu × size — xem [10-phase2-catalog.md](10-phase2-catalog.md)
+- [x] ✅ Bật `is_closeout` để chặn bán quá tồn kho
+- [ ] Tồn kho khớp thực tế **theo từng variant** (hiện là số chia đều của dữ liệu demo)
+- [ ] Dựng size chart bằng CMS block — khách VN rất hay cần
 
 > `SwagPlatformDemoData` đã gỡ từ Phase 0, không còn trong hệ thống.
 

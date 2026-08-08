@@ -47,7 +47,7 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 ## Tiến độ
 
-Phase 0 (nền tảng thị trường VN) ✅ xong — plugin `AniveleVietnam`.
-Tiếp theo: xem [docs/01-roadmap.md](docs/01-roadmap.md).
+- **Phase 0** (nền tảng thị trường VN) ✅ — plugin `AniveleVietnam`
+- **Phase 2** (biến thể Màu × Size) ✅ — plugin `AniveleCatalog`, 12 mẫu → 64 biến thể
 
-> ⚠️ **Chưa có variant** — 12 sản phẩm đều là sản phẩm đơn lẻ, khách không chọn được size. Đây là hạng mục chặn go-live: [docs/10-phase2-catalog.md](docs/10-phase2-catalog.md).
+Tiếp theo: **Phase 1 — thanh toán & vận chuyển**. Không có plugin Shopware sẵn cho VNPay/MoMo/GHN/GHTK; hướng khuyến nghị là go-live với COD + chuyển khoản rồi tự viết VietQR. Xem [docs/decisions/ADR-002-thanh-toan.md](docs/decisions/ADR-002-thanh-toan.md) và [docs/01-roadmap.md](docs/01-roadmap.md).

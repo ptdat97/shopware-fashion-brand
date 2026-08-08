@@ -78,11 +78,13 @@ mysql -h 127.0.0.1 -u root shopware -e "SELECT name, managed_by_composer FROM pl
 Plugin tự viết phải là `0`. Hiện trạng đúng của dự án:
 
 ```
+AniveleCatalog       0     ← tự viết, xoá được từ Admin
 AniveleDemoData      0     ← tự viết, xoá được từ Admin
 AniveleVietnam       0     ← tự viết, xoá được từ Admin
 SwagLanguagePack     1     ← bên thứ ba, đúng là phải qua composer
-SwagPayPal           1     ← bên thứ ba
 ```
+
+> 🔴 **Chiều ngược lại cũng nguy hiểm:** xoá thư mục plugin mà quên gỡ khỏi `composer.json`. Autoloader sẽ trỏ vào file không tồn tại và **làm hỏng toàn bộ `bin/console`** — mọi lệnh Shopware đều lỗi. Đã xảy ra thật với `SwagPayPal`, xem [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md). Gỡ plugin bên thứ ba phải dùng `composer remove`, không xoá thư mục bằng tay.
 
 > Chi tiết bối cảnh của bài học này: [runbook/05-demo-data.md](runbook/05-demo-data.md) — `AniveleDemoData` từng phải chuyển từ `custom/static-plugins/` sang `custom/plugins/` chính vì lý do bị khoá nút Xoá.
 

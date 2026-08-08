@@ -12,7 +12,7 @@
 | Cash on delivery (COD) | Active |
 | Paid in advance (chuyển khoản) | Active |
 | Invoice | Active |
-| PayPal (SwagPayPal 10.7.0) | Inactive |
+| PayPal (SwagPayPal) | **Đã gỡ hẳn 08/08/2026** |
 
 ### Phát hiện quan trọng
 
@@ -76,7 +76,11 @@ Lý do: doanh thu từ COD bắt đầu chảy ngay trong lúc phát triển c�
 
 ## Về PayPal
 
-Đã cài nhưng đang inactive. **Nên giữ nguyên trạng thái inactive** cho shop bán nội địa VN — PayPal ít phổ biến với người tiêu dùng Việt Nam và phí giao dịch cao. Chỉ bật nếu có kế hoạch bán ra nước ngoài.
+**Đã gỡ hẳn ngày 08/08/2026.** Trước đó plugin đã inactive — PayPal ít phổ biến với người tiêu dùng Việt Nam và phí giao dịch cao, nên với shop bán nội địa thì không cần.
+
+Lý do gỡ hẳn thay vì để inactive: thư mục plugin bị xoá khỏi git nhưng `composer.json` vẫn require, khiến autoloader trỏ vào file không tồn tại và **làm hỏng toàn bộ `bin/console`** — mọi lệnh Shopware đều lỗi. Plugin inactive mà thiếu file còn nguy hiểm hơn không cài.
+
+Nếu sau này bán ra nước ngoài thì cài lại từ đầu bằng `composer require swag/paypal`.
 
 ## Lưu ý bảo mật
 

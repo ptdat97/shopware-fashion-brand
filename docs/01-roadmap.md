@@ -56,26 +56,29 @@ Vận chuyển: tương tự, cần tự tích hợp API GHN/GHTK hoặc giai đ
 
 ---
 
-## Phase 2 — Catalog thời trang
+## Phase 2 — Catalog thời trang ✅ **HOÀN TẤT** (08/08/2026)
 
 **Mục tiêu:** cấu trúc dữ liệu sản phẩm đúng đặc thù ngành thời trang.
 
-> ⚠️ **Hệ thống hiện có 0 variant.** 12 sản phẩm đều là sản phẩm đơn lẻ; Size/Màu chỉ gắn dưới dạng nhãn mô tả nên khách **không chọn được size khi mua** và tồn kho tính chung cho cả mẫu. Đây là hạng mục chặn go-live.
-
-| Việc | Ghi chú |
+| Việc | Trạng thái |
 |---|---|
-| Chốt dải size theo loại hàng | **Chặn mọi việc sau** — cần người bán hàng quyết |
-| Chốt quy tắc mã SKU cho variant | Đi vào đơn hàng/hoá đơn, không nên đổi về sau |
-| Tách "Hoa nhiều màu" khỏi nhóm Màu sắc | Hoạ tiết không phải màu — làm hỏng bộ lọc |
-| Cấu hình variant matrix (màu × size) | Đặc thù fashion: 1 mẫu có thể 28+ biến thể |
-| Bật `is_closeout` chặn bán quá tồn kho | Hiện đang tắt |
-| Size chart | Dùng CMS block, không cần plugin |
+| Tách "Hoa nhiều màu" khỏi nhóm Màu sắc → nhóm Hoạ tiết | ✅ |
+| Bản dịch vi-VN cho thuộc tính (trước chỉ có en-US) | ✅ |
+| Cấu hình variant matrix (màu × size) — 64 biến thể | ✅ |
+| Quy tắc mã SKU cho variant (`ANV-1001-01`) | ✅ |
+| Bật `is_closeout` chặn bán quá tồn kho | ✅ |
+| Chốt dải size theo loại hàng | ⏳ **Cần người bán hàng quyết** — hiện dùng S/M/L/XL |
+| Size chart | ⏳ Dùng CMS block, không cần plugin |
 
-**Property group đã Việt hoá sẵn** ("Màu sắc", "Kích cỡ") — việc này coi như xong. **Không cần plugin nào** cho phase này: variant generator, swatch màu, import/export đều có sẵn trong core 6.7.
+**Kết quả kiểm chứng:** storefront hiện bộ chọn size/màu; đặt size S về 0 tồn kho thì `available = 0` riêng size đó, M/L/XL vẫn bán được; bộ lọc màu không còn trả về váy hoa.
 
-**Rủi ro lớn nhất của phase này:** nếu chốt sai cấu trúc variant, sửa về sau cực đắt. Phải làm kỹ ngay từ đầu.
+Thực hiện bằng plugin `AniveleCatalog` — migration chuẩn hoá thuộc tính + lệnh `anivele:catalog:variants`.
 
-Đánh giá đầy đủ, thứ tự thực hiện và câu hỏi cần chốt: [10-phase2-catalog.md](10-phase2-catalog.md)
+> **Còn lại cần chốt:** dải size cho quần/chân váy (số eo 26–30 hay chữ S–XL), có bán Free size không, và giá có khác theo size không. Đây là quyết định kinh doanh, không phải kỹ thuật.
+
+**Không cần plugin bên ngoài nào** cho phase này — variant generator, swatch màu, import/export đều có sẵn trong core 6.7. Đúng như đánh giá ban đầu.
+
+Đánh giá đầy đủ và bài học thu được: [10-phase2-catalog.md](10-phase2-catalog.md)
 
 ---
 

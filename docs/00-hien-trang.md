@@ -27,17 +27,18 @@ Tiếng Việt đã được cài và đang hoạt động:
 
 | Bảng | Số lượng | Đánh giá |
 |---|---|---|
-| product | 12 | Demo thời trang tự tạo, giá VND |
+| product | 76 | 12 sản phẩm cha + **64 biến thể**, giá VND |
 | category | 5 | Danh mục chính + Đầm/Áo/Chân váy/Bộ sưu tập |
 | customer | 0 | |
 | order | 0 | Chưa có đơn nào |
-| property_group | 2 | Màu sắc (7 giá trị), Kích cỡ (S/M/L/XL) |
+| property_group | 3 | Màu sắc (6 giá trị, swatch), Kích cỡ (S/M/L/XL), Hoạ tiết (1) |
+| product_configurator_setting | 64 | Trục sinh biến thể — trước Phase 2 là 0 |
 | media | 85 | 66 ảnh sản phẩm + ảnh hệ thống |
 | theme | 1 | Chỉ có Storefront mặc định |
 
 Catalog hiện tại do plugin tự viết `AniveleDemoData` sinh ra từ ảnh thật của brand — xem [runbook/05-demo-data.md](runbook/05-demo-data.md). Hệ thống **không dùng** `SwagPlatformDemoData`. **Vẫn cần thay bằng hàng thật trước go-live.**
 
-> ⚠️ **Chưa có variant.** Cả 12 sản phẩm là sản phẩm đơn lẻ (`parent_id` rỗng, `product_configurator_setting` = 0 dòng). Size/Màu chỉ gắn dưới dạng nhãn mô tả, nên khách **không chọn được size khi mua** và tồn kho tính chung cho cả mẫu — `ANV-1001` có `stock = 78` mà không biết còn bao nhiêu size M. Kế hoạch xử lý: [10-phase2-catalog.md](10-phase2-catalog.md).
+> ✅ **Đã có variant** (Phase 2). 12 sản phẩm cha sinh ra **64 biến thể** Màu × Size, mỗi biến thể có SKU riêng (`ANV-1001-01`), tồn kho riêng và `is_closeout = 1`. Khách chọn được size khi mua; hết size S không ảnh hưởng size M. Chi tiết: [10-phase2-catalog.md](10-phase2-catalog.md).
 
 ## Cấu hình thương mại — đây là phần cần sửa nhiều nhất
 
@@ -69,7 +70,7 @@ Không chịu thuế (0%)    0.000%
 | Invoice | active |
 | Cash on delivery | active |
 | Paid in advance | active |
-| PayPal (SwagPayPal 10.8.0) | đã cài nhưng **inactive** |
+| PayPal | **đã gỡ hẳn** (08/08/2026) — xem [03-plugin-app.md](03-plugin-app.md) |
 
 Không có cổng thanh toán nội địa VN nào. COD có sẵn là điểm cộng vì COD chiếm tỷ trọng lớn ở VN, nhưng thiếu VNPay/MoMo là thiếu hụt lớn.
 
@@ -100,10 +101,9 @@ Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên ti
 | Plugin | Version | Active | Ghi chú |
 |---|---|---|---|
 | AniveleVietnam | 1.0.0 | Yes | Plugin tự viết — nền tảng thị trường VN |
+| AniveleCatalog | 1.0.0 | Yes | Plugin tự viết — biến thể Màu × Size |
 | AniveleDemoData | 1.0.0 | Yes | Plugin tự viết — dữ liệu demo |
-| SwagLanguagePack | dev-master | Yes | |
-| SwagPayPal | 10.8.0 | **No** | |
-| SwagExtensionStore | 4.2.2 | **No** | |
+| SwagLanguagePack | dev-master | Yes | Plugin bên thứ ba duy nhất còn lại |
 
 `custom/apps/` rỗng — chưa có app nào.
 

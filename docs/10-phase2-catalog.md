@@ -1,32 +1,44 @@
-# Phase 2 — Catalog thời trang: đánh giá & kế hoạch
+# Phase 2 — Catalog thời trang: đánh giá & kết quả
 
-Đánh giá dựa trên truy vấn trực tiếp database ngày 26/07/2026, không dựa trên giả định của roadmap.
+> ✅ **Đã hoàn tất 08/08/2026.** Thực hiện bằng plugin `AniveleCatalog`.
 
 ---
 
-## 1. Phát hiện quan trọng nhất
+## 1. Vấn đề ban đầu — đã xử lý
 
-**Hệ thống hiện KHÔNG có variant nào. Toàn bộ 12 sản phẩm là sản phẩm đơn lẻ.**
+**Trước Phase 2 hệ thống KHÔNG có variant nào. Toàn bộ 12 sản phẩm là sản phẩm đơn lẻ.**
 
 ```
-product:                     12 tổng — 12 parent, 0 variant
-product_configurator_setting: 0 dòng
-product_option:               0 dòng
-product_property:            64 dòng   ← chỉ là nhãn mô tả
+                              TRƯỚC → SAU
+product:                      12    → 76  (12 cha + 64 biến thể)
+product_configurator_setting:  0    → 64
+product_option:                0    → 128
+product_property:             64    → 76  (nhãn mô tả, vẫn giữ)
 ```
 
-Nghĩa là Size và Màu hiện đang gắn vào sản phẩm dưới dạng **thuộc tính mô tả** (`product_property`), **không phải trục sinh biến thể** (`product_option` + `product_configurator_setting`).
+Size và Màu trước đây gắn dưới dạng **thuộc tính mô tả** (`product_property`), **không phải trục sinh biến thể** (`product_option` + `product_configurator_setting`).
 
 ### Hệ quả thực tế — đây là lỗi nghiệp vụ, không phải vấn đề thẩm mỹ
 
-| Vấn đề | Chi tiết |
+| Vấn đề | Trạng thái |
 |---|---|
-| **Tồn kho sai** | `ANV-1001` có `stock = 78` cho *cả mẫu*. Không biết còn bao nhiêu size M. Khách đặt XL khi chỉ còn S → vẫn bán được |
-| **Không chọn được size khi mua** | Storefront không hiện bộ chọn size/màu vì không có configurator |
-| **Giá theo size không làm được** | Size XL thường đắt hơn S — hiện không biểu diễn được |
-| **`is_closeout = 0`** | Không chặn bán quá tồn kho |
+| **Tồn kho sai** — `stock` tính chung cả mẫu, đặt XL khi chỉ còn S vẫn mua được | ✅ Mỗi biến thể có tồn kho riêng |
+| **Không chọn được size khi mua** | ✅ Storefront hiện bộ chọn size + swatch màu |
+| **Giá theo size không làm được** | ✅ Biểu diễn được qua `product_price` từng biến thể |
+| **`is_closeout = 0`** | ✅ Đã bật cho cả 76 dòng |
 
-> Đây là hạng mục **chặn go-live**, không phải việc tối ưu. Một shop thời trang không chọn được size thì không bán được hàng.
+### Kiểm chứng đã thực hiện
+
+Đặt `ANV-1001-01` (size S) về `stock = 0` rồi chạy `dal:refresh:index`:
+
+```
+ANV-1001-01   stock=0   available=0   ← chỉ size S bị chặn
+ANV-1001-02   stock=6   available=1
+ANV-1001-03   stock=6   available=1
+ANV-1001-04   stock=6   available=1
+```
+
+Đúng hành vi mong muốn: hết size S không ảnh hưởng M/L/XL.
 
 ---
 
@@ -134,20 +146,43 @@ Chốt sớm vì mã SKU đi vào đơn hàng, hoá đơn, và không nên đổ
 
 Sắp theo phụ thuộc — làm sai thứ tự phải làm lại.
 
-| # | Việc | Ghi chú |
+| # | Việc | Trạng thái |
 |---|---|---|
-| 1 | Chốt dải size theo loại hàng (5.2) | **Chặn mọi việc sau** — cần người bán hàng quyết |
-| 2 | Chốt quy tắc SKU (5.3) | |
-| 3 | Tách "Hoa nhiều màu" khỏi nhóm Màu sắc → nhóm Hoạ tiết | Làm trước khi sinh variant |
-| 4 | Bổ sung giá trị size còn thiếu (quần, free size) | |
-| 5 | **Backup** | Bắt buộc — xem [runbook/00-backup.md](runbook/00-backup.md) |
-| 6 | Sinh variant cho 1 sản phẩm thử | Kiểm chứng trước khi làm hàng loạt |
-| 7 | Kiểm tra storefront: chọn được size/màu, tồn kho đúng | |
-| 8 | Bật `is_closeout` để chặn bán quá tồn kho | |
-| 9 | Nhân ra toàn bộ catalog | |
-| 10 | Dựng size chart bằng CMS block | |
+| 1 | Chốt dải size theo loại hàng (5.2) | ⏳ Dùng tạm S/M/L/XL — **vẫn cần người bán chốt** |
+| 2 | Chốt quy tắc SKU (5.3) | ✅ `ANV-1001-01` (mã mẫu + số thứ tự) |
+| 3 | Tách "Hoa nhiều màu" → nhóm Hoạ tiết | ✅ Migration |
+| 4 | Bổ sung giá trị size còn thiếu (quần, free size) | ⏳ Chờ bước 1 |
+| 5 | **Backup** | ✅ `fb-before-phase2-*.sql` |
+| 6 | Sinh variant cho 1 sản phẩm thử | ✅ ANV-1001 → 4 biến thể |
+| 7 | Kiểm tra storefront + tồn kho | ✅ Xem mục 1 |
+| 8 | Bật `is_closeout` | ✅ 76/76 dòng |
+| 9 | Nhân ra toàn bộ catalog | ✅ 64 biến thể / 12 mẫu |
+| 10 | Dựng size chart bằng CMS block | ⏳ Chưa làm |
 
 Bước 6–7 là **cổng kiểm chứng**: nếu variant đầu tiên không chạy đúng, dừng lại xem xét thay vì nhân rộng lỗi.
+
+### Cổng kiểm chứng đã bắt được lỗi thật
+
+Chạy `--dry-run` cho ANV-1001 báo **0 màu × 4 size = 0 biến thể**. Nguyên nhân: sản phẩm này ("Đầm maxi hoa nhí") chỉ có đúng một giá trị màu là "Hoa nhiều màu" — vừa bị bước 3 chuyển sang nhóm Hoạ tiết, nên còn 0 màu và không sinh được biến thể.
+
+Nếu bỏ qua dry-run mà chạy thẳng toàn catalog, sản phẩm này sẽ **âm thầm bị bỏ sót** — vẫn là sản phẩm đơn lẻ giữa một catalog đã có variant, rất khó phát hiện về sau.
+
+Cách xử lý: migration gán màu nền ("Kem") cho mọi sản phẩm không còn màu nào sau khi tách hoạ tiết. Đây cũng là cách shop thời trang thật phân loại — hàng hoạ tiết vẫn có màu nền, khách lọc theo màu nền và lọc riêng theo hoạ tiết.
+
+### Bài học kỹ thuật
+
+Hai lỗi gặp khi viết lệnh sinh biến thể, đều do **đoán API thay vì đọc core** — đúng thứ [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 3 cảnh báo:
+
+| Lỗi | Nguyên nhân | Đúng phải là |
+|---|---|---|
+| `Cannot use object of type VariantListingConfig as array` | Truyền struct vào DAL | Ghi bằng **mảng** — `VariantListingConfigFieldSerializer::encode()` nhận array, chỉ `decode()` mới trả struct |
+| `Expected command to be UpdateCommand (Got: InsertCommand)` | Dùng `update()` | Dùng **`upsert()`** — payload vừa sửa cha vừa tạo mới con |
+
+Lỗi thứ ba về **tính idempotent**, phát hiện khi đối chiếu số liệu docs với database: migration tạo nhóm Hoạ tiết rồi dò trùng bằng tên tiếng Việt `'Hoạ tiết'`, nhưng lần chạy đầu nhóm được tạo với tên `'Pattern'` (bản dịch vi-VN thêm sau). Chạy lại migration → **sinh ra nhóm trùng rỗng**.
+
+Cách sửa: dò theo **mọi tên ngôn ngữ** của nhóm (`IN ('Hoạ tiết', 'Pattern', 'Muster')`), không chỉ một. Đã kiểm chứng chạy migration hai lần vẫn ra đúng 3 nhóm.
+
+> **Bài học chung:** migration idempotent phải dò trùng bằng thứ **không đổi giữa các lần chạy**. Dò bằng tên đã dịch là bẫy — bản dịch có thể được thêm/sửa ở lần chạy sau.
 
 ---
 
