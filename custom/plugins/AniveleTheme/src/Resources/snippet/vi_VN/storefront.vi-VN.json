@@ -1,0 +1,12 @@
+{
+    "anivele": {
+        "sizeChart": {
+            "open": "Bảng size",
+            "title": "Bảng size",
+            "howToTitle": "Cách đo",
+            "howToBust": "Vòng ngực: đo quanh phần đầy nhất của ngực, giữ thước song song mặt đất.",
+            "howToWaist": "Vòng eo: đo quanh phần nhỏ nhất của eo, thường trên rốn khoảng 2cm.",
+            "howToHip": "Vòng mông: đo quanh phần đầy nhất của mông."
+        }
+    }
+}

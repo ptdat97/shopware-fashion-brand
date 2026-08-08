@@ -76,9 +76,26 @@ Không chỉ ghi "M" mà phải kèm số đo thực tế:
 
 > Các con số cụ thể phải do brand tự đo trên sản phẩm thật. Tài liệu này không đưa số mẫu vì mỗi form dáng mỗi khác — đưa số sai còn tệ hơn không đưa.
 
-**3. Hiển thị bảng size ngay tại trang sản phẩm**
+**3. Hiển thị bảng size ngay tại trang sản phẩm** ✅ **đã làm**
 
-Dạng popup, không bắt khách rời trang. Nên có thêm hướng dẫn cách tự đo.
+Popup ngay dưới bộ chọn size, kèm hướng dẫn cách đo. Không bắt khách rời trang.
+
+### Sửa số đo ở đâu
+
+Bảng size gắn theo **danh mục**, không phải từng sản phẩm — đầm và chân váy không cùng thang số đo, nhưng mọi mẫu đầm dùng chung một bảng. Nhập một lần cho cả danh mục thay vì lặp lại cho hàng trăm SKU.
+
+```
+Administration → Danh mục → chọn danh mục (Đầm / Áo / Chân váy)
+  → tab "Tuỳ chỉnh" → Bảng size
+     ├── Bảng số đo   (trình soạn thảo HTML)
+     └── Ghi chú dưới bảng
+```
+
+Sản phẩm tự lấy bảng của danh mục chứa nó. Danh mục chưa nhập bảng thì nút "Bảng size" **không hiện** — không có popup rỗng.
+
+> 🔴 **Số đo hiện tại là SỐ THAM KHẢO** theo thang phổ biến của thị trường VN, không phải số đo thật của Anivele. Phải đo trên sản phẩm thật rồi thay lại trước go-live.
+
+Kỹ thuật: custom field `anivele_size_chart_table` / `anivele_size_chart_note` trên entity `category`, xem `custom/plugins/AniveleTheme/src/Migration/Migration1786195057SizeChartCustomField.php`.
 
 ---
 

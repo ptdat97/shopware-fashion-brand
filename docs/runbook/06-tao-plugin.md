@@ -152,8 +152,25 @@ php bin/console database:migrate --all TenPlugin
 | **Timestamp thật**, không làm tròn, không placeholder | Quy ước của Shopware; quyết định thứ tự chạy |
 | **Idempotent** — chạy lại không sinh dữ liệu trùng | Dùng `INSERT ... ON DUPLICATE KEY UPDATE` hoặc kiểm tra tồn tại trước |
 | **Không hardcode ID sinh ngẫu nhiên** | ID của bản cài mới khác máy khác. Dò theo giá trị nghiệp vụ (`iso`, `tax_rate`, `locale.code`) |
+| **Bảng `*_translation` phải lọc CẢ `language_id`** | Xem cảnh báo bên dưới |
 | Hằng số core thì **được** hardcode | `Defaults::CURRENCY` là hằng số thật trong core, dùng `Uuid::fromHexToBytes(Defaults::CURRENCY)` |
 | **Không** test `updateDestructive()` rỗng | Xem [../09-nguyen-tac-ky-thuat.md](../09-nguyen-tac-ky-thuat.md) |
+
+> 🔴 **Bẫy bảng `*_translation`:** các bảng dịch (`category_translation`,
+> `product_translation`...) có **một dòng cho MỖI ngôn ngữ đã cài**. Dự án này
+> có 31 ngôn ngữ từ SwagLanguagePack, nên `UPDATE ... WHERE category_id = :id`
+> ghi vào cả 31 dòng thay vì đúng dòng cần sửa.
+>
+> ```sql
+> -- Sai: ghi vào mọi ngôn ngữ
+> UPDATE category_translation SET custom_fields = :v WHERE category_id = :id;
+>
+> -- Đúng
+> UPDATE category_translation SET custom_fields = :v
+> WHERE category_id = :id AND language_id = :lang;
+> ```
+>
+> Kiểm tra sau khi chạy migration: đếm số dòng bị ảnh hưởng có khớp kỳ vọng không.
 
 > ⚠️ **Cân nhắc kỹ việc hoàn tác khi gỡ plugin.** `AniveleVietnam` **cố ý không** hoàn tác VND/thuế — đưa currency về USD trong khi shop đã có đơn giá VND sẽ làm sai toàn bộ số tiền. Ghi rõ quyết định này vào docblock của class plugin.
 

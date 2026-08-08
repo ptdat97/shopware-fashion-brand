@@ -63,6 +63,7 @@ Phần lớn đã xong ở Phase 0 qua plugin `AniveleVietnam` — chạy `plugi
 - [x] ✅ Theme `AniveleTheme` đã compile và gán cho sales channel
 - [x] ✅ Việt hoá nhãn còn sót ("Home" → "Trang chủ", "Pattern" → "Hoạ tiết")
 - [ ] 🔴 **Tải logo thật của brand** — Administration → Themes → Giao diện Anivele → Media. Hiện đang dùng chữ ANIVELE tạm
+- [ ] 🔴 **Thay số đo bảng size bằng số đo THẬT** — Administration → Danh mục → tab Tuỳ chỉnh → Bảng size. Số hiện tại chỉ là tham khảo theo thang thị trường VN; số đo sai là nguyên nhân đổi trả hàng đầu
 - [ ] 🔴 **Favicon** — vẫn là favicon mặc định của Shopware
 - [ ] Kiểm tra trên thiết bị thật: điện thoại, tablet, máy tính
 - [ ] Kiểm tra trên nhiều trình duyệt (Safari iOS rất phổ biến ở VN)

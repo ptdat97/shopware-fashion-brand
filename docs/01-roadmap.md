@@ -119,11 +119,13 @@ Thực hiện bằng plugin `AniveleCatalog` — migration chuẩn hoá thuộc 
 | Sticky header + sticky buybox | ✅ Nút mua luôn trong tầm mắt |
 | Danh sách yêu thích (Wishlist) | ✅ Bật tính năng có sẵn của core |
 | Ô số lượng ngay ở trang danh mục | ✅ |
-| Bảng size chart | ⏳ Cần số đo thật của brand |
+| Bảng size chart | ✅ Popup theo danh mục, sửa số đo trong Admin |
 | Ảnh WebP/AVIF | ⏳ Chưa làm |
 | Lookbook, đánh giá kèm ảnh | ⏳ Giai đoạn sau |
 
 > ⚠️ **Cần file logo thật.** Hiện dùng chữ ANIVELE. Tải logo tại Administration → Themes → Giao diện Anivele → Media, template tự chuyển sang dùng ảnh.
+>
+> ⚠️ **Số đo trong bảng size là SỐ THAM KHẢO** theo thang phổ biến của thị trường VN, không phải số đo thật của Anivele. Phải đo trên sản phẩm thật rồi thay lại tại Administration → Danh mục → tab Tuỳ chỉnh → Bảng size, **trước khi go-live**. Số đo sai là nguyên nhân đổi trả hàng đầu với thời trang online.
 
 **Bộ chọn biến thể:** kiểm tra thực tế cho thấy core 6.7 **đã render sẵn** swatch màu (`displayType = color`) và nút size — không phải dropdown như [02-theme.md](02-theme.md) lo ngại. Theme chỉ tinh chỉnh thị giác.
 

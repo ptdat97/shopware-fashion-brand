@@ -294,3 +294,71 @@ h1, h2, h3 {
         padding-right: 0.25rem;
     }
 }
+
+// --- Bảng size ------------------------------------------------------------
+// Số đo sai là nguyên nhân đổi trả hàng đầu với thời trang online, nên nút
+// mở bảng đặt ngay dưới bộ chọn size chứ không giấu trong tab mô tả.
+.anivele-size-chart-trigger {
+    margin-top: 0.75rem;
+
+    .btn-link {
+        color: $anivele-ink;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        font-size: 0.9375rem;
+    }
+}
+
+.anivele-size-chart-modal {
+    .anivele-size-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9375rem;
+
+        th,
+        td {
+            padding: 0.625rem 0.75rem;
+            border-bottom: 1px solid $anivele-beige;
+            text-align: left;
+        }
+
+        thead th {
+            background-color: $anivele-cream;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        tbody th {
+            font-weight: 600;
+        }
+    }
+
+    .anivele-size-chart-note {
+        margin-top: 1rem;
+        margin-bottom: 0;
+        font-size: 0.875rem;
+        color: $anivele-muted;
+    }
+
+    .anivele-size-chart-howto {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid $anivele-beige;
+
+        h6 {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        ul {
+            margin-bottom: 0;
+            padding-left: 1.25rem;
+            font-size: 0.875rem;
+            color: $anivele-muted;
+        }
+
+        li + li {
+            margin-top: 0.375rem;
+        }
+    }
+}
