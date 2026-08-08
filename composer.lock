@@ -4,8 +4,45 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "edc2b13a6fe1168c8373474de38bd890",
+    "content-hash": "b6646da4ae9d50da0304408a9d176e9e",
     "packages": [
+        {
+            "name": "anivele/vietnam",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "custom/plugins/AniveleVietnam",
+                "reference": "23dd3f0fbda658db688b18bda1ad4cdba87b1e5f"
+            },
+            "require": {
+                "shopware/core": "~6.7"
+            },
+            "type": "shopware-platform-plugin",
+            "extra": {
+                "shopware-plugin-class": "Anivele\\Vietnam\\AniveleVietnam",
+                "label": {
+                    "en-GB": "Anivele Vietnam Market",
+                    "de-DE": "Anivele Vietnam Market"
+                },
+                "description": {
+                    "en-GB": "Vietnamese market baseline: VND currency, VAT rates, country and provinces, address rules.",
+                    "de-DE": "Vietnamese market baseline: VND currency, VAT rates, country and provinces, address rules."
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Anivele\\Vietnam\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Cấu hình nền tảng thị trường Việt Nam: VND, VAT, quốc gia, tỉnh/thành, địa chỉ",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
         {
             "name": "async-aws/core",
             "version": "1.29.2",
