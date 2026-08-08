@@ -58,10 +58,59 @@ h1, h2, h3 {
     }
 }
 
-// Ảnh sản phẩm: tỷ lệ dọc hợp với ảnh người mẫu mặc đồ.
-// Ảnh thời trang chụp dọc, khung vuông của Bootstrap cắt mất phần chân váy.
+// --- Ảnh sản phẩm: tỷ lệ 2:3 dọc ------------------------------------------
+// Core đặt `height: 200px` cố định và `object-fit: scale-down`, nên ảnh
+// người mẫu chụp dọc bị thu nhỏ giữa hai dải trống trên/dưới.
+//
+// 2:3 là tỷ lệ lookbook kinh điển của ngành thời trang — hiện được trọn
+// outfit từ đầu tới giày.
 .product-image-wrapper {
     background-color: $anivele-cream;
+
+    // Ghi đè chiều cao cố định của core bằng tỷ lệ khung hình.
+    height: auto;
+    aspect-ratio: 2 / 3;
+    flex-basis: auto;
+    overflow: hidden;
+}
+
+.product-image-link {
+    height: 100%;
+}
+
+// Ảnh lấp đầy khung theo tỷ lệ, cắt bớt hai bên thay vì để trống trên dưới.
+// `is-standard` là chế độ mặc định của core (object-fit: scale-down).
+.product-image,
+.product-image.is-standard,
+.product-image.is-contain {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: cover;
+    object-position: center top;
+}
+
+// Ảnh thứ hai: chồng lên ảnh chính, hiện khi rê chuột.
+// Chỉ bật trên thiết bị có con trỏ thật — trên điện thoại không có hover,
+// và tải thêm ảnh chỉ tốn băng thông (mạng di động VN không đồng đều).
+.anivele-product-image-hover {
+    display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .product-image-wrapper {
+        .anivele-product-image-hover {
+            display: block;
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        &:hover .anivele-product-image-hover {
+            opacity: 1;
+        }
+    }
 }
 
 .product-name {
@@ -146,11 +195,43 @@ h1, h2, h3 {
     }
 }
 
+// --- Header dính khi cuộn -------------------------------------------------
+// Điều hướng luôn trong tầm tay — chuẩn mực của shop thời trang hiện đại.
+// Core 6.7 không có sẵn tính năng này.
+.header-main {
+    position: sticky;
+    top: 0;
+    z-index: 1020; // dưới offcanvas/modal của Bootstrap (1045+)
+    background-color: var(--bs-body-bg);
+    transition: box-shadow 0.2s ease;
+}
+
+// Đổ bóng nhẹ khi đã cuộn để tách header khỏi nội dung.
+// `animation-timeline: scroll()` chưa hỗ trợ rộng nên dùng cách đơn giản:
+// bóng luôn hiện, rất nhẹ.
+.header-main {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+
 // --- Trang chi tiết sản phẩm ----------------------------------------------
 .product-detail-buy .btn-buy {
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-size: 0.9375rem;
+}
+
+// Khối mua hàng dính khi cuộn xem ảnh.
+// Trang sản phẩm thời trang rất dài (nhiều ảnh + mô tả), khách cuộn tới cuối
+// sẽ mất nút "Thêm vào giỏ" khỏi tầm mắt.
+//
+// Chỉ bật từ lg trở lên: trên điện thoại cột dọc nên sticky vô nghĩa và
+// còn che mất nội dung.
+@include media-breakpoint-up(lg) {
+    .product-detail-buy {
+        position: sticky;
+        top: 7rem; // chừa chỗ cho header dính
+        align-self: flex-start;
+    }
 }
 
 // --- Khối VietQR ở trang cảm ơn -------------------------------------------
@@ -200,5 +281,16 @@ h1, h2, h3 {
         margin-bottom: 0;
         font-size: 0.875rem;
         color: $anivele-muted;
+    }
+}
+
+// --- Ô số lượng ở trang danh mục ------------------------------------------
+.anivele-listing-quantity {
+    flex: 0 0 4.5rem;
+
+    .form-control {
+        text-align: center;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
     }
 }

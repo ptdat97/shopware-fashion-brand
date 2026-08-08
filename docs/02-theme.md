@@ -133,6 +133,40 @@ nên `padding: 0` thường không thắng; phải ghi đè chính biến.
 > Core cũng đã có sẵn `.disabled { text-decoration: line-through }` cho size
 > hết hàng — kiểm tra trước khi tự viết lại, tránh trùng lặp.
 
+### Đối chiếu với theme thương mại (SPHERE Pro €468/năm)
+
+Đã khảo sát [SPHERE Pro](https://store.shopware.com/en/zenit46893265141m/sphere-pro-multipurpose-premium-theme.html) để xem có nên mua thay vì tự làm. Kết quả đối chiếu từng nhóm tính năng với core 6.7:
+
+| SPHERE quảng cáo | Thực tế core 6.7 |
+|---|---|
+| "67+ CMS elements" | Core **đã có 22 element + 40 block** |
+| Native lazy loading | ✅ Đã có — ảnh listing đều `loading="lazy"` |
+| Magnifier, zoom ảnh, slider | ✅ Đã có JS plugin `magnifier`, `image-zoom`, `zoom-modal`, `slider` |
+| Offcanvas cart / filter | ✅ Đã có `offcanvas-cart`, `offcanvas-filter` |
+| Wishlist | ✅ Core có, chỉ cần bật `core.cart.wishlistEnabled` |
+| Sticky header, sticky buybox | ❌ Core không có → tự viết, mỗi cái ~10 dòng SCSS |
+| Ảnh thứ 2 khi hover | ❌ Core không có → tự viết |
+
+**Kết luận:** phần lớn giá trị của theme thương mại nằm ở **tính đa dụng** (5 layout, 17 template demo, child theme generator) — dành cho agency bán lại cho nhiều shop. Anivele là *một* shop thời trang nữ, không dùng tới.
+
+Những thứ thực sự thiếu chỉ là vài chục dòng SCSS + một subscriber. Đã tự làm, không mua.
+
+> ⚠️ **Không sao chép mã nguồn theme thương mại.** Học ý tưởng tính năng rồi tự viết bằng cơ chế mở rộng của Shopware là hợp lệ; copy code là vi phạm bản quyền.
+
+### Bẫy: association lồng nhau trong listing
+
+Khi làm ảnh hover, `product.media` **không được nạp** trong listing (chỉ có `cover`). Thêm subscriber gọi `addAssociation('media')` vẫn chưa đủ — `product.media` là bảng nối `ProductMedia`, entity `Media` thật nằm bên trong.
+
+```php
+// Sai — template thấy product.media có phần tử nhưng productMedia.media là null
+$criteria->addAssociation('media');
+
+// Đúng
+$criteria->addAssociation('media.media');
+```
+
+Lỗi này **không báo gì cả**, chỉ âm thầm không hiện ảnh. Phát hiện bằng cách in tạm `{{ pm.media ? 'Y':'N' }}` ra HTML.
+
 ### Bộ chọn biến thể: core 6.7 đã đủ tốt
 
 Mục "Bộ chọn biến thể trực quan" ở trên lo rằng Shopware hiển thị variant bằng

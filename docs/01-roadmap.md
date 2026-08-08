@@ -114,6 +114,11 @@ Thực hiện bằng plugin `AniveleCatalog` — migration chuẩn hoá thuộc 
 | Size hết hàng gạch chéo, không ẩn | ✅ |
 | Việt hoá nhãn còn sót ("Home", "Pattern") | ✅ |
 | Bo góc vuông, typography thanh | ✅ |
+| Tỷ lệ ảnh 2:3 dọc (lookbook) | ✅ Hiện trọn outfit thay vì bị cắt |
+| Ảnh thứ 2 khi rê chuột ở danh mục | ✅ Xem mặt trước/sau không cần bấm vào |
+| Sticky header + sticky buybox | ✅ Nút mua luôn trong tầm mắt |
+| Danh sách yêu thích (Wishlist) | ✅ Bật tính năng có sẵn của core |
+| Ô số lượng ngay ở trang danh mục | ✅ |
 | Bảng size chart | ⏳ Cần số đo thật của brand |
 | Ảnh WebP/AVIF | ⏳ Chưa làm |
 | Lookbook, đánh giá kèm ảnh | ⏳ Giai đoạn sau |
