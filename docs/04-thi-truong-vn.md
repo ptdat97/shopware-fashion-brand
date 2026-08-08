@@ -1,10 +1,14 @@
 # Cấu hình cho thị trường Việt Nam
 
-Đây là **Phase 0 — chặn mọi công việc khác**. Không nên bắt đầu theme hay nhập catalog trước khi hoàn tất phần này.
+> ✅ **Phase 0 đã hoàn tất.** Tài liệu này giải thích **vì sao** từng cấu hình phải như vậy — phần "Vấn đề" mô tả trạng thái *trước khi sửa*, giữ lại vì đó là bối cảnh dẫn tới quyết định.
+>
+> - Đã làm những gì, bằng cách nào: [runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md)
+> - Hiện trạng đã kiểm chứng: [00-hien-trang.md](00-hien-trang.md)
+> - Toàn bộ được tái lập bằng migration trong plugin `AniveleVietnam`, không phải SQL thủ công.
 
 ## 1. Tiền tệ VND
 
-### Vấn đề hiện tại
+### Vấn đề ban đầu
 
 Hệ thống chỉ có USD. Sales channel `anivele` đặt country là Viet Nam nhưng bán bằng USD — sai hoàn toàn với thực tế kinh doanh.
 
@@ -26,7 +30,7 @@ Chuẩn VN: `1.250.000 ₫` — chấm phân cách nghìn, ký hiệu đứng sa
 Đổi currency ảnh hưởng tới:
 - **Độ dài chuỗi giá** — `1.250.000 ₫` dài hơn `$52.00` rất nhiều, dễ vỡ layout trên mobile
 - **Cách làm tròn** — mọi phép tính giảm giá, thuế, phí ship phải làm tròn về đơn vị đồng
-- **Giá của 16 sản phẩm demo** — sẽ vô nghĩa, nhưng không sao vì sẽ xóa hết
+- **Giá sản phẩm demo cũ** — trở thành vô nghĩa, nhưng không sao vì đã xoá hết cùng `SwagPlatformDemoData`
 
 Đây chính là lý do currency phải chốt **trước** theme.
 
@@ -60,14 +64,16 @@ Nếu để hiển thị giá net, khách sẽ thấy giá tăng lên ở bướ
 
 ## 3. Quốc gia
 
-### Vấn đề
+### Vấn đề ban đầu
 
 Gần như **toàn bộ ~250 quốc gia đang active**, kể cả Antarctica, Pitcairn, Western Sahara. Khách hoàn toàn có thể chọn giao hàng tới đó.
 
-### Cần làm
+### Đã làm
 
-- Tắt toàn bộ, chỉ để **Viet Nam** active
-- Nếu có kế hoạch bán quốc tế, chỉ bật thêm đúng những nước thực sự giao được
+- Tắt toàn bộ, chỉ để **Việt Nam** active ✅
+- Nếu sau này bán quốc tế, chỉ bật thêm đúng những nước thực sự giao được
+
+> ⚠️ **Bẫy:** tắt quốc gia phải kiểm tra lại `sales_channel.country_id` của **mọi** channel — channel trỏ tới quốc gia vừa tắt sẽ lỗi khi gọi API. Migration đã xử lý sẵn, nhưng cần nhớ nếu tắt thêm quốc gia bằng tay.
 
 Việc này vừa tránh đơn hàng không giao được, vừa làm gọn dropdown chọn quốc gia ở trang thanh toán.
 

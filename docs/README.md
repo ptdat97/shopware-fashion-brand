@@ -6,8 +6,9 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 
 | | Tài liệu | Nội dung |
 |---|---|---|
-| ⚠️ | **[08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md)** | **Được sửa ở đâu** — không can thiệp core, mở rộng qua Plugin/App/Theme |
+| ⚠️ | **[08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md)** | **Được sửa ở đâu** — không can thiệp core, không `composer require` plugin tự viết |
 | ⚠️ | **[09-nguyen-tac-ky-thuat.md](09-nguyen-tac-ky-thuat.md)** | **Sửa như thế nào** — phạm vi thay đổi, kiến trúc PHP, migration, test |
+| 🔧 | **[runbook/06-tao-plugin.md](runbook/06-tao-plugin.md)** | **Bắt tay vào làm** — quy trình tạo plugin mới đúng chuẩn |
 
 ## Tra cứu nhanh
 
@@ -25,6 +26,7 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 |---|---|
 | Thị trường VN — VND, thuế, địa chỉ | [04-thi-truong-vn.md](04-thi-truong-vn.md) |
 | Plugin / app cần cài | [03-plugin-app.md](03-plugin-app.md) |
+| MCP server & công cụ AI cho dev | [11-mcp-va-ai-tooling.md](11-mcp-va-ai-tooling.md) |
 | Chuẩn bị go-live | [06-golive.md](06-golive.md) |
 
 **Xây dựng shop**
@@ -45,6 +47,7 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 | Xoá demo data | [runbook/03-xoa-demo-data.md](runbook/03-xoa-demo-data.md) |
 | Tái lập Phase 0 trên môi trường khác | [runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md) |
 | Dữ liệu demo thời trang | [runbook/05-demo-data.md](runbook/05-demo-data.md) |
+| **Tạo plugin mới** | [runbook/06-tao-plugin.md](runbook/06-tao-plugin.md) |
 
 **Quyết định kỹ thuật** — [decisions/](decisions/)
 
@@ -55,9 +58,11 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 
 ## Quy tắc quan trọng nhất
 
-> **Không can thiệp core Shopware.** Mọi thay đổi phải viết qua Plugin, App hoặc Theme — không sửa `vendor/`.
+> **1. Không can thiệp core Shopware.** Mọi thay đổi phải viết qua Plugin, App hoặc Theme — không sửa `vendor/`.
 >
 > Lý do: `composer update` ghi đè toàn bộ `vendor/`, git không track thư mục này, và sửa core khoá chặt khả năng nâng cấp Shopware về sau.
+>
+> **2. Không `composer require` plugin tự viết.** Shopware tự quét `custom/plugins/`. Thêm vào `composer.json` sẽ khoá nút Xoá plugin trong Administration và gây xung đột merge.
 >
 > Chi tiết và cách làm đúng cho từng nhu cầu: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md)
 

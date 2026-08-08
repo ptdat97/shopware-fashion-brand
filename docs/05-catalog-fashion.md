@@ -2,19 +2,20 @@
 
 Phần này quyết định chất lượng dữ liệu lâu dài. **Sai cấu trúc ở đây sẽ rất đắt để sửa** khi đã có hàng trăm sản phẩm.
 
+> ⚠️ **Tài liệu này là thiết kế mục tiêu, không phải hiện trạng.** Hiện trạng đã kiểm chứng nằm ở [10-phase2-catalog.md](10-phase2-catalog.md) — đọc file đó trước khi thao tác.
+
 ## Hiện trạng
 
-5 property group đang có (từ demo data):
+**2 property group**, đều đã Việt hoá sẵn ở cả `vi-VN` lẫn `en-US`:
 
-| Group | Đánh giá |
-|---|---|
-| Colour | Giữ, đổi tên tiếng Việt, chuẩn hóa giá trị |
-| Size | Giữ, cần thiết kế lại theo chuẩn VN |
-| Material | Giữ, hữu ích cho thời trang |
-| Target group | Có thể tái dụng thành Giới tính / Nhóm khách |
-| Ingredients | **Bỏ** — dành cho thực phẩm, không liên quan |
+| Group | `display_type` | Giá trị | Đánh giá |
+|---|---|---|---|
+| Màu sắc | `color` | 7 (có mã hex, storefront render swatch) | Cần tách "Hoa nhiều màu" sang nhóm Hoạ tiết |
+| Kích cỡ | `text` | 4 (S/M/L/XL) | Cần thiết kế lại theo chuẩn VN từng loại hàng |
 
-16 sản phẩm demo sẽ bị xóa toàn bộ.
+**Chưa có** nhóm Chất liệu, Kiểu dáng, Giới tính, Mùa — các thuộc tính đề xuất ở mục dưới đều là *việc cần làm*, không phải thứ đang có.
+
+12 sản phẩm demo hiện tại do plugin `AniveleDemoData` sinh ra, **chưa có variant nào** — đây là hạng mục chặn go-live. Kế hoạch xử lý: [10-phase2-catalog.md](10-phase2-catalog.md).
 
 ---
 
@@ -122,7 +123,9 @@ Tránh lồng quá 3 cấp — khách sẽ lạc.
 
 ## Xóa demo data
 
-Trước khi nhập hàng thật phải xóa sạch 16 sản phẩm demo. Gỡ plugin `SwagPlatformDemoData`.
+Trước khi nhập hàng thật phải xoá sạch 12 sản phẩm demo `ANV-*` do plugin `AniveleDemoData` sinh ra.
+
+> `SwagPlatformDemoData` đã được gỡ từ Phase 0, không còn liên quan.
 
 > ⚠️ Gỡ plugin có thể **không tự xóa hết** dữ liệu đã tạo. Cần kiểm tra lại và xóa thủ công phần còn sót. Luôn backup trước khi thao tác.
 

@@ -19,3 +19,7 @@
 /public/asset-manifest.json
 ###< shopware/core ###
 .DS_Store
+!/.claude
+
+# Chứa access key + secret của integration MCP dạng plaintext — xem docs/11-mcp-va-ai-tooling.md
+/.mcp.json

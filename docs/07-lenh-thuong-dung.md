@@ -86,7 +86,9 @@ php bin/console plugin:update TenPlugin
 php bin/console plugin:update:all
 ```
 
-> 🔴 **`plugin:uninstall` thường xoá luôn dữ liệu plugin tạo ra.** Backup trước. Ví dụ thực tế: gỡ `SwagPlatformDemoData` sẽ xoá sản phẩm demo.
+> 🔴 **`plugin:uninstall` thường xoá luôn dữ liệu plugin tạo ra.** Backup trước. Ví dụ thực tế đã gặp: gỡ `SwagPlatformDemoData` ở Phase 0 đã xoá sạch 16 sản phẩm demo và toàn bộ property group.
+>
+> Ngoại lệ có chủ đích: `AniveleVietnam` **không** hoàn tác cấu hình VND/thuế khi gỡ — đưa currency về USD trong khi shop đã có đơn giá VND sẽ làm sai toàn bộ số tiền.
 
 **Quy trình chuẩn khi cài plugin mới:**
 

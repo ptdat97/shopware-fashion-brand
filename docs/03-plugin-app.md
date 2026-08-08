@@ -18,12 +18,17 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 
 ## Nhóm 1 — Đã cài
 
-| Plugin | Version | Trạng thái | Việc cần làm |
-|---|---|---|---|
-| SwagLanguagePack | dev-master | Active | Theo dõi bản release ổn định hỗ trợ 6.7 để chuyển sang |
-| SwagPayPal | 10.7.0 | **Inactive** | Quyết định có dùng không — PayPal ít phổ biến với khách VN |
-| SwagExtensionStore | 4.2.2 | Active | Giữ, để cài plugin từ store |
-| SwagPlatformDemoData | 2.1.0 | Active | **Gỡ trước khi go-live** |
+| Plugin | Version | Trạng thái | `managed_by_composer` | Việc cần làm |
+|---|---|---|---|---|
+| AniveleVietnam | 1.0.0 | Active | 0 | Plugin tự viết — nền tảng thị trường VN (Phase 0) |
+| AniveleDemoData | 1.0.0 | Active | 0 | Plugin tự viết — **gỡ trước khi go-live**, thay bằng hàng thật |
+| SwagLanguagePack | dev-master | Active | 1 | Theo dõi bản release ổn định hỗ trợ 6.7 để chuyển sang |
+| SwagPayPal | 10.8.0 | **Inactive** | 1 | Quyết định có dùng không — PayPal ít phổ biến với khách VN |
+| SwagExtensionStore | 4.2.2 | Inactive | 0 | Kích hoạt khi cần cài plugin từ store |
+
+> `SwagPlatformDemoData` **không còn tồn tại** — đã gỡ ở Phase 0 và thay bằng `AniveleDemoData`. Xem [runbook/05-demo-data.md](runbook/05-demo-data.md).
+>
+> Cột `managed_by_composer` phải là **0** với plugin tự viết, nếu không Administration sẽ khoá nút Xoá — xem [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 2.
 
 ---
 

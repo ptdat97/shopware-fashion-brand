@@ -69,7 +69,7 @@ Không chịu thuế (0%)    0.000%
 | Invoice | active |
 | Cash on delivery | active |
 | Paid in advance | active |
-| PayPal (SwagPayPal 10.7.0) | đã cài nhưng **inactive** |
+| PayPal (SwagPayPal 10.8.0) | đã cài nhưng **inactive** |
 
 Không có cổng thanh toán nội địa VN nào. COD có sẵn là điểm cộng vì COD chiếm tỷ trọng lớn ở VN, nhưng thiếu VNPay/MoMo là thiếu hụt lớn.
 
@@ -97,12 +97,13 @@ Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên ti
 
 ## Plugin đang cài
 
-| Plugin | Version | Active |
-|---|---|---|
-| SwagExtensionStore | 4.2.2 | Yes |
-| SwagLanguagePack | dev-master | Yes |
-| SwagPayPal | 10.7.0 | **No** |
-| AniveleDemoData | 1.0.0 | Yes (plugin tự viết) |
+| Plugin | Version | Active | Ghi chú |
+|---|---|---|---|
+| AniveleVietnam | 1.0.0 | Yes | Plugin tự viết — nền tảng thị trường VN |
+| AniveleDemoData | 1.0.0 | Yes | Plugin tự viết — dữ liệu demo |
+| SwagLanguagePack | dev-master | Yes | |
+| SwagPayPal | 10.8.0 | **No** | |
+| SwagExtensionStore | 4.2.2 | **No** | |
 
 `custom/apps/` rỗng — chưa có app nào.
 

@@ -23,21 +23,28 @@ Các mục đánh dấu 🔴 là **chặn go-live** — không được bỏ qua
 
 ## Dữ liệu
 
-- [ ] 🔴 **Xóa sạch demo data** — xem [runbook/03-xoa-demo-data.md](runbook/03-xoa-demo-data.md)
-- [ ] 🔴 Gỡ plugin `SwagPlatformDemoData`
+- [ ] 🔴 **Xóa sạch demo data** — 12 sản phẩm `ANV-*`, xem [runbook/03-xoa-demo-data.md](runbook/03-xoa-demo-data.md)
+- [ ] 🔴 Gỡ plugin `AniveleDemoData` (xoá được trực tiếp từ Administration)
 - [ ] Xóa khách hàng demo
 - [ ] Catalog thật đã nhập đầy đủ, có ảnh
-- [ ] Tồn kho khớp thực tế
+- [ ] 🔴 **Mọi sản phẩm đã có variant** màu × size — xem [10-phase2-catalog.md](10-phase2-catalog.md)
+- [ ] 🔴 Bật `is_closeout` để chặn bán quá tồn kho
+- [ ] Tồn kho khớp thực tế **theo từng variant**
+
+> `SwagPlatformDemoData` đã gỡ từ Phase 0, không còn trong hệ thống.
 
 ## Cấu hình thị trường VN
 
-- [ ] 🔴 **VND là tiền tệ mặc định**, `decimals = 0` — xem [runbook/01-cau-hinh-vnd.md](runbook/01-cau-hinh-vnd.md)
-- [ ] 🔴 **Thuế VAT đúng** (đã xác nhận mức với kế toán)
-- [ ] Giá hiển thị đã bao gồm thuế
-- [ ] Chỉ bật quốc gia thực sự giao hàng được
+Phần lớn đã xong ở Phase 0 qua plugin `AniveleVietnam` — chạy `plugin:install --activate AniveleVietnam` là tái lập được trên production.
+
+- [x] ✅ **VND là tiền tệ mặc định**, `decimals = 0`
+- [x] ✅ Giá hiển thị đã bao gồm thuế (`display_gross = 1`)
+- [x] ✅ Chỉ Việt Nam active
+- [x] ✅ Số điện thoại là trường bắt buộc
+- [x] ✅ 34 tỉnh/thành đã nạp
+- [ ] 🔴 **Xác nhận mức VAT với kế toán** (10% hay 8% cho hàng may mặc tại thời điểm go-live)
+- [ ] 🔴 **Đối chiếu danh mục tỉnh/thành với nguồn chính thức** — cơ cấu hành chính VN có thay đổi theo các đợt sáp nhập
 - [ ] Timezone `Asia/Ho_Chi_Minh`, ngày `dd/mm/yyyy`
-- [ ] Dữ liệu tỉnh/huyện/xã theo danh mục mới nhất
-- [ ] Số điện thoại là trường bắt buộc
 
 ## Thanh toán & Vận chuyển
 
