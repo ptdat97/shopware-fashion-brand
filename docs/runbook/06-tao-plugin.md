@@ -6,6 +6,28 @@ Quy trình dưới đây đã kiểm chứng khi tạo `AniveleVietnam` — dùn
 
 ---
 
+## 0. Đọc kiến trúc trước — bước không được bỏ qua
+
+**Trước khi gõ dòng code đầu tiên**, xác nhận điểm mở rộng có thật trong `vendor/` của **đúng phiên bản đang chạy**:
+
+```bash
+# Ví dụ cho payment handler (Phase 1 sắp cần)
+ls vendor/shopware/core/Checkout/Payment/Cart/PaymentHandler/
+grep -n "abstract public function" \
+  vendor/shopware/core/Checkout/Payment/Cart/PaymentHandler/AbstractPaymentHandler.php
+
+# Xác nhận một class có tồn tại không
+grep -rl "class TenClass\|interface TenInterface" vendor/shopware/
+```
+
+> 🔴 **Shopware xoá interface giữa các bản major.** `SynchronousPaymentHandlerInterface`, `AsynchronousPaymentHandlerInterface`, `PaymentHandlerInterface` — cả ba **không còn tồn tại** trong 6.7, dù phần lớn tutorial trên mạng vẫn dạy. Code chép về sẽ lỗi ngay lúc nạp class.
+>
+> Chi tiết và quy trình đầy đủ: [../08-quy-tac-phat-trien.md](../08-quy-tac-phat-trien.md) Quy tắc số 3.
+
+Mẫu tốt nhất luôn là class core đã implement sẵn — ví dụ `PrePayment.php` (chuyển khoản), `CashPayment.php` (COD).
+
+---
+
 ## 1. Tạo cấu trúc thư mục
 
 ```bash
@@ -171,9 +193,21 @@ mysql -h 127.0.0.1 -u root shopware -e \
 
 # 4. Cú pháp PHP
 php -l custom/plugins/TenPlugin/src/**/*.php
+
+# 5. Mọi class Shopware đang dùng đều có thật (bắt lỗi bịa API)
+php bin/check-plugin-api.php custom/plugins/TenPlugin
 ```
 
-Cả 4 phải sạch. Mục 2 chỉ được có thay đổi khi cài plugin **bên thứ ba**.
+Cả 5 phải sạch. Mục 2 chỉ được có thay đổi khi cài plugin **bên thứ ba**.
+
+Mục 5 báo tên nào thì tên đó **không tồn tại trong `vendor/`** — đang bịa API, quay lại bước 0. Script dùng chính autoloader của Shopware nên kết quả đáng tin, không phải đoán theo đường dẫn:
+
+```
+❌ Class Shopware KHÔNG TỒN TẠI trong vendor/:
+
+  Shopware\Core\Checkout\Payment\Cart\PaymentHandler\SynchronousPaymentHandlerInterface
+      dùng ở: custom/plugins/TenPlugin/src/Service/VnpayHandler.php
+```
 
 ---
 

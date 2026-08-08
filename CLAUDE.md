@@ -2,13 +2,19 @@
 
 Shop bán lẻ thời trang cho thị trường Việt Nam. Toàn bộ tài liệu kỹ thuật nằm ở [docs/](docs/).
 
-## Ba quy tắc cứng
+## Bốn quy tắc cứng
 
 **1. Không sửa `vendor/`.** Mọi tuỳ biến viết qua Plugin, App hoặc Theme trong `custom/`. `composer update` ghi đè sạch `vendor/`, git không track thư mục này.
 
 **2. Không `composer require` plugin tự viết.** Shopware tự quét `custom/plugins/`. Thêm vào `composer.json` sẽ đặt `managed_by_composer = 1` và **khoá nút Xoá plugin trong Administration**. Chỉ dùng `composer require` cho plugin bên thứ ba hoặc nâng version core.
 
-**3. Backup trước mọi thay đổi dữ liệu.** Xem [docs/runbook/00-backup.md](docs/runbook/00-backup.md).
+**3. Đọc kiến trúc Shopware trước khi viết plugin. Không bịa API.** Shopware xoá interface giữa các bản major — `SynchronousPaymentHandlerInterface`, `AsynchronousPaymentHandlerInterface`, `PaymentHandlerInterface` đều **không còn tồn tại** trong 6.7 dù tutorial trên mạng vẫn dạy. Mọi tên class phải xác nhận trong `vendor/` trước khi dùng:
+
+```bash
+php bin/check-plugin-api.php     # bắt lỗi class không tồn tại
+```
+
+**4. Backup trước mọi thay đổi dữ liệu.** Xem [docs/runbook/00-backup.md](docs/runbook/00-backup.md).
 
 Chi tiết và lý do: [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) · [docs/09-nguyen-tac-ky-thuat.md](docs/09-nguyen-tac-ky-thuat.md)
 

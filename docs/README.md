@@ -64,6 +64,8 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 >
 > **2. Không `composer require` plugin tự viết.** Shopware tự quét `custom/plugins/`. Thêm vào `composer.json` sẽ khoá nút Xoá plugin trong Administration và gây xung đột merge.
 >
+> **3. Đọc kiến trúc Shopware trước khi viết. Không bịa API.** Shopware xoá interface giữa các bản major — code chép từ tutorial cũ sẽ không chạy. Xác nhận mọi tên class trong `vendor/` bằng `php bin/check-plugin-api.php`.
+>
 > Chi tiết và cách làm đúng cho từng nhu cầu: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md)
 
 ## Quy ước của bộ tài liệu

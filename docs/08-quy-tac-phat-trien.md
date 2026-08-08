@@ -98,6 +98,116 @@ SwagPayPal           1     ← bên thứ ba
 
 ---
 
+## Quy tắc số 3 — Đọc kiến trúc Shopware trước khi viết. Không viết bừa, không bịa API
+
+**Trước khi viết dòng code plugin đầu tiên: đọc code core của đúng phiên bản đang chạy, hoặc tài liệu chính thức của đúng phiên bản đó.**
+
+Không đoán tên class. Không nhớ mang máng. Không copy từ blog/tutorial mà chưa kiểm chứng. Không để AI sinh ra API rồi tin luôn.
+
+### Vì sao — bằng chứng ngay trong dự án này
+
+Shopware **xoá interface giữa các phiên bản major**. Kiểm chứng trên chính `vendor/` của dự án (6.7.12.2):
+
+```bash
+grep -rl "interface SynchronousPaymentHandlerInterface" vendor/shopware/core/
+```
+
+| Interface tutorial hay dạy | Trong 6.7 |
+|---|---|
+| `SynchronousPaymentHandlerInterface` | **Không còn tồn tại** |
+| `AsynchronousPaymentHandlerInterface` | **Không còn tồn tại** |
+| `PaymentHandlerInterface` | **Không còn tồn tại** |
+| `PreparedPaymentHandlerInterface` | **Không còn tồn tại** |
+
+Cả 4 đều đã bị xoá. Phần lớn hướng dẫn viết payment plugin trên mạng vẫn dạy chúng — **code chép về sẽ không chạy nổi, lỗi ngay lúc nạp class.**
+
+Cái đúng cho 6.7 là **một** abstract class duy nhất:
+
+```
+vendor/shopware/core/Checkout/Payment/Cart/PaymentHandler/AbstractPaymentHandler.php
+```
+
+```php
+abstract public function supports(PaymentHandlerType $type, string $paymentMethodId, Context $context): bool;
+abstract public function pay(Request $request, PaymentTransactionStruct $transaction, Context $context, ?Struct $validateStruct): ?RedirectResponse;
+public function validate(Cart $cart, RequestDataBag $dataBag, SalesChannelContext $context): ?Struct;
+public function finalize(Request $request, PaymentTransactionStruct $transaction, Context $context): void;
+```
+
+Đây là thông tin **đọc trực tiếp từ `vendor/`**, không phải trí nhớ. Phase 1 (VNPay/VietQR) sẽ cần đúng class này.
+
+> Bài học tương tự đã xảy ra ở Phase 0: chỉ nhờ **đọc** `vendor/shopware/core/Defaults.php` mới phát hiện `Defaults::CURRENCY` là hằng số hardcode, từ đó chọn chuyển đổi tại chỗ thay vì tạo currency mới — nếu làm theo phỏng đoán thì toàn bộ giá đã sai.
+
+### Quy trình bắt buộc trước khi viết plugin
+
+**1. Tìm điểm mở rộng thật trong `vendor/`**
+
+```bash
+# Tìm abstract class / interface theo lĩnh vực
+find vendor/shopware/core/Checkout/Payment -name "*PaymentHandler*"
+ls vendor/shopware/core/Checkout/Shipping/
+
+# Xem chữ ký method thật, không đoán
+grep -n "abstract public function\|public function" \
+  vendor/shopware/core/Checkout/Payment/Cart/PaymentHandler/AbstractPaymentHandler.php
+```
+
+**2. Đọc luôn class core đã implement sẵn** — mẫu tốt nhất luôn nằm trong core:
+
+```
+vendor/shopware/core/Checkout/Payment/Cart/PaymentHandler/PrePayment.php     ← chuyển khoản
+vendor/shopware/core/Checkout/Payment/Cart/PaymentHandler/CashPayment.php    ← COD
+```
+
+**3. Đối chiếu tài liệu chính thức — nhớ chọn đúng version**
+
+[developer.shopware.com](https://developer.shopware.com/docs/) có bộ chọn phiên bản. **Tài liệu 6.5/6.6 không áp dụng cho 6.7.**
+
+**4. Kiểm tra tính thử nghiệm**
+
+```bash
+grep -rn "@experimental" vendor/shopware/core/<đường-dẫn>
+```
+
+Class đánh dấu `@experimental` có thể đổi API ở minor tiếp theo — cân nhắc trước khi phụ thuộc vào nó.
+
+### Dấu hiệu đang viết bừa
+
+| Dấu hiệu | Xử lý |
+|---|---|
+| Không mở `vendor/` lần nào trước khi code | Dừng, đọc trước |
+| Tên class lấy từ trí nhớ hoặc blog, chưa `grep` xác nhận tồn tại | `grep -rl "class TenClass" vendor/shopware/` |
+| Chép nguyên đoạn code từ tutorial, không rõ nó cho version nào | Kiểm chứng từng class trong `vendor/` |
+| AI sinh code trông hợp lý nhưng chưa ai xác nhận API có thật | Bắt buộc `grep` lại từng tên class/method |
+| Nghĩ "chắc Shopware có sẵn cái này" | Tìm thật; **không có** thì ghi rõ vào [03-plugin-app.md](03-plugin-app.md) |
+
+> ⚠️ **Điều này áp dụng cho cả AI lẫn người.** AI rất dễ sinh ra tên class nghe hợp lý nhưng không tồn tại, hoặc đúng cho 6.5 mà sai cho 6.7. Mọi API do AI đề xuất phải xác nhận trong `vendor/` trước khi dùng — **không có ngoại lệ**.
+
+### Kiểm tra tự động
+
+Không cần tự nhớ — có script kiểm tra sẵn:
+
+```bash
+php bin/check-plugin-api.php                           # toàn bộ custom/plugins
+php bin/check-plugin-api.php custom/plugins/TenPlugin  # một plugin
+```
+
+Script duyệt mọi câu `use Shopware\...` trong plugin và dùng **chính autoloader của Shopware** để xác nhận class có tồn tại — đáng tin hơn đoán theo đường dẫn file. Exit code `1` nếu phát hiện class ma.
+
+Chạy trước mỗi commit có đụng code plugin.
+
+### Khi tìm mãi không thấy
+
+Có thể Shopware **thật sự không có** thứ đó — như trường hợp cổng thanh toán VN. Lúc đó:
+
+1. Ghi rõ **cái gì không có** vào [03-plugin-app.md](03-plugin-app.md), kèm ngày kiểm chứng
+2. Ghi quyết định tự viết vào [decisions/](decisions/)
+3. **Không** bịa ra một API tưởng tượng rồi viết code quanh nó
+
+Đây chính là quy ước số 3 của bộ tài liệu: *"Nói rõ cái gì KHÔNG có sẵn."*
+
+---
+
 ## Vì sao quy tắc này quan trọng
 
 ### 1. Mọi thay đổi trong `vendor/` sẽ bị xoá sạch
@@ -203,7 +313,7 @@ Với thay đổi cấu hình có tính lặp lại (cần tái lập trên stag
 
 ## Đọc core thì sao?
 
-**Đọc thoải mái — rất khuyến khích.** Đọc core là cách tốt nhất để hiểu Shopware hoạt động ra sao và tìm đúng điểm mở rộng.
+**Đọc là bắt buộc, không phải tuỳ chọn** — xem [Quy tắc số 3](#quy-tắc-số-3--đọc-kiến-trúc-shopware-trước-khi-viết-không-viết-bừa-không-bịa-api). Đọc core là cách duy nhất đáng tin để biết điểm mở rộng nào thật sự tồn tại trong phiên bản đang chạy.
 
 Ví dụ thực tế trong dự án này: khi cấu hình VND, việc đọc `vendor/shopware/core/Defaults.php` giúp phát hiện `Defaults::CURRENCY` là hằng số hardcode, từ đó chọn cách chuyển đổi tại chỗ thay vì tạo currency mới — tránh được lỗi nghiêm trọng. Xem [runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md).
 
@@ -249,16 +359,18 @@ Tuyệt đối không sửa tay trực tiếp rồi để đó.
 |---|---|
 | ✅ Viết code trong | `custom/plugins/`, `custom/static-plugins/`, `custom/apps/` |
 | ✅ Mở rộng bằng | Theme kế thừa, event subscriber, decorator, custom entity |
-| ✅ Đọc core để | Hiểu cơ chế, tìm điểm mở rộng đúng |
+| ✅ **Đọc core TRƯỚC khi viết** | Xác nhận class/method có thật trong đúng version đang chạy |
 | ✅ Cài plugin tự viết bằng | `plugin:refresh` + `plugin:install --activate` |
 | ❌ Không sửa | `vendor/`, `public/bundles/`, `public/theme/` |
 | ❌ Không copy | Nguyên file template rồi sửa vài dòng |
 | ❌ Không `composer require` | Plugin tự viết trong `custom/plugins/` |
+| ❌ **Không bịa API** | Tên class từ trí nhớ/blog/AI mà chưa `grep` xác nhận |
 
-**Hai câu hỏi tự kiểm tra trước mỗi thay đổi:**
+**Ba câu hỏi tự kiểm tra trước mỗi thay đổi:**
 
 1. *"Sau khi chạy `composer update`, thay đổi này còn không?"* — Nếu **không** → đang sửa nhầm chỗ, phải làm qua plugin/theme.
 2. *"Thay đổi này có buộc phải sửa file dùng chung (`composer.json`, `composer.lock`) không?"* — Nếu **có** mà chỉ để cài plugin tự viết → thừa, bỏ đi.
+3. *"Mọi class và method mình đang dùng, đã mở `vendor/` xác nhận có thật trong 6.7 chưa?"* — Nếu **chưa** → dừng lại, `grep` trước khi viết tiếp.
 
 ---
 
