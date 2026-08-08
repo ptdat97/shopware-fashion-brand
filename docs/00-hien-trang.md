@@ -34,7 +34,7 @@ Tiếng Việt đã được cài và đang hoạt động:
 | property_group | 3 | Màu sắc (6 giá trị, swatch), Kích cỡ (S/M/L/XL), Hoạ tiết (1) |
 | product_configurator_setting | 64 | Trục sinh biến thể — trước Phase 2 là 0 |
 | media | 85 | 66 ảnh sản phẩm + ảnh hệ thống |
-| theme | 1 | Chỉ có Storefront mặc định |
+| theme | 2 | Storefront mặc định + **AniveleTheme** (đang dùng) |
 
 Catalog hiện tại do plugin tự viết `AniveleDemoData` sinh ra từ ảnh thật của brand — xem [runbook/05-demo-data.md](runbook/05-demo-data.md). Hệ thống **không dùng** `SwagPlatformDemoData`. **Vẫn cần thay bằng hàng thật trước go-live.**
 
@@ -114,6 +114,7 @@ Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên ti
 | AniveleVietnam | 1.0.0 | Yes | Plugin tự viết — nền tảng thị trường VN |
 | AniveleCatalog | 1.0.0 | Yes | Plugin tự viết — biến thể Màu × Size |
 | AnivelePayment | 1.0.0 | Yes | Plugin tự viết — VietQR + phí vận chuyển |
+| AniveleTheme | 1.0.0 | Yes | Plugin tự viết — giao diện thương hiệu |
 | AniveleDemoData | 1.0.0 | Yes | Plugin tự viết — dữ liệu demo |
 | SwagLanguagePack | dev-master | Yes | Plugin bên thứ ba duy nhất còn lại |
 

@@ -50,7 +50,12 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 - **Phase 0** (nền tảng thị trường VN) ✅ — plugin `AniveleVietnam`
 - **Phase 2** (biến thể Màu × Size) ✅ — plugin `AniveleCatalog`, 12 mẫu → 64 biến thể
 - **Phase 1** (thanh toán & vận chuyển) ✅ giai đoạn 1 — plugin `AnivelePayment`: COD, chuyển khoản, VietQR + phí ship theo khu vực
+- **Phase 3** (theme thương hiệu) ✅ giai đoạn 1 — plugin `AniveleTheme`: bảng màu nâu/be/kem, swatch tròn, mobile-first
 
 > ⚠️ **VietQR chưa có số tài khoản thật.** Nhập tại Administration → Extensions → Anivele Payment trước khi mở bán. Đối soát vẫn thủ công — đơn không tự chuyển "đã thanh toán".
+>
+> ⚠️ **Chưa có file logo thật.** Đang dùng chữ ANIVELE; tải logo tại Administration → Themes → Giao diện Anivele → Media.
 
-Tiếp theo: **Phase 3 — theme thương hiệu**. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+**Sửa giao diện thì phải chụp ảnh storefront kiểm chứng**, không tin `curl`/`grep` — xem [docs/02-theme.md](docs/02-theme.md).
+
+Tiếp theo: **Phase 4 — marketing & vận hành** (SEO, Zalo OA, email, analytics). Xem [docs/01-roadmap.md](docs/01-roadmap.md).

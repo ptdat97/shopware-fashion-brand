@@ -91,6 +91,11 @@ class Migration1786159617PropertyGroupsForFashion extends MigrationStep
     /**
      * Nhóm và giá trị hiện có tên tiếng Việt nhưng nằm ở bản dịch en-US.
      * Nhân bản sang vi-VN để storefront đọc thẳng, không phải fallback.
+     *
+     * ⚠️ `ON DUPLICATE KEY` cố ý GIỮ NGUYÊN bản dịch vi-VN đã có, không ghi đè.
+     * Bẫy đã gặp: nhóm Hoạ tiết tạo với tên en-GB "Pattern", chạy lại migration
+     * thì bản sao en-US ghi đè lên vi-VN → bộ lọc storefront hiện "Pattern"
+     * thay vì "Hoạ tiết". Chỉ phát hiện được khi chụp ảnh màn hình storefront.
      */
     private function translateExistingGroups(Connection $connection, ?string $vietnameseId): void
     {
@@ -104,7 +109,7 @@ class Migration1786159617PropertyGroupsForFashion extends MigrationStep
              SELECT pgt.`property_group_id`, :vi, pgt.`name`, pgt.`description`, pgt.`position`, :now
              FROM `property_group_translation` pgt
              WHERE pgt.`language_id` = :source
-             ON DUPLICATE KEY UPDATE `name` = VALUES(`name`)',
+             ON DUPLICATE KEY UPDATE `name` = `property_group_translation`.`name`',
             [
                 'vi' => $vietnameseId,
                 'source' => $this->languageIdByLocale($connection, 'en-US'),
@@ -118,7 +123,7 @@ class Migration1786159617PropertyGroupsForFashion extends MigrationStep
              SELECT t.`property_group_option_id`, :vi, t.`name`, t.`position`, :now
              FROM `property_group_option_translation` t
              WHERE t.`language_id` = :source
-             ON DUPLICATE KEY UPDATE `name` = VALUES(`name`)',
+             ON DUPLICATE KEY UPDATE `name` = `property_group_option_translation`.`name`',
             [
                 'vi' => $vietnameseId,
                 'source' => $this->languageIdByLocale($connection, 'en-US'),

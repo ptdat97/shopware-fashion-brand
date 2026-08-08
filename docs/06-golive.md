@@ -60,13 +60,16 @@ Phần lớn đã xong ở Phase 0 qua plugin `AniveleVietnam` — chạy `plugi
 
 ## Theme & Nội dung
 
-- [ ] Theme đã compile bản production
-- [ ] Kiểm tra trên nhiều thiết bị: điện thoại, tablet, máy tính
-- [ ] Kiểm tra trên nhiều trình duyệt
-- [ ] Không còn chữ tiếng Anh sót trên giao diện tiếng Việt
-- [ ] Ảnh đã tối ưu dung lượng
+- [x] ✅ Theme `AniveleTheme` đã compile và gán cho sales channel
+- [x] ✅ Việt hoá nhãn còn sót ("Home" → "Trang chủ", "Pattern" → "Hoạ tiết")
+- [ ] 🔴 **Tải logo thật của brand** — Administration → Themes → Giao diện Anivele → Media. Hiện đang dùng chữ ANIVELE tạm
+- [ ] 🔴 **Favicon** — vẫn là favicon mặc định của Shopware
+- [ ] Kiểm tra trên thiết bị thật: điện thoại, tablet, máy tính
+- [ ] Kiểm tra trên nhiều trình duyệt (Safari iOS rất phổ biến ở VN)
+- [ ] Rà lại toàn bộ giao diện bằng **ảnh chụp màn hình**, không chỉ `curl` — xem [02-theme.md](02-theme.md)
+- [ ] Ảnh đã tối ưu dung lượng (chưa có WebP/AVIF)
 - [ ] Trang 404 và trang lỗi hiển thị đúng
-- [ ] Logo, favicon, thông tin liên hệ đúng
+- [ ] Thông tin liên hệ đúng (hiện footer còn số điện thoại mẫu `0180 - 000000`)
 
 ## Pháp lý
 

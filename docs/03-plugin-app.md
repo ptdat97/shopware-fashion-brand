@@ -23,6 +23,7 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 | AniveleVietnam | 1.0.0 | Active | 0 | Plugin tự viết — nền tảng thị trường VN (Phase 0) |
 | AniveleCatalog | 1.0.0 | Active | 0 | Plugin tự viết — cấu trúc biến thể Màu × Size (Phase 2) |
 | AnivelePayment | 1.0.0 | Active | 0 | Plugin tự viết — VietQR + phí vận chuyển (Phase 1) |
+| AniveleTheme | 1.0.0 | Active | 0 | Plugin tự viết — giao diện thương hiệu (Phase 3) |
 | AniveleDemoData | 1.0.0 | Active | 0 | Plugin tự viết — **gỡ trước khi go-live**, thay bằng hàng thật |
 | SwagLanguagePack | dev-master | Active | 1 | Theo dõi bản release ổn định hỗ trợ 6.7 để chuyển sang |
 

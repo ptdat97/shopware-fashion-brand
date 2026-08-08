@@ -1,0 +1,33 @@
+/*
+Ghi đè biến SCSS của Bootstrap / Storefront
+==================================================
+File này nạp TRƯỚC @Storefront (xem thứ tự "style" trong theme.json) nên
+biến khai báo ở đây thắng giá trị !default của Bootstrap.
+
+Chỉ ghi đè biến — không viết CSS ở file này. CSS thật nằm ở base.scss.
+*/
+
+// --- Bo góc ---------------------------------------------------------------
+// Thời trang cao cấp thường dùng góc vuông/bo rất nhẹ. Mặc định Bootstrap
+// .375rem trông "mềm" kiểu SaaS, không hợp tông thương hiệu.
+$border-radius: 2px;
+$border-radius-sm: 2px;
+$border-radius-lg: 3px;
+$border-radius-xl: 4px;
+
+// --- Kiểu chữ -------------------------------------------------------------
+// Tiêu đề mảnh hơn mặc định (500) để trông thanh thoát hơn.
+$headings-font-weight: 400;
+$line-height-base: 1.6;
+
+// --- Nút ------------------------------------------------------------------
+// Nút cao hơn và chữ giãn nhẹ — dễ bấm trên điện thoại, đúng hướng
+// mobile-first của docs/02-theme.md.
+$btn-padding-y: 0.75rem;
+$btn-padding-x: 1.5rem;
+$btn-font-weight: 500;
+
+// --- Ô nhập ---------------------------------------------------------------
+// Cao bằng nút để form checkout cân đối.
+$input-padding-y: 0.75rem;
+$input-padding-x: 1rem;

@@ -100,18 +100,27 @@ Thực hiện bằng plugin `AniveleCatalog` — migration chuẩn hoá thuộc 
 
 ---
 
-## Phase 3 — Theme thương hiệu
+## Phase 3 — Theme thương hiệu ✅ **HOÀN TẤT giai đoạn 1** (08/08/2026)
 
 **Mục tiêu:** giao diện mang bản sắc brand, tối ưu cho thời trang.
 
-Đã chốt hướng: **tự làm theme riêng kế thừa Storefront**.
+Đã làm: **theme riêng `AniveleTheme` kế thừa Storefront**.
 
-Trọng tâm cho fashion:
-- Trang sản phẩm ảnh lớn, gallery nhiều góc
-- Bộ chọn màu/size trực quan (swatch màu thay vì dropdown)
-- Bảng size chart (khách VN rất hay cần)
-- Mobile-first — tỷ trọng mua sắm qua mobile ở VN rất cao
-- Tối ưu tốc độ tải ảnh
+| Việc | Trạng thái |
+|---|---|
+| Bảng màu thương hiệu (nâu/be/kem/đen) | ✅ Lấy từ chính bảng màu sản phẩm |
+| Logo dạng chữ ANIVELE thay "Demostore" | ✅ Tạm, tới khi có file logo thật |
+| Swatch màu tròn, nút size ≥44px cho mobile | ✅ |
+| Size hết hàng gạch chéo, không ẩn | ✅ |
+| Việt hoá nhãn còn sót ("Home", "Pattern") | ✅ |
+| Bo góc vuông, typography thanh | ✅ |
+| Bảng size chart | ⏳ Cần số đo thật của brand |
+| Ảnh WebP/AVIF | ⏳ Chưa làm |
+| Lookbook, đánh giá kèm ảnh | ⏳ Giai đoạn sau |
+
+> ⚠️ **Cần file logo thật.** Hiện dùng chữ ANIVELE. Tải logo tại Administration → Themes → Giao diện Anivele → Media, template tự chuyển sang dùng ảnh.
+
+**Bộ chọn biến thể:** kiểm tra thực tế cho thấy core 6.7 **đã render sẵn** swatch màu (`displayType = color`) và nút size — không phải dropdown như [02-theme.md](02-theme.md) lo ngại. Theme chỉ tinh chỉnh thị giác.
 
 Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md](runbook/02-tao-theme.md)
 

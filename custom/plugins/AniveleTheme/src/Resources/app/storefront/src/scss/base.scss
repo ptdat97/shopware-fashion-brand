@@ -1,0 +1,204 @@
+/*
+Giao diện thương hiệu Anivele
+==================================================
+Nạp SAU @Storefront nên ghi đè được CSS mặc định.
+
+Nguyên tắc: chỉ tinh chỉnh những gì mang bản sắc thương hiệu hoặc phục vụ
+đặc thù bán thời trang. Không viết lại toàn bộ giao diện — mọi thứ không
+khai báo ở đây vẫn kế thừa Storefront và tự cập nhật theo Shopware.
+
+Class name đều lấy từ HTML thật của storefront, không phải suy đoán.
+*/
+
+// Biến theme từ theme.json được Shopware inject sẵn, ví dụ $anivele-color-sale.
+
+// --- Bảng màu phụ trợ -----------------------------------------------------
+// Tông trung tính ấm, lấy từ chính bảng màu sản phẩm trong catalog
+// (Nâu #6b4a34 · Be #d9c9b0 · Kem #f0e6d2 · Đen #1a1a1a).
+$anivele-cream: #f0e6d2;
+$anivele-beige: #d9c9b0;
+$anivele-ink: #1a1a1a;
+$anivele-muted: #8a7f74;
+
+// --- Logo dạng chữ --------------------------------------------------------
+// Dùng tạm khi chưa có file logo thật của brand (xem views/.../logo.html.twig).
+.header-logo-wordmark {
+    display: inline-block;
+    font-size: 1.75rem;
+    font-weight: 300;
+    letter-spacing: 0.22em;
+    color: $anivele-ink;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+// --- Typography -----------------------------------------------------------
+// Tiêu đề giãn chữ nhẹ tạo cảm giác thời trang cao cấp.
+.product-detail-name,
+.card-title,
+h1, h2, h3 {
+    letter-spacing: 0.01em;
+}
+
+// Tên sản phẩm tiếng Việt dài hơn tiếng Anh đáng kể ("Đầm dạ hội dáng dài
+// tay bồng"). Trên điện thoại phải cho xuống dòng, nếu không bị cắt mất chữ
+// ở mép phải. Phát hiện khi chụp ảnh ở khổ 390px.
+.product-detail-name {
+    overflow-wrap: break-word;
+    hyphens: none;
+}
+
+// --- Khung sản phẩm ở trang danh mục --------------------------------------
+.product-box {
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+        border-color: $anivele-beige;
+    }
+}
+
+// Ảnh sản phẩm: tỷ lệ dọc hợp với ảnh người mẫu mặc đồ.
+// Ảnh thời trang chụp dọc, khung vuông của Bootstrap cắt mất phần chân váy.
+.product-image-wrapper {
+    background-color: $anivele-cream;
+}
+
+.product-name {
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+
+// Giá VND dài hơn USD đáng kể (1.250.000 ₫ vs $52.00) — đây chính là lý do
+// docs/02-theme.md yêu cầu chốt currency trước khi làm theme.
+// Cho phép xuống dòng thay vì tràn khung trên điện thoại.
+.product-price {
+    font-weight: 500;
+    white-space: normal;
+    word-break: keep-all;
+}
+
+// --- Bộ chọn biến thể -----------------------------------------------------
+// Core 6.7 đã render swatch màu và nút size sẵn; ở đây chỉ tinh chỉnh thị giác.
+
+// Swatch màu: hình tròn thay vì vuông, viền mảnh để phân biệt màu trắng/kem
+// với nền trang.
+// Core đặt `min-width: 3.75rem; height: 3.75rem` cho swatch màu
+// (vendor/.../scss/page/product-detail/_configurator.scss) nên chỉ khai báo
+// `width` là không đủ — swatch bị kéo dẹt thành bầu dục. Phải ghi đè cả
+// min-width. Phát hiện khi chụp ảnh màn hình thật, không lộ ra khi đọc CSS.
+.product-detail-configurator-option-label.is-display-color {
+    --bs-btn-padding-x: 0;
+    --bs-btn-padding-y: 0;
+
+    min-width: 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+
+    &:hover {
+        border-color: $anivele-ink;
+    }
+}
+
+.product-detail-configurator-option-input:checked + .product-detail-configurator-option-label.is-display-color {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3px $anivele-ink;
+    border-color: transparent;
+}
+
+// Nút size: vuông đều, tối thiểu 44px cho vùng chạm trên điện thoại
+// (khuyến nghị vùng chạm tối thiểu của cả iOS lẫn Android).
+.product-detail-configurator-option-label.is-display-text {
+    min-width: 3rem;
+    min-height: 2.75rem;
+    font-weight: 500;
+}
+
+// Size hết hàng: KHÔNG ẩn đi — docs/02-theme.md gọi việc ẩn size hết hàng là
+// lỗi UX phổ biến vì khách không biết shop có size đó nên không quay lại.
+//
+// Core đã gạch ngang chữ (`.disabled { text-decoration: line-through }`).
+// Ở đây chỉ tăng độ tương phản để trạng thái "hết hàng" rõ hơn trên nền kem.
+.product-detail-configurator-option-label.not-combinable {
+    opacity: 0.45;
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+// Swatch màu hết hàng: gạch chéo, vì gạch ngang chữ không thấy được
+// trên ô màu không có chữ.
+.product-detail-configurator-option-label.is-display-color.not-combinable {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to top left,
+            transparent calc(50% - 1px),
+            rgba(0, 0, 0, 0.55) calc(50% - 1px),
+            rgba(0, 0, 0, 0.55) calc(50% + 1px),
+            transparent calc(50% + 1px)
+        );
+        pointer-events: none;
+    }
+}
+
+// --- Trang chi tiết sản phẩm ----------------------------------------------
+.product-detail-buy .btn-buy {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.9375rem;
+}
+
+// --- Khối VietQR ở trang cảm ơn -------------------------------------------
+// Thêm ở Phase 1 (plugin AnivelePayment); tạo dáng cho khớp thương hiệu.
+.anivele-vietqr {
+    border-color: $anivele-beige;
+
+    .anivele-vietqr-title {
+        font-size: 1.125rem;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+    }
+
+    .anivele-vietqr-body {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+
+    .anivele-vietqr-code img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border: 1px solid $anivele-beige;
+        background: #fff;
+    }
+
+    .anivele-vietqr-details {
+        margin: 0;
+        min-width: 15rem;
+
+        dt {
+            font-weight: 400;
+            color: $anivele-muted;
+            font-size: 0.875rem;
+        }
+
+        dd {
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+    }
+
+    .anivele-vietqr-note {
+        margin-top: 1rem;
+        margin-bottom: 0;
+        font-size: 0.875rem;
+        color: $anivele-muted;
+    }
+}

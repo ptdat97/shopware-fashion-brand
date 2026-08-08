@@ -1,5 +1,7 @@
 # Theme thương hiệu
 
+> ✅ **Đã thực hiện giai đoạn 1** (08/08/2026) — plugin `AniveleTheme`. Tài liệu này giữ nguyên phần lý do và nguyên tắc; phần "đã kiểm chứng" bổ sung ở cuối.
+
 Hướng đã chốt: **tự xây theme riêng kế thừa Storefront mặc định**.
 
 ## Vì sao chọn hướng này
@@ -85,3 +87,57 @@ custom/plugins/AniveleTheme/
 **Không bắt đầu theme trước khi chốt xong currency VND.** Lý do: chuỗi giá VND dài hơn USD đáng kể (`1.250.000 ₫` so với `$52.00`). Layout thiết kế theo giá USD sẽ vỡ khi chuyển sang VND — đặc biệt ở khung sản phẩm trên mobile.
 
 Thao tác cụ thể: [runbook/02-tao-theme.md](runbook/02-tao-theme.md)
+
+---
+
+## Đã kiểm chứng khi làm
+
+### 🔴 Phải CHỤP ẢNH storefront, không chỉ đọc CSS
+
+Bài học lớn nhất của phase này. CSS build ra đúng, `grep` thấy đủ class, mọi trang trả HTTP 200 — nhưng **chụp ảnh màn hình mới lộ ra 5 lỗi**, không lỗi nào phát hiện được bằng cách đọc code:
+
+| Lỗi | Vì sao đọc code không thấy |
+|---|---|
+| Logo vẫn là "Demostore" | Ảnh mặc định của Shopware, không có trong CSS lẫn Twig của theme |
+| Bộ lọc hiện "Pattern" thay vì "Hoạ tiết" | Bản dịch vi-VN trong database, không nằm trong code |
+| Tiêu đề trang chủ hiện "Home" | Tên danh mục gốc trong database |
+| Swatch màu bị dẹt thành bầu dục | CSS của tôi đúng cú pháp, nhưng core đặt `min-width` thắng |
+| Tên sản phẩm dài bị cắt trên mobile | Chỉ xảy ra ở khổ hẹp |
+
+Cách chụp (Chrome có sẵn trên máy):
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --disable-gpu --no-sandbox --hide-scrollbars \
+  --window-size=1280,900 --screenshot=/tmp/shot.png \
+  "http://shopware-fashion-brand.test/"
+
+# Mobile — đừng bỏ qua, tỷ trọng mua qua điện thoại ở VN rất cao
+--window-size=414,900
+```
+
+> **Mẹo phân biệt lỗi của mình hay của core:** tạm đổi về theme mặc định
+> (`theme:change Storefront -s <id>`) rồi chụp lại. Nếu lỗi vẫn còn thì
+> không phải do theme mình viết. Đã dùng đúng cách này để loại trừ một
+> hiện tượng cắt chữ tưởng là bug nhưng thực ra là artifact của headless.
+
+### Ghi đè CSS của core: phải đọc SCSS gốc trước
+
+Core đặt `min-width: 3.75rem; height: 3.75rem` cho swatch màu tại
+`vendor/shopware/storefront/Resources/app/storefront/src/scss/page/product-detail/_configurator.scss`.
+Chỉ khai báo `width` là không đủ — phải ghi đè cả `min-width`.
+
+Tương tự, core đặt `--bs-btn-padding-*` dạng biến CSS ngay trên class đó,
+nên `padding: 0` thường không thắng; phải ghi đè chính biến.
+
+> Core cũng đã có sẵn `.disabled { text-decoration: line-through }` cho size
+> hết hàng — kiểm tra trước khi tự viết lại, tránh trùng lặp.
+
+### Bộ chọn biến thể: core 6.7 đã đủ tốt
+
+Mục "Bộ chọn biến thể trực quan" ở trên lo rằng Shopware hiển thị variant bằng
+dropdown. **Không đúng với 6.7**: template `buy-widget/configurator.html.twig`
+đã render radio button, và tự đổ màu nền khi `displayType == 'color'`.
+
+Theme chỉ cần tinh chỉnh hình dáng (bo tròn, kích thước vùng chạm), không cần
+viết lại template.

@@ -1,0 +1,17 @@
+{% sw_extends '@Storefront/storefront/layout/header/logo.html.twig' %}
+
+{#
+    Logo dạng chữ (wordmark) thay cho ảnh "Demostore" mặc định của Shopware.
+
+    Chỉ dùng khi CHƯA cấu hình logo thật: vào Administration → Themes →
+    Giao diện Anivele → Media → tải logo lên, template sẽ tự dùng ảnh đó.
+
+    Cố ý không tự vẽ file logo — nhận diện thương hiệu phải do brand cung cấp.
+#}
+{% block layout_header_logo_image %}
+    {% if theme_config('sw-logo-desktop') and 'demostore-logo' not in theme_config('sw-logo-desktop') %}
+        {{ parent() }}
+    {% else %}
+        <span class="header-logo-wordmark">{{ config('core.basicInformation.shopName')|upper }}</span>
+    {% endif %}
+{% endblock %}

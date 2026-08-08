@@ -1,6 +1,8 @@
 # Runbook: Tạo theme thương hiệu
 
 > Chỉ bắt đầu sau khi đã chốt xong VND — xem [01-cau-hinh-vnd.md](01-cau-hinh-vnd.md) để hiểu lý do.
+>
+> ✅ Đã thực hiện: theme `AniveleTheme`, xem [../02-theme.md](../02-theme.md).
 
 ## Lệnh đã kiểm chứng trên hệ thống
 
@@ -102,11 +104,31 @@ Nếu sửa nhiều lần liên tục, cân nhắc bật chế độ dev để k
 ## Kiểm chứng
 
 ```bash
-mysql -h shopware.test -u root shopware -e \
+mysql -h 127.0.0.1 -u root shopware -e \
   "SELECT technical_name, name FROM theme;"
 ```
 
 Kỳ vọng: xuất hiện `AniveleTheme` bên cạnh `Storefront`.
+
+### 🔴 Bắt buộc: chụp ảnh storefront
+
+Kiểm tra bằng `curl`/`grep` **không đủ** — CSS build đúng, trang trả 200, mà
+giao diện vẫn sai. Phase 3 phát hiện 5 lỗi chỉ nhờ chụp ảnh. Xem
+[../02-theme.md](../02-theme.md) mục "Đã kiểm chứng khi làm".
+
+```bash
+# Desktop
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --disable-gpu --no-sandbox --hide-scrollbars \
+  --window-size=1280,900 --screenshot=/tmp/shot.png \
+  "http://shopware-fashion-brand.test/"
+
+# Mobile — không được bỏ qua
+--window-size=414,900
+```
+
+Kiểm tra bằng mắt: logo, nhãn tiếng Việt, giá VND không tràn khung, swatch màu,
+nút size đủ lớn để bấm.
 
 Kiểm tra theme đang áp cho sales channel:
 
