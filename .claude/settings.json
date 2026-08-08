@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "additionalDirectories": [
+      "/tmp",
+      "/private/tmp",
+      "/Users/dat/shopware-backups"
+    ]
+  },
+  "skipDangerousModePermissionPrompt": true
+}
