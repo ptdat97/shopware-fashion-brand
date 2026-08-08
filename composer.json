@@ -8,7 +8,7 @@
         "shopware/elasticsearch": "*",
         "shopware/storefront": "*",
         "swag/language-pack": "dev-master",
-        "swag/paypal": "10.7.0",
+        "swag/paypal": "10.8.0",
         "symfony/flex": "~2"
     },
     "repositories": [
