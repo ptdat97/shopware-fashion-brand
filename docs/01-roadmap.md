@@ -36,9 +36,27 @@ Dữ liệu demo: [runbook/05-demo-data.md](runbook/05-demo-data.md)
 
 ---
 
-## Phase 1 — Thanh toán & Vận chuyển
+## Phase 1 — Thanh toán & Vận chuyển ✅ **HOÀN TẤT giai đoạn 1** (08/08/2026)
 
 **Mục tiêu:** khách đặt được hàng và trả được tiền.
+
+| Việc | Trạng thái |
+|---|---|
+| COD (thanh toán khi nhận hàng) | ✅ Việt hoá, gắn vào storefront |
+| Chuyển khoản trước | ✅ Việt hoá, gắn vào storefront |
+| **VietQR** — QR chuẩn NAPAS | ✅ Plugin `AnivelePayment` |
+| Dọn 17 phương thức PayPal mồ côi | ✅ |
+| Bảng phí vận chuyển theo khu vực | ✅ 25k nội thành / 35k tỉnh / miễn phí từ 500k |
+| VNPay, MoMo | ⏳ Giai đoạn sau, khi lượng đơn đủ lớn |
+| API GHN/GHTK | ⏳ Giai đoạn 2 |
+
+**Kiểm chứng bằng đơn hàng thật:** đặt đơn qua Store API với VietQR → trạng thái giao dịch `open` (chờ đối soát), tồn kho biến thể trừ đúng, mã QR trên trang cảm ơn **giải mã ra đúng payload** (ngân hàng, số tài khoản, số tiền, nội dung `ANV10001`).
+
+> ⚠️ **Cần nhập thông tin tài khoản ngân hàng thật** tại Administration → Extensions → Anivele Payment (VietQR) trước khi mở bán. Chưa nhập thì trang cảm ơn hiện cảnh báo thay vì mã QR sai.
+>
+> ⚠️ **Đối soát vẫn thủ công.** Đơn VietQR không tự chuyển sang "đã thanh toán" — nhân viên phải kiểm tra sao kê rồi đổi trạng thái. Tự động cần webhook ngân hàng, chưa làm.
+
+Chi tiết bên dưới là bối cảnh dẫn tới quyết định này.
 
 **Cảnh báo quan trọng:** khảo sát Packagist cho thấy **không có plugin Shopware 6 chính thức cho VNPay, MoMo, ZaloPay, GHN, GHTK**. Kết quả tìm kiếm chỉ ra thư viện Laravel/Magento/Omnipay — không dùng trực tiếp được cho Shopware. Đây là hạng mục tốn công nhất của cả dự án.
 

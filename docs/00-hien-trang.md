@@ -67,21 +67,32 @@ Không chịu thuế (0%)    0.000%
 
 | Phương thức | Trạng thái |
 |---|---|
-| Invoice | active |
-| Cash on delivery | active |
-| Paid in advance | active |
+| Thanh toán khi nhận hàng (COD) | active — gắn storefront |
+| Chuyển khoản trước | active — gắn storefront |
+| **Chuyển khoản QR (VietQR)** | active — plugin `AnivelePayment` |
+| Thanh toán bằng hoá đơn | active, không gắn storefront |
 | PayPal | **đã gỡ hẳn** (08/08/2026) — xem [03-plugin-app.md](03-plugin-app.md) |
 
-Không có cổng thanh toán nội địa VN nào. COD có sẵn là điểm cộng vì COD chiếm tỷ trọng lớn ở VN, nhưng thiếu VNPay/MoMo là thiếu hụt lớn.
+Đã có VietQR (chuyển khoản QR chuẩn NAPAS) tự viết. Chưa có VNPay/MoMo — xem [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md).
+
+> ⚠️ VietQR **chưa cấu hình số tài khoản thật**. Phải nhập tại Administration → Extensions trước khi mở bán.
 
 ### Vận chuyển
 
 ```
-Standard   active
-Express    active
+Giao hàng tiêu chuẩn   active   — bảng phí theo khu vực
+Giao hàng nhanh        active   — chưa cấu hình phí
 ```
 
-Đây là shipping method generic, chưa nối với đơn vị vận chuyển VN nào (GHN, GHTK, Viettel Post, J&T...).
+Bảng phí phẳng của "Giao hàng tiêu chuẩn", đã kiểm chứng bằng giỏ hàng thật:
+
+| Điều kiện | Phí |
+|---|---|
+| Địa chỉ giao ở Hà Nội / Hồ Chí Minh | 25.000 ₫ |
+| Các tỉnh thành khác | 35.000 ₫ |
+| Đơn từ 500.000 ₫ | **miễn phí** |
+
+Chưa nối API đơn vị vận chuyển VN nào (GHN, GHTK, Viettel Post, J&T) — đó là giai đoạn 2.
 
 ### Quốc gia ✅
 
@@ -102,8 +113,11 @@ Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên ti
 |---|---|---|---|
 | AniveleVietnam | 1.0.0 | Yes | Plugin tự viết — nền tảng thị trường VN |
 | AniveleCatalog | 1.0.0 | Yes | Plugin tự viết — biến thể Màu × Size |
+| AnivelePayment | 1.0.0 | Yes | Plugin tự viết — VietQR + phí vận chuyển |
 | AniveleDemoData | 1.0.0 | Yes | Plugin tự viết — dữ liệu demo |
 | SwagLanguagePack | dev-master | Yes | Plugin bên thứ ba duy nhất còn lại |
+
+Thư viện ngoài: `endroid/qr-code` (sinh ảnh QR) — cài ở cấp dự án vì Shopware không nạp `vendor/` của plugin, xem [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md).
 
 `custom/apps/` rỗng — chưa có app nào.
 

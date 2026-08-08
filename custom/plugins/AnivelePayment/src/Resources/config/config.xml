@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Tài khoản nhận chuyển khoản</title>
+        <title lang="en-GB">Bank account for transfers</title>
+        <subtitle>Thông tin này được nhúng vào mã QR. Khách quét bằng app ngân hàng sẽ thấy đúng số tài khoản và số tiền.</subtitle>
+        <subtitle lang="en-GB">This data is embedded in the QR code shown to customers.</subtitle>
+
+        <input-field type="single-select">
+            <name>bankBin</name>
+            <label>Ngân hàng thụ hưởng</label>
+            <label lang="en-GB">Beneficiary bank</label>
+            <options>
+                <option><id>970436</id><name>Vietcombank</name><name lang="en-GB">Vietcombank</name></option>
+                <option><id>970407</id><name>Techcombank</name><name lang="en-GB">Techcombank</name></option>
+                <option><id>970422</id><name>MB Bank</name><name lang="en-GB">MB Bank</name></option>
+                <option><id>970415</id><name>VietinBank</name><name lang="en-GB">VietinBank</name></option>
+                <option><id>970418</id><name>BIDV</name><name lang="en-GB">BIDV</name></option>
+                <option><id>970416</id><name>ACB</name><name lang="en-GB">ACB</name></option>
+                <option><id>970432</id><name>VPBank</name><name lang="en-GB">VPBank</name></option>
+                <option><id>970405</id><name>Agribank</name><name lang="en-GB">Agribank</name></option>
+                <option><id>970403</id><name>Sacombank</name><name lang="en-GB">Sacombank</name></option>
+                <option><id>970423</id><name>TPBank</name><name lang="en-GB">TPBank</name></option>
+            </options>
+            <helpText>Mã BIN lấy từ danh mục chính thức của NAPAS.</helpText>
+            <helpText lang="en-GB">BIN codes from the official NAPAS registry.</helpText>
+        </input-field>
+
+        <input-field type="text">
+            <name>accountNumber</name>
+            <label>Số tài khoản</label>
+            <label lang="en-GB">Account number</label>
+            <placeholder>Chỉ nhập chữ số, không có dấu cách</placeholder>
+            <helpText>Số tài khoản nhận tiền của cửa hàng.</helpText>
+            <helpText lang="en-GB">The shop's receiving account number.</helpText>
+        </input-field>
+
+        <input-field type="text">
+            <name>accountHolder</name>
+            <label>Tên chủ tài khoản</label>
+            <label lang="en-GB">Account holder</label>
+            <placeholder>VIET NAM (không dấu, in hoa)</placeholder>
+            <helpText>Hiển thị cho khách đối chiếu. Nên viết in hoa không dấu như trên sao kê ngân hàng.</helpText>
+            <helpText lang="en-GB">Shown to customers for verification.</helpText>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Nội dung chuyển khoản</title>
+        <title lang="en-GB">Transfer reference</title>
+        <subtitle>Dùng để đối soát đơn hàng với sao kê ngân hàng.</subtitle>
+        <subtitle lang="en-GB">Used to reconcile orders against bank statements.</subtitle>
+
+        <input-field type="text">
+            <name>referencePrefix</name>
+            <label>Tiền tố nội dung chuyển khoản</label>
+            <label lang="en-GB">Reference prefix</label>
+            <defaultValue>ANV</defaultValue>
+            <helpText>Nội dung sẽ là "tiền tố + mã đơn hàng", ví dụ ANV10001. Chỉ dùng chữ và số không dấu — app ngân hàng loại bỏ ký tự đặc biệt.</helpText>
+            <helpText lang="en-GB">Reference becomes "prefix + order number". Letters and digits only.</helpText>
+        </input-field>
+    </card>
+</config>

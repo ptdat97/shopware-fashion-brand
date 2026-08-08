@@ -1,0 +1,14 @@
+{
+    "anivele": {
+        "vietqr": {
+            "title": "Scan to pay by bank transfer",
+            "intro": "Open your banking app and scan the QR code below. The account number, amount and reference will be filled in automatically.",
+            "accountHolder": "Account holder",
+            "accountNumber": "Account number",
+            "amount": "Amount",
+            "reference": "Transfer reference",
+            "note": "Please keep the transfer reference unchanged so we can match your payment to this order. Your order is processed once we confirm the payment.",
+            "notConfigured": "The shop has not configured a bank account for transfers yet. Please contact us for payment instructions."
+        }
+    }
+}

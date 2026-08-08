@@ -94,9 +94,31 @@ SwagLanguagePack     1     ← bên thứ ba, đúng là phải qua composer
 |---|---|
 | Cài plugin **bên thứ ba** từ Packagist / Shopware Store | Không có sẵn trong repo, buộc phải tải về |
 | Nâng version `shopware/core` và các gói core | Đây đúng là phụ thuộc của dự án |
-| Plugin tự viết cần **thư viện ngoài** | Khai báo trong `composer.json` **của plugin đó**, không phải của dự án |
+| Plugin tự viết cần **thư viện ngoài** | Khai báo trong `composer.json` của plugin **và** `composer require` ở cấp dự án — xem bên dưới |
 
-> Trường hợp cuối cần chú ý: thư viện khai báo trong plugin không tự động được cài. Xem [03-plugin-app.md](03-plugin-app.md) trước khi thêm phụ thuộc ngoài cho plugin.
+### Thư viện ngoài cho plugin: phải cài ở cấp dự án
+
+> 🔴 **Shopware KHÔNG nạp `vendor/autoload.php` của plugin.** `KernelPluginLoader` chỉ đăng ký các namespace `psr-4` khai báo trong `composer.json` của plugin, không đụng tới thư mục `vendor/` bên trong plugin.
+
+Đã trả giá thật khi làm VietQR: cài `endroid/qr-code` vào `custom/plugins/AnivelePayment/vendor/`, `composer install` báo thành công, `php -r` test riêng cũng chạy — nhưng storefront trả **500**:
+
+```
+ClassNotFoundError: Attempted to load class "QrCode" from namespace "Endroid\QrCode"
+```
+
+Cách đúng — khai báo ở **cả hai nơi**:
+
+```bash
+# 1. Trong composer.json của plugin — để biết plugin cần gì
+#    "require": { "endroid/qr-code": "^6.0" }
+
+# 2. Cài thật ở cấp dự án — để Shopware nạp được
+composer require "endroid/qr-code:^6.0"
+```
+
+Đây là **ngoại lệ hợp lệ của Quy tắc số 2**: thư viện bên thứ ba, không phải plugin tự viết. Plugin `swag/paypal` cũng làm đúng như vậy với `shopware/paypal-sdk`.
+
+> Đừng để lại `vendor/` bên trong plugin sau khi đã cài ở cấp dự án — hai bản sao cùng thư viện sẽ lệch phiên bản về sau.
 
 ---
 

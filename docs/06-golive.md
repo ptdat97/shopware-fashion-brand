@@ -49,11 +49,14 @@ Phần lớn đã xong ở Phase 0 qua plugin `AniveleVietnam` — chạy `plugi
 
 ## Thanh toán & Vận chuyển
 
-- [ ] 🔴 Ít nhất một phương thức thanh toán hoạt động (COD là đủ để mở bán)
-- [ ] 🔴 Phí vận chuyển cấu hình đúng theo khu vực
-- [ ] Đã test đặt hàng thật từ đầu đến cuối
-- [ ] Nếu có cổng online: đã test cả trường hợp **thanh toán thất bại** và **hủy giữa chừng**
-- [ ] Quyết định giữ hay bật PayPal — xem [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md)
+- [x] ✅ Phương thức thanh toán hoạt động: COD, chuyển khoản trước, VietQR
+- [x] ✅ Phí vận chuyển theo khu vực (25k nội thành / 35k tỉnh / miễn phí từ 500k)
+- [x] ✅ Đã test đặt hàng thật từ đầu đến cuối qua Store API
+- [ ] 🔴 **Nhập số tài khoản ngân hàng thật cho VietQR** — Administration → Extensions → Anivele Payment. Chưa nhập thì khách không chuyển khoản được
+- [ ] 🔴 **Quét thử mã QR bằng app ngân hàng thật** trên đơn hàng thật, xác nhận đúng số tiền và nội dung
+- [ ] 🔴 Chốt quy trình đối soát: ai kiểm tra sao kê, bao lâu một lần, đổi trạng thái đơn thế nào
+- [ ] Cân nhắc ngưỡng miễn phí ship 500.000 ₫ có phù hợp biên lợi nhuận không
+- [ ] PayPal đã gỡ hẳn — xem [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md)
 
 ## Theme & Nội dung
 

@@ -1,7 +1,10 @@
 # ADR-002: Chiến lược thanh toán cho thị trường VN
 
-**Trạng thái:** Cần quyết định — ảnh hưởng lớn tới chi phí và thời gian go-live
-**Ngày:** 26/07/2026
+**Trạng thái:** ✅ Đã quyết định và thực hiện giai đoạn 1 (08/08/2026)
+**Ngày:** 26/07/2026 · cập nhật 08/08/2026
+
+> **Đã chọn phương án A + B:** go-live với COD + chuyển khoản, đồng thời tự viết VietQR.
+> VietQR đã hoàn thành trong plugin `AnivelePayment`. VNPay/MoMo để giai đoạn sau.
 
 ## Bối cảnh
 
@@ -81,6 +84,49 @@ Lý do: doanh thu từ COD bắt đầu chảy ngay trong lúc phát triển c�
 Lý do gỡ hẳn thay vì để inactive: thư mục plugin bị xoá khỏi git nhưng `composer.json` vẫn require, khiến autoloader trỏ vào file không tồn tại và **làm hỏng toàn bộ `bin/console`** — mọi lệnh Shopware đều lỗi. Plugin inactive mà thiếu file còn nguy hiểm hơn không cài.
 
 Nếu sau này bán ra nước ngoài thì cài lại từ đầu bằng `composer require swag/paypal`.
+
+## Ghi chú kỹ thuật khi làm VietQR
+
+Kiến thức thu được khi triển khai, hữu ích cho VNPay/MoMo về sau.
+
+### Kiến trúc payment handler 6.7
+
+Shopware 6.7 chỉ còn **một** abstract class: `AbstractPaymentHandler`. Bốn interface mà phần lớn tutorial trên mạng vẫn dạy (`SynchronousPaymentHandlerInterface`, `AsynchronousPaymentHandlerInterface`, `PaymentHandlerInterface`, `PreparedPaymentHandlerInterface`) **đã bị xoá** — xem [08-quy-tac-phat-trien.md](../08-quy-tac-phat-trien.md) Quy tắc số 3.
+
+Phương thức không cần redirect (COD, chuyển khoản, VietQR) thì `pay()` trả `null`, giống `DefaultPayment` của core. Có redirect (VNPay, MoMo) thì trả `RedirectResponse`, và `finalize()` sẽ được gọi sau khi khách quay lại.
+
+Mẫu tham chiếu tốt nhất: `swag/paypal` 10.8.0, class `Swag\PayPal\Checkout\Payment\Method\AbstractPaymentMethodHandler`.
+
+### Chuẩn VietQR
+
+Payload theo đặc tả EMVCo, định dạng TLV (tag 2 ký tự + độ dài 2 ký tự + giá trị):
+
+```
+00 Payload format    01
+01 Init method       12 (QR động, có sẵn số tiền)
+38 Merchant account  GUID NAPAS A000000727 + BIN ngân hàng + số TK + QRIBFTTA
+53 Currency          704 (VND)
+54 Amount            số tiền, không phần thập phân
+58 Country           VN
+62 Additional        nội dung chuyển khoản
+63 CRC               CRC-16/CCITT-FALSE trên toàn chuỗi đã gồm "6304"
+```
+
+> 🔴 **CRC phải đúng biến thể CCITT-FALSE** (poly 0x1021, init 0xFFFF, không đảo bit). Dùng nhầm biến thể CRC-16 khác sẽ sinh mã QR mà app ngân hàng **từ chối** — và không có cách nào biết ngoài việc quét thử. Kiểm chứng bằng vector chuẩn: `CRC("123456789") = 0x29B1`.
+
+Nội dung chuyển khoản phải là **chữ/số không dấu**; app ngân hàng loại bỏ ký tự đặc biệt.
+
+### Kiểm chứng mã QR — không tin bằng mắt
+
+Mã QR trông đúng vẫn có thể không quét được. Cách kiểm chứng thật:
+
+```bash
+brew install zbar
+# render QR ra PNG rồi giải mã ngược
+zbarimg --raw -q qr.png
+```
+
+Chuỗi giải mã phải **khớp từng ký tự** với payload sinh ra. Đã dùng đúng cách này để xác nhận mã QR trên trang cảm ơn mang đúng số tài khoản, số tiền và mã đơn.
 
 ## Lưu ý bảo mật
 

@@ -22,6 +22,7 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 |---|---|---|---|---|
 | AniveleVietnam | 1.0.0 | Active | 0 | Plugin tự viết — nền tảng thị trường VN (Phase 0) |
 | AniveleCatalog | 1.0.0 | Active | 0 | Plugin tự viết — cấu trúc biến thể Màu × Size (Phase 2) |
+| AnivelePayment | 1.0.0 | Active | 0 | Plugin tự viết — VietQR + phí vận chuyển (Phase 1) |
 | AniveleDemoData | 1.0.0 | Active | 0 | Plugin tự viết — **gỡ trước khi go-live**, thay bằng hàng thật |
 | SwagLanguagePack | dev-master | Active | 1 | Theo dõi bản release ổn định hỗ trợ 6.7 để chuyển sang |
 
@@ -49,14 +50,14 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 
 ### Cần bổ sung, phải tự làm
 
-| Dịch vụ | Vì sao cần | Cách triển khai |
+| Dịch vụ | Vì sao cần | Trạng thái |
 |---|---|---|
-| VNPay | Cổng phổ biến nhất, hỗ trợ hầu hết ngân hàng nội địa | Tự viết payment handler |
-| MoMo | Ví điện tử thị phần lớn | Tự viết |
-| ZaloPay | Gắn với hệ sinh thái Zalo | Tự viết |
-| Chuyển khoản QR (VietQR) | Đang tăng rất nhanh, chi phí thấp | Tự viết, đơn giản hơn cổng full |
+| Chuyển khoản QR (VietQR) | Đang tăng rất nhanh, chi phí thấp | ✅ **Đã làm** — plugin `AnivelePayment` |
+| VNPay | Cổng phổ biến nhất, hỗ trợ hầu hết ngân hàng nội địa | ⏳ Tự viết payment handler |
+| MoMo | Ví điện tử thị phần lớn | ⏳ Tự viết |
+| ZaloPay | Gắn với hệ sinh thái Zalo | ⏳ Tự viết |
 
-**Gợi ý thứ tự:** VietQR → VNPay → MoMo. VietQR đơn giản nhất (chỉ sinh mã QR theo chuẩn NAPAS) mà hiệu quả cao.
+**Thứ tự đã chọn:** VietQR → VNPay → MoMo. VietQR đơn giản nhất (chỉ sinh mã QR theo chuẩn NAPAS, không cần redirect) mà hiệu quả cao — đã hoàn thành. Ghi chú kỹ thuật để làm VNPay/MoMo: [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md).
 
 Cơ chế kỹ thuật: Shopware cho phép tự viết payment handler bằng cách implement interface handler tương ứng và đăng ký như một plugin. Xem [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md).
 
@@ -68,14 +69,17 @@ Tình trạng tương tự: **không có plugin sẵn cho GHN, GHTK, Viettel Pos
 
 ### Phương án theo giai đoạn
 
-**Giai đoạn 1 — bảng phí phẳng (làm được ngay, không cần code)**
+**Giai đoạn 1 — bảng phí phẳng** ✅ **đã làm** (migration trong `AnivelePayment`)
 
-Dùng Rule Builder có sẵn của Shopware để tính phí theo khu vực:
-- Nội thành HCM/HN
-- Các tỉnh thành khác
-- Miễn phí ship khi đơn trên ngưỡng X
+| Điều kiện | Phí |
+|---|---|
+| Nội thành Hà Nội / Hồ Chí Minh | 25.000 ₫ |
+| Các tỉnh thành khác | 35.000 ₫ |
+| Đơn từ 500.000 ₫ | miễn phí |
 
-Cách này đủ dùng để mở bán, không cần tích hợp API.
+Dùng Rule Builder có sẵn, không cần tích hợp API. Đủ dùng để mở bán.
+
+> 🔴 **Bẫy khi tạo rule bằng migration:** Shopware bắt buộc cây điều kiện `orContainer → andContainer → điều kiện`. Chèn thẳng `rule_condition` không có parent thì rule **không bao giờ khớp** — không báo lỗi, chỉ âm thầm không áp dụng. So sánh với rule sẵn có của core ("Cart >= 0") để đối chiếu cấu trúc.
 
 **Giai đoạn 2 — tích hợp API đơn vị vận chuyển**
 

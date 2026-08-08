@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Anivele\Payment\Service\VietQrPayloadBuilder"/>
+
+        <service id="Anivele\Payment\Service\VietQrRenderer">
+            <argument type="service" id="Anivele\Payment\Service\VietQrPayloadBuilder"/>
+        </service>
+
+        <service id="Anivele\Payment\Payment\VietQrPaymentHandler">
+            <tag name="shopware.payment.method"/>
+        </service>
+
+        <service id="Anivele\Payment\Subscriber\CheckoutFinishSubscriber">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Anivele\Payment\Service\VietQrRenderer"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+    </services>
+</container>
