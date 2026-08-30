@@ -9,10 +9,16 @@ custom/plugins/AniveleDemoData/
 ├── composer.json
 └── src/
     ├── AniveleDemoData.php
-    ├── Command/SeedDemoCommand.php
+    ├── Command/SeedDemoCommand.php          ← bản dòng lệnh
+    ├── Controller/DemoDataController.php    ← API cho nút bấm
+    ├── Service/
+    │   ├── DemoDataImporter.php             ← toàn bộ logic nhập, dùng chung
+    │   ├── DemoProductCatalog.php           ← dữ liệu 12 sản phẩm
+    │   └── DemoDataException.php
     └── Resources/
-        ├── config/services.xml
-        └── media/demo/              ← 66 ảnh + 1 video (78 MB)
+        ├── config/{services,routes,config}.xml
+        ├── media/demo/                      ← 66 ảnh + 1 video (78 MB)
+        └── public/administration/           ← JS của nút bấm (viết tay, xem bên dưới)
 ```
 
 Ảnh được **đóng gói kèm plugin**, không phụ thuộc `SwagPlatformDemoData`. Plugin tự chứa, chạy được trên máy khác.
@@ -39,13 +45,40 @@ So sánh trong hệ thống hiện tại:
 
 ## Cách dùng
 
+> ⚠️ **Cài và kích hoạt plugin KHÔNG tự nhập sản phẩm.** Phải bấm nút (hoặc chạy lệnh) — đây là chủ ý, khác `SwagPlatformDemoData` (plugin đó nhập ngay khi activate).
+
+**Cách 1 — nút bấm trong Administration (khuyến nghị)**
+
+Extensions → My extensions → **Anivele Demo Data** → ⋯ → Configure → thẻ **Dữ liệu demo** → nút **Nhập dữ liệu demo**.
+
+Thẻ này hiện sẵn tình trạng (`Ảnh đã nạp: 66/66 · Sản phẩm demo: 12/12`) và một thanh tiến trình khi đang chạy.
+
+**Cách 2 — dòng lệnh**
+
 ```bash
 php bin/console anivele:demo:seed
-php bin/console dal:refresh:index
-php bin/console cache:clear
 ```
 
-Lệnh có tính **idempotent** — chạy lại sẽ tái sử dụng ảnh/thuộc tính/danh mục đã có thay vì tạo trùng.
+Hai đường chạy **cùng một service** `DemoDataImporter` nên cho kết quả giống hệt nhau.
+
+### Chạy lại bao nhiêu lần cũng được
+
+Toàn bộ id (sản phẩm, ảnh, danh mục, thuộc tính, product_media, visibility) suy ra từ tên file / mã sản phẩm bằng `Uuid::fromStringToHex()` rồi ghi bằng `upsert`. Bấm lần hai chỉ cập nhật, không nhân bản — cách này học từ [SwagPlatformDemoData](https://github.com/shopware/SwagPlatformDemoData).
+
+Đã kiểm chứng: chạy lần hai vẫn đúng 12 sản phẩm / 47 product_media / 12 visibility, và chỉ mất 0,6 giây thay vì 10 giây.
+
+> Vì id gắn với **mã sản phẩm**, mà mã sinh theo vị trí trong mảng `DemoProductCatalog::definitions()`, nên **không được chèn sản phẩm vào giữa mảng** — làm thế sẽ dịch mã của mọi sản phẩm phía sau và tạo ra bản sao thay vì cập nhật. Thêm mới thì thêm vào cuối.
+
+### Nhập theo từng đợt
+
+Bộ ảnh 78 MB nạp một lần trong một request HTTP dễ chạm `max_execution_time`. Nên `import()` nhận `offset` và mỗi lần chỉ nạp 8 ảnh; Administration gọi lặp cho tới khi `done = true`:
+
+| Route | Việc |
+|---|---|
+| `GET /api/_action/anivele-demo-data/status` | tình trạng hiện tại, và lý do chưa nhập được (nếu có) |
+| `POST /api/_action/anivele-demo-data/import` | nhập một đợt, trả về `offset` để gọi tiếp |
+
+Đo thực tế: 66 ảnh + 12 sản phẩm mất **10,5 giây** chia thành 9 request.
 
 ## Lệnh làm gì
 
@@ -83,24 +116,52 @@ Giá net tính ngược từ giá gross theo VAT 10%: `net = round(gross / 1.10)
 
 ## Bẫy đã gặp: bản dịch chỉ vào en-US
 
-DAL tạo sản phẩm theo `Context::createDefaultContext()` → toàn bộ text vào ngôn ngữ hệ thống (**en-US**), trong khi storefront chạy **vi-VN**.
+DAL ghi text theo ngôn ngữ của `Context`, mà `Context::createDefaultContext()` là ngôn ngữ hệ thống (**en-US**), trong khi storefront chạy **vi-VN**.
 
-Khắc phục bằng cách sao chép bản dịch sang vi-VN:
+**Đã xử lý trong code**, không cần SQL tay nữa: `DemoDataImporter::translate()` nhân bản các trường dịch được sang cả hai ngôn ngữ ngay trong payload.
 
-```sql
-INSERT INTO product_translation
-  (product_id, product_version_id, language_id, name, description, ...)
-SELECT pt.product_id, pt.product_version_id, UNHEX('<VI_VN_LANG_ID>'),
-       pt.name, pt.description, ...
-FROM product_translation pt
-WHERE pt.language_id = UNHEX('<EN_US_LANG_ID>')
-ON DUPLICATE KEY UPDATE name=VALUES(name), description=VALUES(description);
+```php
+'translations' => [
+    Defaults::LANGUAGE_SYSTEM => ['name' => …, 'description' => …],
+    $vietnameseLanguageId     => ['name' => …, 'description' => …],
+],
 ```
 
-Làm tương tự cho `category_translation`, `property_group_translation`, `property_group_option_translation`.
+Áp dụng cho `product`, `category`, `property_group` và `property_group_option`. Kiểm chứng bằng SQL sau khi nhập:
 
-> ⚠️ **Bắt buộc có `product_version_id`** trong INSERT, nếu thiếu sẽ lỗi:
-> `Field 'product_version_id' doesn't have a default value`
+```sql
+SELECT lo.code, count(*) FROM product_translation pt
+JOIN language l ON l.id = pt.language_id
+JOIN locale lo ON lo.id = l.locale_id GROUP BY lo.code;
+-- vi-VN 12 · en-US 12
+```
+
+> Nếu shop chưa cài gói ngôn ngữ vi-VN thì importer chỉ ghi ngôn ngữ hệ thống — không lỗi, storefront vẫn hiển thị nhờ fallback.
+
+---
+
+## JS của Administration viết tay, không qua Vite
+
+`src/Resources/public/administration/` bình thường là **thư mục build** do Vite sinh ra từ `src/Resources/app/administration/src/main.js`. Ở plugin này nó là **mã nguồn viết tay**.
+
+Lý do: `bin/build-administration.sh` cần `npm install` trong `vendor/shopware/administration` (~1 GB phụ thuộc), trong khi thứ cần thêm chỉ là một component nhỏ. Administration nạp JS của plugin bằng `<script type="module">` (xem `ApplicationBootstrapper::injectPlugin`), nên một ES module thuần chỉ dùng biến toàn cục `Shopware` chạy được ngay — không cần build.
+
+Hai file phải khớp nhau:
+
+| File | Vai trò |
+|---|---|
+| `public/administration/js/anivele-demo-data.js` | component + api service |
+| `public/administration/.vite/entrypoints.json` | Shopware đọc file này để biết nạp JS nào |
+
+Khoá trong `entryPoints` phải đúng **technical name** của bundle — `AniveleDemoData` → `anivele_demo_data` → `anivele-demo-data` (xem `ViteFileAccessorDecorator::getTechnicalBundleName`). Sai khoá thì không có lỗi nào hiện ra, nút chỉ đơn giản là không xuất hiện.
+
+> 🔴 **Không tạo `src/Resources/app/administration/src/main.js`.** Có file đó thì lần chạy `bin/build-administration.sh` đầu tiên sẽ ghi đè cả thư mục `public/administration/`, xoá mất file viết tay.
+
+Sau mỗi lần sửa JS:
+
+```bash
+php bin/console assets:install     # chép sang public/bundles/aniveledemodata/
+```
 
 ---
 
@@ -108,17 +169,25 @@ Làm tương tự cho `category_translation`, `property_group_translation`, `pro
 
 ```bash
 # Trang danh mục
-curl -s "http://shopware.test/Dam/" | grep -oE '[0-9]{1,3}(\.[0-9]{3})+\s*₫' | sort -u
+curl -s "http://shopware-fashion-brand.test/Dam/" | grep -oE '[0-9]{1,3}(\.[0-9]{3})+\s*₫' | sort -u
 
 # Trang chi tiết
-curl -s "http://shopware.test/Dam-maxi-hoa-nhi-dang-xoe/ANV-1001" -o /dev/null -w "%{http_code}\n"
+curl -s "http://shopware-fashion-brand.test/Dam-maxi-hoa-nhi-dang-xoe/ANV-1001" -o /dev/null -w "%{http_code}\n"
+
+# Route API của nút bấm có tồn tại không
+php bin/console debug:router | grep anivele-demo-data
+
+# File JS có được phục vụ không (Shopware nạp bằng URL có hai dấu gạch chéo)
+curl -s -o /dev/null -w "%{http_code}\n" \
+  "http://shopware-fashion-brand.test//bundles/aniveledemodata/administration/js/anivele-demo-data.js"
 ```
 
-Kết quả thực tế đã kiểm chứng:
+Kết quả thực tế đã kiểm chứng (30/08/2026):
 - Giá render `1.250.000 ₫` đúng chuẩn VN
 - SEO URL tiếng Việt không dấu: `Dam-maxi-hoa-nhi-dang-xoe/ANV-1001`
-- 264 thumbnail được sinh tự động
-- Ảnh gốc phục vụ HTTP 200
+- Ảnh gốc phục vụ HTTP 200, trang chi tiết hiện đủ 4 ảnh
+- Hai route API trả 401 khi chưa đăng nhập → đúng scope `api`
+- **Chụp ảnh màn hình storefront** (danh mục + chi tiết), không chỉ đọc HTML — theo [../02-theme.md](../02-theme.md)
 
 ---
 

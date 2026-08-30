@@ -55,6 +55,8 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 > ⚠️ **VietQR chưa có số tài khoản thật.** Nhập tại Administration → Extensions → Anivele Payment trước khi mở bán. Đối soát vẫn thủ công — đơn không tự chuyển "đã thanh toán".
 >
 > ⚠️ **Chưa có file logo thật.** Đang dùng chữ ANIVELE; tải logo tại Administration → Themes → Giao diện Anivele → Media.
+>
+> ⚠️ **Dữ liệu demo không tự nhập khi cài plugin.** Bấm nút tại Administration → Extensions → Anivele Demo Data → Configure, hoặc chạy `php bin/console anivele:demo:seed`. Chạy lại không nhân bản dữ liệu. Xem [docs/runbook/05-demo-data.md](docs/runbook/05-demo-data.md).
 
 **Sửa giao diện thì phải chụp ảnh storefront kiểm chứng**, không tin `curl`/`grep` — xem [docs/02-theme.md](docs/02-theme.md).
 

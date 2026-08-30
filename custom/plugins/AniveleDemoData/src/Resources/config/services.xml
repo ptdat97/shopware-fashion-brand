@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="Anivele\DemoData\Command\SeedDemoCommand">
+        <service id="Anivele\DemoData\Service\DemoDataImporter">
             <argument type="service" id="product.repository"/>
             <argument type="service" id="category.repository"/>
             <argument type="service" id="media.repository"/>
@@ -12,8 +12,18 @@
             <argument type="service" id="property_group.repository"/>
             <argument type="service" id="tax.repository"/>
             <argument type="service" id="sales_channel.repository"/>
+            <argument type="service" id="language.repository"/>
             <argument type="service" id="Shopware\Core\Content\Media\File\FileSaver"/>
+        </service>
+
+        <service id="Anivele\DemoData\Command\SeedDemoCommand">
+            <argument type="service" id="Anivele\DemoData\Service\DemoDataImporter"/>
             <tag name="console.command"/>
+        </service>
+
+        <service id="Anivele\DemoData\Controller\DemoDataController" public="true">
+            <argument type="service" id="Anivele\DemoData\Service\DemoDataImporter"/>
+            <tag name="controller.service_arguments"/>
         </service>
     </services>
 </container>
