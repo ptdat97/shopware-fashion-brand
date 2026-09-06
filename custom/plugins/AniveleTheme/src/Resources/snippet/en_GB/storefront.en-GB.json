@@ -8,5 +8,8 @@
             "howToWaist": "Waist: measure around the narrowest part of your waist.",
             "howToHip": "Hip: measure around the fullest part of your hips."
         }
+    },
+    "listing": {
+        "boxAddProduct": "Add to cart"
     }
 }

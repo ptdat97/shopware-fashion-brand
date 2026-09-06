@@ -113,8 +113,25 @@ Cách chụp (Chrome có sẵn trên máy):
   "http://shopware-fashion-brand.test/"
 
 # Mobile — đừng bỏ qua, tỷ trọng mua qua điện thoại ở VN rất cao
---window-size=414,900
+--window-size=500,900
 ```
+
+> 🔴 **Đừng chụp hẹp hơn 500px.** Chrome headless **kẹp bề rộng bố cục ở tối
+> thiểu 500px**, kể cả `--headless=new`. Đặt `--window-size=390` vẫn cho ra
+> ảnh PNG rộng 390px, nhưng đó là bố cục 500px **bị cắt mất mép phải** — trông
+> y hệt lỗi tràn ngang. Đã mất công truy một "lỗi tràn" như vậy: đo bằng
+> JavaScript thì mọi khối đều rộng đúng 500px, còn chụp lại ở
+> `--window-size=500` thì vừa khít, không thiếu gì.
+>
+> Con số 500 vẫn nằm trong cùng breakpoint `xs` của Bootstrap (`sm` bắt đầu từ
+> 576px) nên vẫn kiểm chứng đúng bố cục điện thoại. Muốn đúng 390px thật thì
+> phải dùng Chrome DevTools Protocol (`Emulation.setDeviceMetricsOverride`),
+> không có cờ dòng lệnh nào thay được.
+>
+> **Mẹo đo phần tử nào tràn:** không iframe được vì storefront trả
+> `x-frame-options: deny`. Cách chạy được: `curl` trang về, chèn thêm thẻ
+> `<base href="http://...">` cùng một đoạn script duyệt `getBoundingClientRect()`,
+> rồi mở file cục bộ bằng Chrome — CSS vẫn tải từ máy chủ thật.
 
 > **Mẹo phân biệt lỗi của mình hay của core:** tạm đổi về theme mặc định
 > (`theme:change Storefront -s <id>`) rồi chụp lại. Nếu lỗi vẫn còn thì
@@ -175,3 +192,100 @@ dropdown. **Không đúng với 6.7**: template `buy-widget/configurator.html.tw
 
 Theme chỉ cần tinh chỉnh hình dáng (bo tròn, kích thước vùng chạm), không cần
 viết lại template.
+
+---
+
+## Giai đoạn 2 — hệ chữ theo hướng riani.com (06/09/2026)
+
+Tham chiếu: [riani.com/de_en](https://www.riani.com/de_en). May mắn là **Riani cũng chạy Shopware**
+(`assets.riani.com/bundles/moorlfoundation/...`), nên đọc thẳng được CSS thật của
+họ thay vì đoán qua ảnh chụp — cách này cho ra con số chính xác chứ không phải cảm tính.
+
+### Ba đặc điểm rút ra từ CSS của họ
+
+| Đặc điểm | Con số thật của Riani | Áp dụng ở Anivele |
+|---|---|---|
+| Chữ in hoa giãn rộng | `letter-spacing: 0.84px` trên chữ 14px = **0.06em**, `text-transform: uppercase` | Tên sản phẩm, nút, điều hướng, tiêu đề cột chân trang |
+| Cân nặng mảnh | `h2`: 33px **weight 300**; nút: 14px weight 300 | `$headings-font-weight: 300`, nút 400 |
+| Serif tương phản cao | font "Mango", `line-height: 80%`, `letter-spacing: 0.04em` | Cormorant Garamond cho tiêu đề trang + tên sản phẩm ở trang chi tiết |
+| Góc vuông tuyệt đối | `--bs-border-radius: 0` | `$border-radius: 0` |
+
+Riani dùng **Helvetica Neue Web** (có bản quyền) cho phần chữ thường; Inter mà core
+Shopware đã kèm sẵn là bản thay thế mã nguồn mở gần nhất, giữ nguyên.
+
+### Điều chỉnh riêng cho tiếng Việt
+
+Riani không phải lo phần này, ta thì có:
+
+- **Chữ in hoa cần thêm chỗ thở.** Dấu thanh nằm *trên* chữ hoa (Ầ Ế Ữ Ổ). Riani để
+  `line-height: 130%`; giữ nguyên con số đó thì dấu chạm dòng trên. Dùng **145%**.
+- **Chữ in hoa chiếm nhiều bề ngang hơn hẳn.** Nhãn nút "Thêm vào giỏ hàng" sau khi
+  in hoa + giãn 0.06em thì tràn khỏi nút ở lưới 4 cột, bị cắt thành "THÊM VÀO G…".
+  Đã rút nhãn ở trang danh mục xuống "Thêm vào giỏ" (snippet `listing.boxAddProduct`).
+- **Font phải có đủ dấu.** Kiểm bằng `fontTools` trước khi dùng, không tin mô tả trên
+  Google Fonts:
+
+  ```python
+  from fontTools.ttLib import TTFont
+  cmap = TTFont('cormorant-garamond-400-vietnamese.woff2').getBestCmap()
+  print([c for c in 'ầằẳẵặếệỗộớởữựỳỹ' if ord(c) not in cmap])   # phải rỗng
+  ```
+
+### Font tự host, chỉ hai subset
+
+Đặt tại `src/Resources/app/storefront/src/assets/font/`, khai báo `@font-face` trong
+`scss/_fonts.scss` qua biến `#{$app-css-relative-asset-path}` — đúng cơ chế core dùng
+cho Inter.
+
+Chỉ lấy subset `latin` + `vietnamese`, bỏ cyrillic/greek/latin-ext: **58 KB cho cả bốn
+file**. Subset `vietnamese` chứa sẵn ký hiệu ₫ (U+20AB).
+
+> **Core chỉ có Inter 400–700.** Kiểm bằng fontTools trên chính file của core:
+> trục `wght` chạy `min=400 max=700`. Khai báo `font-weight: 300` với file đó thì
+> trình duyệt kẹp về 400, chữ không mảnh đi chút nào — nên phải tự nạp thêm Inter 300.
+
+### Bẫy: core chừa sẵn chiều cao cho những phần tử rỗng
+
+Bỏ đoạn mô tả khỏi thẻ sản phẩm rồi mà giữa tên và giá vẫn hở gần 200px. Nguyên nhân
+là **năm** khai báo chiều cao cứng của core, cộng dồn lại:
+
+```
+.product-rating                        height 25px + margin 10px
+.product-variant-characteristics       min-height 3em
+.product-variant-characteristics-text  height 3em   ← mixin truncate-multiline
+.product-name                          height 2.75rem (chừa sẵn 2 dòng)
+.product-price-unit                    height 36px  (thẻ <p> rỗng)
+.product-cheapest-price                min-height 20px + margin-bottom 32px
+```
+
+Hai điều đáng nhớ:
+
+1. **`:empty` không dùng được** — các thẻ này chứa khoảng trắng nên theo CSS vẫn là
+   "có nội dung". Phải bỏ chiều cao, không thể ẩn bằng `:empty`.
+2. **Sửa thẻ cha là chưa đủ** — `min-height` ở `.product-variant-characteristics` bị
+   vô hiệu bởi `height: 3em` mà mixin đặt lên thẻ **con**. Chỉ nhìn ra khi bật viền
+   debug lên từng phần tử rồi chụp lại:
+
+   ```scss
+   .product-info > * { outline: 1px solid red; }
+   .product-info > * > * { outline: 1px dashed blue; }
+   ```
+
+### Vùng bấm của thẻ sản phẩm — lỗi do chính giai đoạn 1 gây ra
+
+Core giới hạn `stretched-link::after` ở đúng 200px, bằng chiều cao ảnh mặc định của
+họ, để phần chữ bên dưới vẫn bôi đen được. Giai đoạn 1 đổi ảnh sang tỷ lệ 2:3 làm ảnh
+cao hơn 200px nhiều, **nửa dưới của ảnh không bấm được** mà nhìn ảnh chụp không thấy.
+Cách sửa: cho `::after` mượn đúng tỷ lệ đó thay vì con số cứng (phải `bottom: auto`
+thì `aspect-ratio` mới có tác dụng, vì Bootstrap đặt `inset: 0`).
+
+### Việc CSS không nên làm: ép chiều cao ảnh trang chi tiết
+
+Đã thử cho ảnh chi tiết chiếm trọn cột bằng `aspect-ratio: 2/3 + object-fit: cover`.
+Kết quả: ảnh rộng ra thật nhưng bị cắt thành khổ ngang, **mất đầu người mẫu** — với
+trang chi tiết thời trang thì đó là hỏng.
+
+Chiều cao khung (430px) do **bố cục CMS** đặt inline trên từng slide, CSS của theme
+chỉ thắng được bằng `!important`, tức đè lên đúng con số quản trị viên chỉnh trong
+Administration. Cách đúng: Administration → Nội dung → Bố cục → trang chi tiết sản
+phẩm → phần tử Thư viện ảnh → tăng "Chiều cao tối thiểu".

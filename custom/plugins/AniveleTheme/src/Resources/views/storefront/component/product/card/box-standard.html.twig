@@ -36,3 +36,15 @@
         } %}
     {% endif %}
 {% endblock %}
+
+{#
+    Bỏ đoạn mô tả khỏi thẻ sản phẩm.
+
+    Core in nguyên `product.description` (đã lọc thẻ HTML) vào thẻ, rồi cắt
+    bằng CSS. Với mô tả tiếng Việt dài, thẻ bị đẩy cao và mắt phải đọc ba khối
+    chữ trước khi tới giá. Riani — và hầu hết nhà bán thời trang — chỉ để
+    TÊN + GIÁ dưới ảnh; ảnh mới là thứ bán hàng.
+
+    Mô tả vẫn còn nguyên ở trang chi tiết, không mất thông tin.
+#}
+{% block component_product_box_description %}{% endblock %}

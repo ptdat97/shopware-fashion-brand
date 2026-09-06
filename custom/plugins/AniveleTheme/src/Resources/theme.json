@@ -176,6 +176,17 @@
           "vi-VN": "Màu giá khuyến mãi",
           "en-GB": "Sale price colour"
         }
+      },
+      "anivele-font-family-display": {
+        "type": "fontFamily",
+        "value": "'Cormorant Garamond', 'Times New Roman', Georgia, serif",
+        "editable": true,
+        "block": "typography",
+        "order": 350,
+        "label": {
+          "vi-VN": "Font chữ hiển thị (tiêu đề lớn)",
+          "en-GB": "Display font (large headings)"
+        }
       }
     }
   }

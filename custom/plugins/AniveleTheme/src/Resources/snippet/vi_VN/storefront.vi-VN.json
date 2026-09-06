@@ -8,5 +8,8 @@
             "howToWaist": "Vòng eo: đo quanh phần nhỏ nhất của eo, thường trên rốn khoảng 2cm.",
             "howToHip": "Vòng mông: đo quanh phần đầy nhất của mông."
         }
+    },
+    "listing": {
+        "boxAddProduct": "Thêm vào giỏ"
     }
 }

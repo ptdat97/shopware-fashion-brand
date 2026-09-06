@@ -8,26 +8,49 @@ Chỉ ghi đè biến — không viết CSS ở file này. CSS thật nằm ở 
 */
 
 // --- Bo góc ---------------------------------------------------------------
-// Thời trang cao cấp thường dùng góc vuông/bo rất nhẹ. Mặc định Bootstrap
-// .375rem trông "mềm" kiểu SaaS, không hợp tông thương hiệu.
-$border-radius: 2px;
-$border-radius-sm: 2px;
-$border-radius-lg: 3px;
-$border-radius-xl: 4px;
+// Vuông tuyệt đối. Riani đặt `--bs-border-radius: 0` cho toàn bộ giao diện;
+// đây là chi tiết dễ bỏ qua nhưng quyết định phần lớn cảm giác "thời trang"
+// so với "SaaS". Bo góc mềm của Bootstrap (.375rem) kéo tông xuống ngay.
+$border-radius: 0;
+$border-radius-sm: 0;
+$border-radius-lg: 0;
+$border-radius-xl: 0;
+$border-radius-2xl: 0;
+$border-radius-pill: 50rem; // giữ nguyên: dùng cho badge tròn, không phải khối
 
 // --- Kiểu chữ -------------------------------------------------------------
-// Tiêu đề mảnh hơn mặc định (500) để trông thanh thoát hơn.
-$headings-font-weight: 400;
+// Tiêu đề dùng cân nặng mảnh. Riani để h2 ở 300 — chính chỗ này tạo cảm giác
+// thoáng. Cân nặng 300 do theme tự nạp thêm (xem _fonts.scss), core chỉ có
+// 400–700.
+$headings-font-weight: 300;
+$font-weight-light: 300;
 $line-height-base: 1.6;
 
 // --- Nút ------------------------------------------------------------------
-// Nút cao hơn và chữ giãn nhẹ — dễ bấm trên điện thoại, đúng hướng
-// mobile-first của docs/02-theme.md.
-$btn-padding-y: 0.75rem;
-$btn-padding-x: 1.5rem;
-$btn-font-weight: 500;
+// Nút cao và rộng rãi, chữ nhỏ. Riani: `padding: 21px 40px`, `font-size: 14px`.
+// Ở đây lấy mức vừa phải cho MỌI nút, còn nút CTA chính (.btn-buy) được nới
+// rộng thêm trong base.scss — nếu nới cho tất cả thì các nút phụ trong
+// offcanvas/giỏ hàng sẽ phình quá khổ trên điện thoại.
+$btn-padding-y: 1rem;
+$btn-padding-x: 2rem;
+$btn-font-size: 0.875rem;
+$btn-font-weight: 400;
+$btn-border-radius: 0;
+$btn-border-radius-sm: 0;
+$btn-border-radius-lg: 0;
 
 // --- Ô nhập ---------------------------------------------------------------
 // Cao bằng nút để form checkout cân đối.
-$input-padding-y: 0.75rem;
+$input-padding-y: 0.875rem;
 $input-padding-x: 1rem;
+$input-border-radius: 0;
+$input-font-size: 0.9375rem;
+
+// --- Lưới sản phẩm --------------------------------------------------------
+// Riani để ảnh sát nhau, khoảng thở nằm ở khoảng trắng quanh lưới chứ không
+// phải giữa các thẻ. Thu hẹp máng lưới cho ảnh lớn hơn trong cùng bề ngang.
+//
+// PHẢI dùng px: Storefront đặt lại biến này thành `40px` (không phải 1.5rem
+// như Bootstrap gốc) rồi đem cộng với biến px khác ở _offcanvas.scss. Khai
+// báo bằng rem làm hỏng cả lần biên dịch: "Incompatible units rem and px".
+$grid-gutter-width: 24px;

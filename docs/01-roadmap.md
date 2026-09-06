@@ -123,6 +123,20 @@ Thực hiện bằng plugin `AniveleCatalog` — migration chuẩn hoá thuộc 
 | Ảnh WebP/AVIF | ⏳ Chưa làm |
 | Lookbook, đánh giá kèm ảnh | ⏳ Giai đoạn sau |
 
+**Giai đoạn 2 — hệ chữ theo hướng riani.com** ✅ (06/09/2026)
+
+| Việc | Trạng thái |
+|---|---|
+| Chữ in hoa giãn 0.06em cho tên SP, nút, điều hướng, chân trang | ✅ Lấy đúng con số từ CSS thật của Riani |
+| Serif hiển thị (Cormorant Garamond) cho tiêu đề trang + tên SP | ✅ Tự host, đã kiểm đủ dấu tiếng Việt bằng fontTools |
+| Bổ sung Inter 300 — core chỉ có 400–700 | ✅ Tự host, 4 file chỉ 58 KB |
+| Góc vuông tuyệt đối (`$border-radius: 0`) | ✅ |
+| Thẻ sản phẩm bỏ mô tả, chỉ còn ảnh → tên → giá | ✅ Gỡ 6 khai báo chiều cao cứng của core |
+| Vùng bấm thẻ sản phẩm phủ đúng khung ảnh 2:3 | ✅ Sửa lỗi do giai đoạn 1 gây ra |
+| Việt hoá ô sắp xếp + tiêu đề trang chủ | ✅ Migration `1788690517` |
+| Ảnh trang chi tiết chiếm trọn cột | ❌ Không làm bằng CSS — thuộc bố cục CMS, xem 02-theme.md |
+| Trang chủ dạng editorial (hero, lookbook) | ⏳ Cần dựng bố cục CMS, chưa làm |
+
 > ⚠️ **Cần file logo thật.** Hiện dùng chữ ANIVELE. Tải logo tại Administration → Themes → Giao diện Anivele → Media, template tự chuyển sang dùng ảnh.
 >
 > ⚠️ **Số đo trong bảng size là SỐ THAM KHẢO** theo thang phổ biến của thị trường VN, không phải số đo thật của Anivele. Phải đo trên sản phẩm thật rồi thay lại tại Administration → Danh mục → tab Tuỳ chỉnh → Bảng size, **trước khi go-live**. Số đo sai là nguyên nhân đổi trả hàng đầu với thời trang online.

@@ -10,6 +10,9 @@ khai báo ở đây vẫn kế thừa Storefront và tự cập nhật theo Shop
 Class name đều lấy từ HTML thật của storefront, không phải suy đoán.
 */
 
+@import 'fonts';
+@import 'typography';
+
 // Biến theme từ theme.json được Shopware inject sẵn, ví dụ $anivele-color-sale.
 
 // --- Bảng màu phụ trợ -----------------------------------------------------
@@ -33,11 +36,43 @@ $anivele-muted: #8a7f74;
 }
 
 // --- Typography -----------------------------------------------------------
-// Tiêu đề giãn chữ nhẹ tạo cảm giác thời trang cao cấp.
-.product-detail-name,
-.card-title,
-h1, h2, h3 {
-    letter-spacing: 0.01em;
+// Xem _typography.scss để biết vì sao chọn ba đặc điểm này.
+
+// Tiêu đề trang và tên sản phẩm ở trang chi tiết: serif cỡ lớn.
+// Đây là "khoảnh khắc editorial" — chỉ dùng ở đúng hai chỗ này để giữ sức
+// nặng, rải khắp nơi thì mất tác dụng.
+.cms-element-category-name-headline {
+    @include anivele-display(2.25rem, 3.75rem);
+
+    margin-bottom: 2.5rem;
+}
+
+.product-detail-name {
+    @include anivele-display(1.75rem, 2.5rem);
+}
+
+// Tiêu đề mục: sans in hoa, mảnh. Riani để h2 ở 33px/300 trên desktop.
+h2, .h2 {
+    @include anivele-caps(1.375rem, 300);
+}
+
+h3, .h3 {
+    @include anivele-caps(1.0625rem, 400);
+}
+
+h4, h5, h6,
+.h4, .h5, .h6 {
+    letter-spacing: 0.02em;
+}
+
+// Điều hướng chính: in hoa, giãn chữ, mảnh.
+.main-navigation-link {
+    @include anivele-caps(0.8125rem);
+}
+
+// Tiêu đề cột ở chân trang — Riani áp dụng đúng kiểu chữ này.
+.footer-column-headline {
+    @include anivele-caps(0.8125rem);
 }
 
 // Tên sản phẩm tiếng Việt dài hơn tiếng Anh đáng kể ("Đầm dạ hội dáng dài
@@ -49,13 +84,12 @@ h1, h2, h3 {
 }
 
 // --- Khung sản phẩm ở trang danh mục --------------------------------------
+// Bỏ hẳn viền và nền: Riani để thẻ sản phẩm trôi trên nền trang, ảnh tự làm
+// khung. Viền chạy quanh khi rê chuột (bản trước) tạo cảm giác "ô phần mềm"
+// chứ không phải trang thời trang.
 .product-box {
-    border: 1px solid transparent;
-    transition: border-color 0.2s ease;
-
-    &:hover {
-        border-color: $anivele-beige;
-    }
+    border: 0;
+    background: transparent;
 }
 
 // --- Ảnh sản phẩm: tỷ lệ 2:3 dọc ------------------------------------------
@@ -113,16 +147,33 @@ h1, h2, h3 {
     }
 }
 
+// Tên sản phẩm trong thẻ: in hoa, giãn chữ, cỡ nhỏ — chữ ký thị giác của
+// Riani (họ để 13–14px, letter-spacing 0.78–0.84px, uppercase).
 .product-name {
-    font-weight: 400;
-    letter-spacing: 0.01em;
+    @include anivele-caps(0.8125rem);
+
+    // Giữ nguyên cơ chế kẹp 2 dòng của core (display:-webkit-box + line-clamp)
+    // — tên tiếng Việt dài rất dễ tràn 3 dòng và làm lệch lưới. Chỉ bỏ
+    // `height: 2.75rem` cứng để tên một dòng không chừa chỗ trống cho dòng hai.
+    height: auto;
+    color: $anivele-ink;
+    margin-bottom: 0.5rem;
+
+    &:hover {
+        color: $anivele-muted;
+    }
 }
 
 // Giá VND dài hơn USD đáng kể (1.250.000 ₫ vs $52.00) — đây chính là lý do
 // docs/02-theme.md yêu cầu chốt currency trước khi làm theme.
 // Cho phép xuống dòng thay vì tràn khung trên điện thoại.
+//
+// Cân nặng 400 chứ không phải 500: giá đậm hơn tên sản phẩm sẽ kéo mắt về
+// con số. Thời trang cao cấp làm ngược lại — sản phẩm trước, giá sau.
 .product-price {
-    font-weight: 500;
+    font-weight: 400;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
     white-space: normal;
     word-break: keep-all;
 }
@@ -360,5 +411,180 @@ h1, h2, h3 {
         li + li {
             margin-top: 0.375rem;
         }
+    }
+}
+
+// --- Nút ------------------------------------------------------------------
+// Riani: mọi nút đều in hoa, chữ 14px, giãn 0.06em, góc vuông. Kích thước và
+// bo góc đã đặt bằng biến ở overrides.scss; phần chữ phải viết ở đây vì
+// Bootstrap không có biến cho text-transform.
+.btn {
+    letter-spacing: $anivele-tracking;
+    text-transform: uppercase;
+    line-height: 1.45; // dấu tiếng Việt trên chữ hoa
+}
+
+// Nút CTA chính rộng hơn hẳn — Riani để padding ngang 40px.
+//
+// CHỈ ở trang chi tiết. Nới cho cả nút trong thẻ sản phẩm thì chữ "Thêm vào
+// giỏ hàng" bị cắt thành "THÊM VÀO G..." ở lưới 4 cột — chữ in hoa giãn rộng
+// chiếm nhiều bề ngang hơn hẳn chữ thường, phát hiện khi chụp ảnh.
+.product-detail-buy .btn-buy,
+.product-detail-buy .btn-primary {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+}
+
+// Nút mua trong thẻ sản phẩm: bó sát để chữ đủ chỗ.
+.anivele-listing-buy .btn-buy {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+// Nút dạng chữ giữ chữ thường: chúng nằm lẫn trong đoạn văn nên in hoa sẽ rối.
+//
+// `.btn-link-inline` là chỗ dễ sót: dòng "Giá đã bao gồm VAT và phí vận
+// chuyển" dưới mỗi giá thật ra là một <button class="btn btn-link-inline">,
+// nên quy tắc in hoa cho .btn tóm luôn cả nó.
+.btn-link,
+.btn-link-inline,
+.product-price-tax-link {
+    text-transform: none;
+    letter-spacing: 0.01em;
+}
+
+// --- Thẻ sản phẩm: nhịp dọc -----------------------------------------------
+// Bỏ mô tả khỏi thẻ (xem box-standard.html.twig) nên phần chữ dưới ảnh gom
+// lại sát nhau: tên → giá, đúng như Riani. Trước đó core chừa sẵn chỗ cho
+// đoạn mô tả nên thẻ có hai khoảng trống lớn vô nghĩa.
+.product-info {
+    padding-top: 1rem;
+    text-align: left;
+}
+
+// Core đặt CHIỀU CAO CỨNG cho năm phần tử trong thẻ, kể cả khi chúng rỗng, để
+// mọi thẻ cao bằng nhau. Cộng lại thành khoảng hở gần 200px giữa tên và giá —
+// nhìn thấy ngay trên ảnh chụp, không thấy khi đọc code:
+//
+//   .product-rating                  height 25px + margin 10px
+//   .product-variant-characteristics min-height 3em
+//   .product-name                    height 2.75rem (chừa sẵn 2 dòng)
+//   .product-price-unit              height 36px   (thẻ <p> rỗng)
+//   .product-cheapest-price          min-height 20px + margin-bottom 32px
+//
+// Không dùng được `:empty` vì các thẻ này chứa khoảng trắng nên theo CSS vẫn
+// là "có nội dung".
+//
+// Bỏ chiều cao cứng, để nội dung tự quyết định. Lưới vẫn thẳng hàng vì ảnh
+// đều tỷ lệ 2:3 và tên sản phẩm bị kẹp tối đa 2 dòng.
+.product-rating {
+    height: auto;
+    min-height: 0;
+    margin-bottom: 0;
+
+    &:not(:has(*)) {
+        display: none;
+    }
+}
+
+.product-variant-characteristics {
+    min-height: 0;
+
+    // Thẻ con mới là thủ phạm chính: mixin `truncate-multiline(1.5em, 2)` của
+    // core đặt `height: 3em` lên nó, nên bỏ min-height ở thẻ cha vẫn còn hở
+    // đúng 3em. Chỉ nhìn ra khi bật viền debug lên từng phần tử rồi chụp lại.
+    .product-variant-characteristics-text {
+        height: auto;
+    }
+}
+
+.product-price-unit {
+    height: auto;
+    min-height: 0;
+    // Thẻ <p> rỗng vẫn mang margin-bottom 1rem của Bootstrap.
+    margin-bottom: 0;
+}
+
+.product-cheapest-price {
+    min-height: 0;
+    margin-bottom: 0;
+}
+
+// Vùng bấm của thẻ sản phẩm phải phủ đúng khung ảnh.
+//
+// Core giới hạn `stretched-link::after` ở 200px — đúng bằng chiều cao ảnh mặc
+// định của họ — để phần chữ bên dưới vẫn bôi đen được. Nhưng theme này đã đổi
+// ảnh sang tỷ lệ 2:3 nên ảnh cao hơn 200px nhiều, nửa dưới của ảnh không bấm
+// được. Cho ::after mượn đúng tỷ lệ ấy thay vì một con số cứng.
+.product-box.box-standard .stretched-link::after,
+.product-box.box-minimal .stretched-link::after {
+    bottom: auto; // Bootstrap đặt inset:0; phải nhả cạnh dưới thì aspect-ratio mới có tác dụng
+    height: auto;
+    aspect-ratio: 2 / 3;
+}
+
+// --- Thanh lọc & sắp xếp ở trang danh mục ---------------------------------
+// Nhãn nhỏ in hoa cho khớp phần còn lại; nút lọc bỏ nền, chỉ còn đường kẻ
+// dưới — nhẹ hơn hộp viền kín của Bootstrap.
+.filter-panel-item-toggle {
+    @include anivele-caps(0.75rem);
+
+    border: 0;
+    border-bottom: 1px solid $anivele-beige;
+    border-radius: 0;
+    padding-left: 0;
+    padding-right: 1.5rem;
+    background: transparent;
+
+    &:hover,
+    &:focus {
+        border-bottom-color: $anivele-ink;
+        background: transparent;
+    }
+}
+
+.sorting {
+    @include anivele-caps(0.75rem);
+
+    border: 0;
+    border-bottom: 1px solid $anivele-beige;
+    border-radius: 0;
+    padding-left: 0;
+    background-color: transparent;
+}
+
+// --- Chân trang -----------------------------------------------------------
+.footer-main {
+    border-top: 1px solid $anivele-beige;
+    margin-top: 4rem;
+}
+
+// --- Ảnh trang chi tiết ---------------------------------------------------
+// ĐÃ THỬ VÀ BỎ: ép ảnh lớn bằng CSS.
+//
+// Riani để ảnh chiếm gần trọn cột, ở đây ảnh dọc chỉ chiếm chừng một phần ba
+// bề ngang. Nhưng chiều cao khung (430px) do BỐ CỤC CMS đặt inline trên từng
+// slide, nên CSS của theme chỉ thắng được bằng `!important` — tức là đè lên
+// đúng con số mà quản trị viên chỉnh trong Administration.
+//
+// Đã thử `aspect-ratio: 2/3 + object-fit: cover`: ảnh rộng ra thật nhưng bị
+// cắt thành khổ ngang, mất đầu người mẫu. Với trang chi tiết thời trang thì
+// đó là hỏng, tệ hơn cả việc ảnh nhỏ.
+//
+// Cách đúng: chỉnh ngay trong Administration → Nội dung → Bố cục → trang chi
+// tiết sản phẩm → phần tử Thư viện ảnh → tăng "Chiều cao tối thiểu". Đây là
+// dữ liệu cấu hình, không phải việc của theme.
+//
+// Chỉ giữ lại phần ảnh nhỏ chuyển sang khổ dọc cho khớp ảnh 2:3 ở danh mục.
+.product-detail-media {
+    .gallery-slider-thumbnails-item {
+        height: 84px;
+        width: 56px;
+    }
+
+    .gallery-slider-thumbnails-item-inner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 }
