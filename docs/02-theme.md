@@ -279,13 +279,54 @@ cao hơn 200px nhiều, **nửa dưới của ảnh không bấm được** mà 
 Cách sửa: cho `::after` mượn đúng tỷ lệ đó thay vì con số cứng (phải `bottom: auto`
 thì `aspect-ratio` mới có tác dụng, vì Bootstrap đặt `inset: 0`).
 
-### Việc CSS không nên làm: ép chiều cao ảnh trang chi tiết
+### Ảnh trang chi tiết: `min-height` inline là SÀN, không phải trần
 
-Đã thử cho ảnh chi tiết chiếm trọn cột bằng `aspect-ratio: 2/3 + object-fit: cover`.
-Kết quả: ảnh rộng ra thật nhưng bị cắt thành khổ ngang, **mất đầu người mẫu** — với
-trang chi tiết thời trang thì đó là hỏng.
+Ảnh dọc chỉ cao 430px giữa cột rộng gần 600px. Cấu trúc thật:
 
-Chiều cao khung (430px) do **bố cục CMS** đặt inline trên từng slide, CSS của theme
-chỉ thắng được bằng `!important`, tức đè lên đúng con số quản trị viên chỉnh trong
-Administration. Cách đúng: Administration → Nội dung → Bố cục → trang chi tiết sản
-phẩm → phần tử Thư viện ảnh → tăng "Chiều cao tối thiểu".
+```
+.gallery-slider-item.is-contain   height: 100%            (core)
+                                  min-height: 430px       (bố cục CMS, đặt INLINE)
+  └── img.gallery-slider-image    position: absolute; inset: 0;
+                                  margin: auto; object-fit: contain
+```
+
+Ảnh phủ tuyệt đối theo khung và `contain`, nên **chiều cao ảnh chính là chiều cao
+khung**. Thứ ghìm ảnh là cái khung 430px, không phải bản thân ảnh.
+
+> 🔴 **Suýt kết luận sai.** Ban đầu tôi tưởng style inline khoá cứng chiều cao nên
+> CSS của theme chỉ thắng được bằng `!important` — và đã định bỏ, khuyên chỉnh trong
+> Administration. Sai ở chỗ: `min-height` là **giá trị sàn**, không phải trần. Đặt
+> `height` lớn hơn 430px thì không hề xung đột với `min-height` inline (khác thuộc
+> tính), thắng bình thường **không cần `!important`**, mà vẫn tôn trọng con số quản
+> trị viên đặt làm mức tối thiểu.
+
+```scss
+$anivele-gallery-height: clamp(430px, 68vh, 820px);
+
+.product-detail-media {
+    .gallery-slider-item,
+    .gallery-slider-single-image {
+        height: $anivele-gallery-height;
+    }
+
+    // cột ảnh nhỏ bên trái phải cao theo, core kẹp cứng 425px cho khung 430px cũ
+    .gallery-slider-thumbnails-col.is-left .gallery-slider-thumbnails {
+        max-height: $anivele-gallery-height;
+    }
+}
+```
+
+Kết quả đo trên ảnh chụp: **287×430 → 455×680** ở cửa sổ 1440×1000.
+
+Hai điều phải nhớ:
+
+- **Đừng dùng `object-fit: cover` ở trang chi tiết.** Đã thử `aspect-ratio: 2/3 + cover`:
+  ảnh rộng ra thật nhưng bị cắt thành khổ ngang, **mất đầu người mẫu**. Trang danh mục
+  cắt được (ảnh nhỏ, cốt để xem dáng tổng thể), trang chi tiết thì không — khách vào
+  đây để soi sản phẩm. `contain` giữ trọn khuôn hình, chỉ chừa lề hai bên.
+- **Modal phóng to nằm BÊN TRONG `.product-detail-media`** (kiểm bằng DOM, không đoán),
+  nên dính luôn chiều cao ở trên. Phải trả lại `height: 100%` cho `.zoom-modal` để modal
+  toàn màn hình vẫn dùng trọn chiều cao khả dụng.
+
+Dùng `clamp()` để chiều cao co theo màn hình: sàn 430px giữ đúng mức tối thiểu của bố
+cục CMS, trần 820px để ảnh không cao quá một màn hình trên màn lớn.

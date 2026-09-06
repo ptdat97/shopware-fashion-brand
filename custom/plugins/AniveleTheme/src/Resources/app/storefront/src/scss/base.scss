@@ -560,23 +560,39 @@ h4, h5, h6,
 }
 
 // --- Ảnh trang chi tiết ---------------------------------------------------
-// ĐÃ THỬ VÀ BỎ: ép ảnh lớn bằng CSS.
+// Ảnh dọc chỉ cao 430px giữa cột rộng gần 600px, hai bên trống huơ.
 //
-// Riani để ảnh chiếm gần trọn cột, ở đây ảnh dọc chỉ chiếm chừng một phần ba
-// bề ngang. Nhưng chiều cao khung (430px) do BỐ CỤC CMS đặt inline trên từng
-// slide, nên CSS của theme chỉ thắng được bằng `!important` — tức là đè lên
-// đúng con số mà quản trị viên chỉnh trong Administration.
+// Cấu trúc thật (đã soi DOM + SCSS của core):
+//   .gallery-slider-item.is-contain   height: 100% (core)
+//                                     min-height: 430px (bố cục CMS đặt INLINE)
+//     └── img.gallery-slider-image    position: absolute; inset: 0;
+//                                     margin: auto; object-fit: contain
 //
-// Đã thử `aspect-ratio: 2/3 + object-fit: cover`: ảnh rộng ra thật nhưng bị
-// cắt thành khổ ngang, mất đầu người mẫu. Với trang chi tiết thời trang thì
-// đó là hỏng, tệ hơn cả việc ảnh nhỏ.
+// Ảnh phủ tuyệt đối theo khung và `contain`, nên **chiều cao ảnh chính là
+// chiều cao khung**. Ghìm ảnh lại là cái khung 430px, không phải bản thân ảnh.
 //
-// Cách đúng: chỉnh ngay trong Administration → Nội dung → Bố cục → trang chi
-// tiết sản phẩm → phần tử Thư viện ảnh → tăng "Chiều cao tối thiểu". Đây là
-// dữ liệu cấu hình, không phải việc của theme.
+// Mấu chốt: `min-height` là SÀN chứ không phải trần. Đặt `height` lớn hơn 430px
+// thì không hề xung đột với style inline — thắng mà không cần `!important`, và
+// vẫn tôn trọng con số quản trị viên đặt trong Administration làm mức tối thiểu.
 //
-// Chỉ giữ lại phần ảnh nhỏ chuyển sang khổ dọc cho khớp ảnh 2:3 ở danh mục.
+// Vì sao KHÔNG dùng `aspect-ratio` + `object-fit: cover` (đã thử và bỏ): ảnh bị
+// cắt thành khổ ngang, mất đầu người mẫu. Với trang chi tiết thời trang thì đó
+// là hỏng. `contain` giữ trọn khuôn hình, chỉ chừa lề hai bên.
+$anivele-gallery-height: clamp(430px, 68vh, 820px);
+
 .product-detail-media {
+    .gallery-slider-item,
+    .gallery-slider-single-image {
+        height: $anivele-gallery-height;
+    }
+
+    // Cột ảnh nhỏ bên trái cao theo ảnh chính, nếu không sẽ hụt một khoảng lớn.
+    // Core kẹp cứng ở 425px cho khớp khung 430px cũ.
+    .gallery-slider-thumbnails-col.is-left .gallery-slider-thumbnails {
+        max-height: $anivele-gallery-height;
+    }
+
+    // Ảnh nhỏ chuyển sang khổ dọc cho khớp ảnh 2:3 ở trang danh mục.
     .gallery-slider-thumbnails-item {
         height: 84px;
         width: 56px;
@@ -586,5 +602,15 @@ h4, h5, h6,
         width: 100%;
         height: 100%;
         object-fit: cover;
+    }
+
+    // Modal phóng to nằm BÊN TRONG .product-detail-media (đã kiểm bằng DOM) nên
+    // sẽ dính luôn chiều cao ở trên. Trả lại hành vi gốc của core: modal toàn
+    // màn hình phải dùng trọn chiều cao khả dụng.
+    .zoom-modal {
+        .gallery-slider-item,
+        .gallery-slider-single-image {
+            height: 100%;
+        }
     }
 }

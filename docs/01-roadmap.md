@@ -134,7 +134,7 @@ Thực hiện bằng plugin `AniveleCatalog` — migration chuẩn hoá thuộc 
 | Thẻ sản phẩm bỏ mô tả, chỉ còn ảnh → tên → giá | ✅ Gỡ 6 khai báo chiều cao cứng của core |
 | Vùng bấm thẻ sản phẩm phủ đúng khung ảnh 2:3 | ✅ Sửa lỗi do giai đoạn 1 gây ra |
 | Việt hoá ô sắp xếp + tiêu đề trang chủ | ✅ Migration `1788690517` |
-| Ảnh trang chi tiết chiếm trọn cột | ❌ Không làm bằng CSS — thuộc bố cục CMS, xem 02-theme.md |
+| Ảnh trang chi tiết cao gấp rưỡi (287×430 → 455×680) | ✅ `height` thắng `min-height` inline, không cần `!important` |
 | Trang chủ dạng editorial (hero, lookbook) | ⏳ Cần dựng bố cục CMS, chưa làm |
 
 > ⚠️ **Cần file logo thật.** Hiện dùng chữ ANIVELE. Tải logo tại Administration → Themes → Giao diện Anivele → Media, template tự chuyển sang dùng ảnh.
