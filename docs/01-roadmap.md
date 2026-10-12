@@ -44,7 +44,7 @@ Dữ liệu demo: [runbook/05-demo-data.md](runbook/05-demo-data.md)
 |---|---|
 | COD (thanh toán khi nhận hàng) | ✅ Việt hoá, gắn vào storefront |
 | Chuyển khoản trước | ✅ Việt hoá, gắn vào storefront |
-| **VietQR** — QR chuẩn NAPAS | ✅ Plugin `AnivelePayment` |
+| **VietQR** — QR chuẩn NAPAS | ✅ Plugin `AcmePayment` |
 | Dọn 17 phương thức PayPal mồ côi | ✅ |
 | Bảng phí vận chuyển theo khu vực | ✅ 25k nội thành / 35k tỉnh / miễn phí từ 500k |
 | VNPay, MoMo | ⏳ Giai đoạn sau, khi lượng đơn đủ lớn |
@@ -52,7 +52,7 @@ Dữ liệu demo: [runbook/05-demo-data.md](runbook/05-demo-data.md)
 
 **Kiểm chứng bằng đơn hàng thật:** đặt đơn qua Store API với VietQR → trạng thái giao dịch `open` (chờ đối soát), tồn kho biến thể trừ đúng, mã QR trên trang cảm ơn **giải mã ra đúng payload** (ngân hàng, số tài khoản, số tiền, nội dung `ANV10001`).
 
-> ⚠️ **Cần nhập thông tin tài khoản ngân hàng thật** tại Administration → Extensions → Anivele Payment (VietQR) trước khi mở bán. Chưa nhập thì trang cảm ơn hiện cảnh báo thay vì mã QR sai.
+> ⚠️ **Cần nhập thông tin tài khoản ngân hàng thật** tại Administration → Extensions → Acme Payment (VietQR) trước khi mở bán. Chưa nhập thì trang cảm ơn hiện cảnh báo thay vì mã QR sai.
 >
 > ⚠️ **Đối soát vẫn thủ công.** Đơn VietQR không tự chuyển sang "đã thanh toán" — nhân viên phải kiểm tra sao kê rồi đổi trạng thái. Tự động cần webhook ngân hàng, chưa làm.
 
@@ -90,7 +90,7 @@ Vận chuyển: tương tự, cần tự tích hợp API GHN/GHTK hoặc giai đ
 
 **Kết quả kiểm chứng:** storefront hiện bộ chọn size/màu; đặt size S về 0 tồn kho thì `available = 0` riêng size đó, M/L/XL vẫn bán được; bộ lọc màu không còn trả về váy hoa.
 
-Thực hiện bằng plugin `AniveleCatalog` — migration chuẩn hoá thuộc tính + lệnh `anivele:catalog:variants`.
+Thực hiện bằng plugin `AcmeCatalog` — migration chuẩn hoá thuộc tính + lệnh `acme:catalog:variants`.
 
 > **Còn lại cần chốt:** dải size cho quần/chân váy (số eo 26–30 hay chữ S–XL), có bán Free size không, và giá có khác theo size không. Đây là quyết định kinh doanh, không phải kỹ thuật.
 
@@ -104,7 +104,7 @@ Thực hiện bằng plugin `AniveleCatalog` — migration chuẩn hoá thuộc 
 
 **Mục tiêu:** giao diện mang bản sắc brand, tối ưu cho thời trang.
 
-Đã làm: **theme riêng `AniveleTheme` kế thừa Storefront**.
+Đã làm: **theme riêng `AcmeTheme` kế thừa Storefront**.
 
 | Việc | Trạng thái |
 |---|---|
@@ -137,7 +137,7 @@ Thực hiện bằng plugin `AniveleCatalog` — migration chuẩn hoá thuộc 
 | Ảnh trang chi tiết cao gấp rưỡi (287×430 → 455×680) | ✅ `height` thắng `min-height` inline, không cần `!important` |
 | Trang chủ dạng editorial (hero, lookbook) | ⏳ Cần dựng bố cục CMS, chưa làm |
 
-> ⚠️ **Cần file logo thật.** Hiện dùng chữ ANIVELE. Tải logo tại Administration → Themes → Giao diện Anivele → Media, template tự chuyển sang dùng ảnh.
+> ⚠️ **Cần file logo thật.** Hiện dùng chữ ANIVELE. Tải logo tại Administration → Themes → Giao diện Acme → Media, template tự chuyển sang dùng ảnh.
 >
 > ⚠️ **Số đo trong bảng size là SỐ THAM KHẢO** theo thang phổ biến của thị trường VN, không phải số đo thật của Anivele. Phải đo trên sản phẩm thật rồi thay lại tại Administration → Danh mục → tab Tuỳ chỉnh → Bảng size, **trước khi go-live**. Số đo sai là nguyên nhân đổi trả hàng đầu với thời trang online.
 

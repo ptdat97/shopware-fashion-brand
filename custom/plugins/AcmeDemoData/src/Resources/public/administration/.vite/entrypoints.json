@@ -1,0 +1,23 @@
+{
+  "base": "/bundles/acmedemodata/administration/",
+  "entryPoints": {
+    "acme-demo-data": {
+      "css": [],
+      "dynamic": [],
+      "js": [
+        "/bundles/acmedemodata/administration/js/acme-demo-data.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}

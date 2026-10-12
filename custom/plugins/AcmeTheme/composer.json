@@ -1,0 +1,28 @@
+{
+    "name": "acme/theme",
+    "description": "Theme thương hiệu Acme — kế thừa Storefront, tối ưu cho thời trang nữ",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "version": "1.0.0",
+    "conflict": {
+        "shopware/core": "<6.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "AcmeTheme\\": "src/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "AcmeTheme\\AcmeTheme",
+        "label": {
+            "vi-VN": "Giao diện Acme",
+            "en-GB": "Acme Theme",
+            "de-DE": "Acme Theme"
+        },
+        "description": {
+            "vi-VN": "Giao diện thương hiệu Acme, tối ưu cho thời trang nữ và mua sắm trên điện thoại.",
+            "en-GB": "Acme brand theme, optimised for womenswear and mobile shopping.",
+            "de-DE": "Acme brand theme, optimised for womenswear and mobile shopping."
+        }
+    }
+}

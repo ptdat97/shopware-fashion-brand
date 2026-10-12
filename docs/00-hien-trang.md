@@ -34,9 +34,9 @@ Tiếng Việt đã được cài và đang hoạt động:
 | property_group | 3 | Màu sắc (6 giá trị, swatch), Kích cỡ (S/M/L/XL), Hoạ tiết (1) |
 | product_configurator_setting | 64 | Trục sinh biến thể — trước Phase 2 là 0 |
 | media | 85 | 66 ảnh sản phẩm + ảnh hệ thống |
-| theme | 2 | Storefront mặc định + **AniveleTheme** (đang dùng) |
+| theme | 2 | Storefront mặc định + **AcmeTheme** (đang dùng) |
 
-Catalog hiện tại do plugin tự viết `AniveleDemoData` sinh ra từ ảnh thật của brand — xem [runbook/05-demo-data.md](runbook/05-demo-data.md). Hệ thống **không dùng** `SwagPlatformDemoData`. **Vẫn cần thay bằng hàng thật trước go-live.**
+Catalog hiện tại do plugin tự viết `AcmeDemoData` sinh ra từ ảnh thật của brand — xem [runbook/05-demo-data.md](runbook/05-demo-data.md). Hệ thống **không dùng** `SwagPlatformDemoData`. **Vẫn cần thay bằng hàng thật trước go-live.**
 
 > ✅ **Đã có variant** (Phase 2). 12 sản phẩm cha sinh ra **64 biến thể** Màu × Size, mỗi biến thể có SKU riêng (`ANV-1001-01`), tồn kho riêng và `is_closeout = 1`. Khách chọn được size khi mua; hết size S không ảnh hưởng size M. Chi tiết: [10-phase2-catalog.md](10-phase2-catalog.md).
 
@@ -69,7 +69,7 @@ Không chịu thuế (0%)    0.000%
 |---|---|
 | Thanh toán khi nhận hàng (COD) | active — gắn storefront |
 | Chuyển khoản trước | active — gắn storefront |
-| **Chuyển khoản QR (VietQR)** | active — plugin `AnivelePayment` |
+| **Chuyển khoản QR (VietQR)** | active — plugin `AcmePayment` |
 | Thanh toán bằng hoá đơn | active, không gắn storefront |
 | PayPal | **đã gỡ hẳn** (08/08/2026) — xem [03-plugin-app.md](03-plugin-app.md) |
 
@@ -111,11 +111,11 @@ Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên ti
 
 | Plugin | Version | Active | Ghi chú |
 |---|---|---|---|
-| AniveleVietnam | 1.0.0 | Yes | Plugin tự viết — nền tảng thị trường VN |
-| AniveleCatalog | 1.0.0 | Yes | Plugin tự viết — biến thể Màu × Size |
-| AnivelePayment | 1.0.0 | Yes | Plugin tự viết — VietQR + phí vận chuyển |
-| AniveleTheme | 1.0.0 | Yes | Plugin tự viết — giao diện thương hiệu |
-| AniveleDemoData | 1.0.0 | Yes | Plugin tự viết — dữ liệu demo |
+| AcmeVietnam | 1.0.0 | Yes | Plugin tự viết — nền tảng thị trường VN |
+| AcmeCatalog | 1.0.0 | Yes | Plugin tự viết — biến thể Màu × Size |
+| AcmePayment | 1.0.0 | Yes | Plugin tự viết — VietQR + phí vận chuyển |
+| AcmeTheme | 1.0.0 | Yes | Plugin tự viết — giao diện thương hiệu |
+| AcmeDemoData | 1.0.0 | Yes | Plugin tự viết — dữ liệu demo |
 | SwagLanguagePack | dev-master | Yes | Plugin bên thứ ba duy nhất còn lại |
 
 Thư viện ngoài: `endroid/qr-code` (sinh ảnh QR) — cài ở cấp dự án vì Shopware không nạp `vendor/` của plugin, xem [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md).

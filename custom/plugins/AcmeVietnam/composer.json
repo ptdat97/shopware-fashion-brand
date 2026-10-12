@@ -1,0 +1,26 @@
+{
+    "name": "acme/vietnam",
+    "description": "Cấu hình nền tảng thị trường Việt Nam: VND, VAT, quốc gia, tỉnh/thành, địa chỉ",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "version": "1.0.0",
+    "require": {
+        "shopware/core": "~6.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Acme\\Vietnam\\": "src/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Acme\\Vietnam\\AcmeVietnam",
+        "label": {
+            "en-GB": "Acme Vietnam Market",
+            "de-DE": "Acme Vietnam Market"
+        },
+        "description": {
+            "en-GB": "Vietnamese market baseline: VND currency, VAT rates, country and provinces, address rules.",
+            "de-DE": "Vietnamese market baseline: VND currency, VAT rates, country and provinces, address rules."
+        }
+    }
+}

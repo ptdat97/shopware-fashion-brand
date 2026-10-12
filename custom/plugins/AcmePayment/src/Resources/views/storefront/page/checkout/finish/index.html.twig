@@ -1,0 +1,51 @@
+{% sw_extends '@Storefront/storefront/page/checkout/finish/index.html.twig' %}
+
+{# Chèn khối QR ngay sau phần thông tin đơn, trước bảng sản phẩm —
+   khách nhìn thấy mã QR đầu tiên mà không phải cuộn trang. #}
+{% block page_checkout_finish_details %}
+    {{ parent() }}
+
+    {% set vietQr = page.extensions.acmeVietQr %}
+
+    {% if vietQr %}
+        <div class="card acme-vietqr">
+            <div class="card-body">
+                {% if vietQr.configured %}
+                    <h3 class="acme-vietqr-title">{{ "acme.vietqr.title"|trans }}</h3>
+
+                    <p class="acme-vietqr-intro">{{ "acme.vietqr.intro"|trans }}</p>
+
+                    <div class="acme-vietqr-body">
+                        <div class="acme-vietqr-code">
+                            <img src="{{ vietQr.qrDataUri }}"
+                                 alt="{{ "acme.vietqr.title"|trans }}"
+                                 width="280"
+                                 height="280">
+                        </div>
+
+                        <dl class="acme-vietqr-details">
+                            <dt>{{ "acme.vietqr.accountHolder"|trans }}</dt>
+                            <dd>{{ vietQr.accountHolder }}</dd>
+
+                            <dt>{{ "acme.vietqr.accountNumber"|trans }}</dt>
+                            <dd>{{ vietQr.accountNumber }}</dd>
+
+                            <dt>{{ "acme.vietqr.amount"|trans }}</dt>
+                            <dd>{{ vietQr.amount|currency }}</dd>
+
+                            <dt>{{ "acme.vietqr.reference"|trans }}</dt>
+                            <dd><strong>{{ vietQr.reference }}</strong></dd>
+                        </dl>
+                    </div>
+
+                    <p class="acme-vietqr-note">{{ "acme.vietqr.note"|trans }}</p>
+                {% else %}
+                    {# Chưa cấu hình tài khoản ngân hàng — báo rõ thay vì hiện QR sai. #}
+                    <div class="alert alert-warning" role="alert">
+                        {{ "acme.vietqr.notConfigured"|trans }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

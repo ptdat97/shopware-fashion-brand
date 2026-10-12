@@ -88,7 +88,7 @@ php bin/console plugin:update:all
 
 > 🔴 **`plugin:uninstall` thường xoá luôn dữ liệu plugin tạo ra.** Backup trước. Ví dụ thực tế đã gặp: gỡ `SwagPlatformDemoData` ở Phase 0 đã xoá sạch 16 sản phẩm demo và toàn bộ property group.
 >
-> Ngoại lệ có chủ đích: `AniveleVietnam` **không** hoàn tác cấu hình VND/thuế khi gỡ — đưa currency về USD trong khi shop đã có đơn giá VND sẽ làm sai toàn bộ số tiền.
+> Ngoại lệ có chủ đích: `AcmeVietnam` **không** hoàn tác cấu hình VND/thuế khi gỡ — đưa currency về USD trong khi shop đã có đơn giá VND sẽ làm sai toàn bộ số tiền.
 
 **Quy trình chuẩn khi cài plugin mới:**
 
@@ -117,11 +117,11 @@ php bin/console cache:clear
 
 ```bash
 # 🟢 Tạo theme mới (thêm --static để đặt trong custom/static-plugins/)
-php bin/console theme:create AniveleTheme
+php bin/console theme:create AcmeTheme
 
 # 🟡 Gán theme cho sales channel
-php bin/console theme:change AniveleTheme -s <sales-channel-id>
-php bin/console theme:change AniveleTheme --all
+php bin/console theme:change AcmeTheme -s <sales-channel-id>
+php bin/console theme:change AcmeTheme --all
 
 # 🟢 Biên dịch
 php bin/console theme:compile

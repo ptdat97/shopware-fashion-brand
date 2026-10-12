@@ -47,16 +47,16 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 ## Tiến độ
 
-- **Phase 0** (nền tảng thị trường VN) ✅ — plugin `AniveleVietnam`
-- **Phase 2** (biến thể Màu × Size) ✅ — plugin `AniveleCatalog`, 12 mẫu → 64 biến thể
-- **Phase 1** (thanh toán & vận chuyển) ✅ giai đoạn 1 — plugin `AnivelePayment`: COD, chuyển khoản, VietQR + phí ship theo khu vực
-- **Phase 3** (theme thương hiệu) ✅ giai đoạn 1 — plugin `AniveleTheme`: bảng màu nâu/be/kem, swatch tròn, mobile-first
+- **Phase 0** (nền tảng thị trường VN) ✅ — plugin `AcmeVietnam`
+- **Phase 2** (biến thể Màu × Size) ✅ — plugin `AcmeCatalog`, 12 mẫu → 64 biến thể
+- **Phase 1** (thanh toán & vận chuyển) ✅ giai đoạn 1 — plugin `AcmePayment`: COD, chuyển khoản, VietQR + phí ship theo khu vực
+- **Phase 3** (theme thương hiệu) ✅ giai đoạn 1 — plugin `AcmeTheme`: bảng màu nâu/be/kem, swatch tròn, mobile-first
 
-> ⚠️ **VietQR chưa có số tài khoản thật.** Nhập tại Administration → Extensions → Anivele Payment trước khi mở bán. Đối soát vẫn thủ công — đơn không tự chuyển "đã thanh toán".
+> ⚠️ **VietQR chưa có số tài khoản thật.** Nhập tại Administration → Extensions → Acme Payment trước khi mở bán. Đối soát vẫn thủ công — đơn không tự chuyển "đã thanh toán".
 >
-> ⚠️ **Chưa có file logo thật.** Đang dùng chữ ANIVELE; tải logo tại Administration → Themes → Giao diện Anivele → Media.
+> ⚠️ **Chưa có file logo thật.** Đang dùng chữ ANIVELE; tải logo tại Administration → Themes → Giao diện Acme → Media.
 >
-> ⚠️ **Dữ liệu demo không tự nhập khi cài plugin.** Bấm nút tại Administration → Extensions → Anivele Demo Data → Configure, hoặc chạy `php bin/console anivele:demo:seed`. Chạy lại không nhân bản dữ liệu. Xem [docs/runbook/05-demo-data.md](docs/runbook/05-demo-data.md).
+> ⚠️ **Dữ liệu demo không tự nhập khi cài plugin.** Bấm nút tại Administration → Extensions → Acme Demo Data → Configure, hoặc chạy `php bin/console acme:demo:seed`. Chạy lại không nhân bản dữ liệu. Xem [docs/runbook/05-demo-data.md](docs/runbook/05-demo-data.md).
 
 **Sửa giao diện thì phải chụp ảnh storefront kiểm chứng**, không tin `curl`/`grep` — xem [docs/02-theme.md](docs/02-theme.md).
 

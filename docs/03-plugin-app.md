@@ -20,14 +20,14 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 
 | Plugin | Version | Trạng thái | `managed_by_composer` | Việc cần làm |
 |---|---|---|---|---|
-| AniveleVietnam | 1.0.0 | Active | 0 | Plugin tự viết — nền tảng thị trường VN (Phase 0) |
-| AniveleCatalog | 1.0.0 | Active | 0 | Plugin tự viết — cấu trúc biến thể Màu × Size (Phase 2) |
-| AnivelePayment | 1.0.0 | Active | 0 | Plugin tự viết — VietQR + phí vận chuyển (Phase 1) |
-| AniveleTheme | 1.0.0 | Active | 0 | Plugin tự viết — giao diện thương hiệu (Phase 3) |
-| AniveleDemoData | 1.0.0 | Active | 0 | Plugin tự viết — **gỡ trước khi go-live**, thay bằng hàng thật |
+| AcmeVietnam | 1.0.0 | Active | 0 | Plugin tự viết — nền tảng thị trường VN (Phase 0) |
+| AcmeCatalog | 1.0.0 | Active | 0 | Plugin tự viết — cấu trúc biến thể Màu × Size (Phase 2) |
+| AcmePayment | 1.0.0 | Active | 0 | Plugin tự viết — VietQR + phí vận chuyển (Phase 1) |
+| AcmeTheme | 1.0.0 | Active | 0 | Plugin tự viết — giao diện thương hiệu (Phase 3) |
+| AcmeDemoData | 1.0.0 | Active | 0 | Plugin tự viết — **gỡ trước khi go-live**, thay bằng hàng thật |
 | SwagLanguagePack | dev-master | Active | 1 | Theo dõi bản release ổn định hỗ trợ 6.7 để chuyển sang |
 
-> `SwagPlatformDemoData` **không còn tồn tại** — đã gỡ ở Phase 0 và thay bằng `AniveleDemoData`. Xem [runbook/05-demo-data.md](runbook/05-demo-data.md).
+> `SwagPlatformDemoData` **không còn tồn tại** — đã gỡ ở Phase 0 và thay bằng `AcmeDemoData`. Xem [runbook/05-demo-data.md](runbook/05-demo-data.md).
 >
 > `SwagPayPal` **đã gỡ hẳn** (08/08/2026). Thư mục plugin bị xoá khỏi git nhưng `composer.json` vẫn require → autoloader trỏ vào file không tồn tại và **làm hỏng toàn bộ `bin/console`**. Đã `composer remove swag/paypal` và dọn thư mục thừa. Nếu sau này cần bán quốc tế thì cài lại từ đầu.
 >
@@ -53,7 +53,7 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 
 | Dịch vụ | Vì sao cần | Trạng thái |
 |---|---|---|
-| Chuyển khoản QR (VietQR) | Đang tăng rất nhanh, chi phí thấp | ✅ **Đã làm** — plugin `AnivelePayment` |
+| Chuyển khoản QR (VietQR) | Đang tăng rất nhanh, chi phí thấp | ✅ **Đã làm** — plugin `AcmePayment` |
 | VNPay | Cổng phổ biến nhất, hỗ trợ hầu hết ngân hàng nội địa | ⏳ Tự viết payment handler |
 | MoMo | Ví điện tử thị phần lớn | ⏳ Tự viết |
 | ZaloPay | Gắn với hệ sinh thái Zalo | ⏳ Tự viết |
@@ -70,7 +70,7 @@ Tình trạng tương tự: **không có plugin sẵn cho GHN, GHTK, Viettel Pos
 
 ### Phương án theo giai đoạn
 
-**Giai đoạn 1 — bảng phí phẳng** ✅ **đã làm** (migration trong `AnivelePayment`)
+**Giai đoạn 1 — bảng phí phẳng** ✅ **đã làm** (migration trong `AcmePayment`)
 
 | Điều kiện | Phí |
 |---|---|

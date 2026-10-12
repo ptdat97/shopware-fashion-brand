@@ -15,7 +15,7 @@ Phần này quyết định chất lượng dữ liệu lâu dài. **Sai cấu t
 
 **Chưa có** nhóm Chất liệu, Kiểu dáng, Giới tính, Mùa — các thuộc tính đề xuất ở mục dưới đều là *việc cần làm*, không phải thứ đang có.
 
-12 sản phẩm demo hiện tại do plugin `AniveleDemoData` sinh ra, **chưa có variant nào** — đây là hạng mục chặn go-live. Kế hoạch xử lý: [10-phase2-catalog.md](10-phase2-catalog.md).
+12 sản phẩm demo hiện tại do plugin `AcmeDemoData` sinh ra, **chưa có variant nào** — đây là hạng mục chặn go-live. Kế hoạch xử lý: [10-phase2-catalog.md](10-phase2-catalog.md).
 
 ---
 
@@ -95,7 +95,7 @@ Sản phẩm tự lấy bảng của danh mục chứa nó. Danh mục chưa nh�
 
 > 🔴 **Số đo hiện tại là SỐ THAM KHẢO** theo thang phổ biến của thị trường VN, không phải số đo thật của Anivele. Phải đo trên sản phẩm thật rồi thay lại trước go-live.
 
-Kỹ thuật: custom field `anivele_size_chart_table` / `anivele_size_chart_note` trên entity `category`, xem `custom/plugins/AniveleTheme/src/Migration/Migration1786195057SizeChartCustomField.php`.
+Kỹ thuật: custom field `acme_size_chart_table` / `acme_size_chart_note` trên entity `category`, xem `custom/plugins/AcmeTheme/src/Migration/Migration1786195057SizeChartCustomField.php`.
 
 ---
 
@@ -140,7 +140,7 @@ Tránh lồng quá 3 cấp — khách sẽ lạc.
 
 ## Xóa demo data
 
-Trước khi nhập hàng thật phải xoá sạch 12 sản phẩm demo `ANV-*` do plugin `AniveleDemoData` sinh ra.
+Trước khi nhập hàng thật phải xoá sạch 12 sản phẩm demo `ANV-*` do plugin `AcmeDemoData` sinh ra.
 
 > `SwagPlatformDemoData` đã được gỡ từ Phase 0, không còn liên quan.
 

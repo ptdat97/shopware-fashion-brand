@@ -1,0 +1,50 @@
+{% sw_extends '@Storefront/storefront/component/product/card/box-standard.html.twig' %}
+
+{#
+    Ảnh thứ hai hiện khi rê chuột — đặc thù thời trang: khách xem được
+    mặt trước/mặt sau ngay ở trang danh mục, không phải bấm vào từng mẫu.
+
+    Association `media` do ListingMediaSubscriber nạp thêm; mặc định listing
+    chỉ có `cover`.
+#}
+{% block component_product_box_image_inner %}
+    {{ parent() }}
+
+    {% set hoverMedia = null %}
+
+    {% if product.media is defined and product.media is not empty %}
+        {% for productMedia in product.media %}
+            {% if hoverMedia is null
+                and productMedia.media
+                and productMedia.media.url
+                and productMedia.media.id != cover.id
+                and productMedia.media.getMediaType().getName() != 'VIDEO' %}
+                {% set hoverMedia = productMedia.media %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if hoverMedia %}
+        {% sw_include '@Storefront/storefront/utilities/thumbnail.html.twig' with {
+            media: hoverMedia,
+            sizes: sizes,
+            attributes: {
+                class: 'product-image acme-product-image-hover is-cover',
+                alt: (hoverMedia.translated.alt ?: name),
+                loading: 'lazy'
+            }
+        } %}
+    {% endif %}
+{% endblock %}
+
+{#
+    Bỏ đoạn mô tả khỏi thẻ sản phẩm.
+
+    Core in nguyên `product.description` (đã lọc thẻ HTML) vào thẻ, rồi cắt
+    bằng CSS. Với mô tả tiếng Việt dài, thẻ bị đẩy cao và mắt phải đọc ba khối
+    chữ trước khi tới giá. Riani — và hầu hết nhà bán thời trang — chỉ để
+    TÊN + GIÁ dưới ảnh; ảnh mới là thứ bán hàng.
+
+    Mô tả vẫn còn nguyên ở trang chi tiết, không mất thông tin.
+#}
+{% block component_product_box_description %}{% endblock %}

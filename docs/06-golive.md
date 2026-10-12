@@ -24,7 +24,7 @@ Các mục đánh dấu 🔴 là **chặn go-live** — không được bỏ qua
 ## Dữ liệu
 
 - [ ] 🔴 **Xóa sạch demo data** — 12 sản phẩm `ANV-*`, xem [runbook/03-xoa-demo-data.md](runbook/03-xoa-demo-data.md)
-- [ ] 🔴 Gỡ plugin `AniveleDemoData` (xoá được trực tiếp từ Administration)
+- [ ] 🔴 Gỡ plugin `AcmeDemoData` (xoá được trực tiếp từ Administration)
 - [ ] Xóa khách hàng demo
 - [ ] Catalog thật đã nhập đầy đủ, có ảnh
 - [x] ✅ **Mọi sản phẩm đã có variant** màu × size — xem [10-phase2-catalog.md](10-phase2-catalog.md)
@@ -36,7 +36,7 @@ Các mục đánh dấu 🔴 là **chặn go-live** — không được bỏ qua
 
 ## Cấu hình thị trường VN
 
-Phần lớn đã xong ở Phase 0 qua plugin `AniveleVietnam` — chạy `plugin:install --activate AniveleVietnam` là tái lập được trên production.
+Phần lớn đã xong ở Phase 0 qua plugin `AcmeVietnam` — chạy `plugin:install --activate AcmeVietnam` là tái lập được trên production.
 
 - [x] ✅ **VND là tiền tệ mặc định**, `decimals = 0`
 - [x] ✅ Giá hiển thị đã bao gồm thuế (`display_gross = 1`)
@@ -52,7 +52,7 @@ Phần lớn đã xong ở Phase 0 qua plugin `AniveleVietnam` — chạy `plugi
 - [x] ✅ Phương thức thanh toán hoạt động: COD, chuyển khoản trước, VietQR
 - [x] ✅ Phí vận chuyển theo khu vực (25k nội thành / 35k tỉnh / miễn phí từ 500k)
 - [x] ✅ Đã test đặt hàng thật từ đầu đến cuối qua Store API
-- [ ] 🔴 **Nhập số tài khoản ngân hàng thật cho VietQR** — Administration → Extensions → Anivele Payment. Chưa nhập thì khách không chuyển khoản được
+- [ ] 🔴 **Nhập số tài khoản ngân hàng thật cho VietQR** — Administration → Extensions → Acme Payment. Chưa nhập thì khách không chuyển khoản được
 - [ ] 🔴 **Quét thử mã QR bằng app ngân hàng thật** trên đơn hàng thật, xác nhận đúng số tiền và nội dung
 - [ ] 🔴 Chốt quy trình đối soát: ai kiểm tra sao kê, bao lâu một lần, đổi trạng thái đơn thế nào
 - [ ] Cân nhắc ngưỡng miễn phí ship 500.000 ₫ có phù hợp biên lợi nhuận không
@@ -60,9 +60,9 @@ Phần lớn đã xong ở Phase 0 qua plugin `AniveleVietnam` — chạy `plugi
 
 ## Theme & Nội dung
 
-- [x] ✅ Theme `AniveleTheme` đã compile và gán cho sales channel
+- [x] ✅ Theme `AcmeTheme` đã compile và gán cho sales channel
 - [x] ✅ Việt hoá nhãn còn sót ("Home" → "Trang chủ", "Pattern" → "Hoạ tiết")
-- [ ] 🔴 **Tải logo thật của brand** — Administration → Themes → Giao diện Anivele → Media. Hiện đang dùng chữ ANIVELE tạm
+- [ ] 🔴 **Tải logo thật của brand** — Administration → Themes → Giao diện Acme → Media. Hiện đang dùng chữ ANIVELE tạm
 - [ ] 🔴 **Thay số đo bảng size bằng số đo THẬT** — Administration → Danh mục → tab Tuỳ chỉnh → Bảng size. Số hiện tại chỉ là tham khảo theo thang thị trường VN; số đo sai là nguyên nhân đổi trả hàng đầu
 - [ ] 🔴 **Favicon** — vẫn là favicon mặc định của Shopware
 - [ ] Kiểm tra trên thiết bị thật: điện thoại, tablet, máy tính

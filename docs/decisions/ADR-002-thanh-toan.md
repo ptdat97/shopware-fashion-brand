@@ -4,7 +4,7 @@
 **Ngày:** 26/07/2026 · cập nhật 08/08/2026
 
 > **Đã chọn phương án A + B:** go-live với COD + chuyển khoản, đồng thời tự viết VietQR.
-> VietQR đã hoàn thành trong plugin `AnivelePayment`. VNPay/MoMo để giai đoạn sau.
+> VietQR đã hoàn thành trong plugin `AcmePayment`. VNPay/MoMo để giai đoạn sau.
 
 ## Bối cảnh
 

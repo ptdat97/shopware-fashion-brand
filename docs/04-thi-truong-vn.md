@@ -4,7 +4,7 @@
 >
 > - Đã làm những gì, bằng cách nào: [runbook/04-phase0-da-thuc-hien.md](runbook/04-phase0-da-thuc-hien.md)
 > - Hiện trạng đã kiểm chứng: [00-hien-trang.md](00-hien-trang.md)
-> - Toàn bộ được tái lập bằng migration trong plugin `AniveleVietnam`, không phải SQL thủ công.
+> - Toàn bộ được tái lập bằng migration trong plugin `AcmeVietnam`, không phải SQL thủ công.
 
 ## 1. Tiền tệ VND
 

@@ -5,10 +5,10 @@ Plugin tự viết để tạo sản phẩm demo thời trang từ bộ ảnh th
 ## Vị trí
 
 ```
-custom/plugins/AniveleDemoData/
+custom/plugins/AcmeDemoData/
 ├── composer.json
 └── src/
-    ├── AniveleDemoData.php
+    ├── AcmeDemoData.php
     ├── Command/SeedDemoCommand.php          ← bản dòng lệnh
     ├── Controller/DemoDataController.php    ← API cho nút bấm
     ├── Service/
@@ -28,8 +28,8 @@ custom/plugins/AniveleDemoData/
 Plugin nằm trong `custom/plugins/` và **không khai báo trong `composer.json`**, nên Shopware ghi nhận `managed_by_composer = 0`:
 
 ```
-name: AniveleDemoData
-path: custom/plugins/AniveleDemoData/
+name: AcmeDemoData
+path: custom/plugins/AcmeDemoData/
 managed_by_composer: 0          ← nút Xoá trong Admin hoạt động
 ```
 
@@ -39,7 +39,7 @@ So sánh trong hệ thống hiện tại:
 
 | Plugin | Vị trí | managed_by_composer | Xoá từ Admin |
 |---|---|---|---|
-| AniveleDemoData | `custom/plugins/` | 0 | ✅ Được |
+| AcmeDemoData | `custom/plugins/` | 0 | ✅ Được |
 | SwagExtensionStore | `custom/plugins/` | 0 | ✅ Được |
 | SwagLanguagePack | `vendor/` | 1 | ❌ Phải dùng `composer remove` |
 
@@ -49,14 +49,14 @@ So sánh trong hệ thống hiện tại:
 
 **Cách 1 — nút bấm trong Administration (khuyến nghị)**
 
-Extensions → My extensions → **Anivele Demo Data** → ⋯ → Configure → thẻ **Dữ liệu demo** → nút **Nhập dữ liệu demo**.
+Extensions → My extensions → **Acme Demo Data** → ⋯ → Configure → thẻ **Dữ liệu demo** → nút **Nhập dữ liệu demo**.
 
 Thẻ này hiện sẵn tình trạng (`Ảnh đã nạp: 66/66 · Sản phẩm demo: 12/12`) và một thanh tiến trình khi đang chạy.
 
 **Cách 2 — dòng lệnh**
 
 ```bash
-php bin/console anivele:demo:seed
+php bin/console acme:demo:seed
 ```
 
 Hai đường chạy **cùng một service** `DemoDataImporter` nên cho kết quả giống hệt nhau.
@@ -75,8 +75,8 @@ Bộ ảnh 78 MB nạp một lần trong một request HTTP dễ chạm `max_exe
 
 | Route | Việc |
 |---|---|
-| `GET /api/_action/anivele-demo-data/status` | tình trạng hiện tại, và lý do chưa nhập được (nếu có) |
-| `POST /api/_action/anivele-demo-data/import` | nhập một đợt, trả về `offset` để gọi tiếp |
+| `GET /api/_action/acme-demo-data/status` | tình trạng hiện tại, và lý do chưa nhập được (nếu có) |
+| `POST /api/_action/acme-demo-data/import` | nhập một đợt, trả về `offset` để gọi tiếp |
 
 Đo thực tế: 66 ảnh + 12 sản phẩm mất **10,5 giây** chia thành 9 request.
 
@@ -108,7 +108,7 @@ Bộ ảnh 78 MB nạp một lần trong một request HTTP dễ chạm `max_exe
 | ANV-1011 | Chân váy dài xếp ly tông be | 790.000 ₫ |
 | ANV-1012 | Đầm dạ hội dáng dài tay bồng | 1.890.000 ₫ |
 
-Mỗi sản phẩm có 3–4 ảnh, custom field `anivele_material` (chất liệu) và `anivele_model_size` (người mẫu mặc size) — đúng các trường đã đề xuất trong [../05-catalog-fashion.md](../05-catalog-fashion.md).
+Mỗi sản phẩm có 3–4 ảnh, custom field `acme_material` (chất liệu) và `acme_model_size` (người mẫu mặc size) — đúng các trường đã đề xuất trong [../05-catalog-fashion.md](../05-catalog-fashion.md).
 
 Giá net tính ngược từ giá gross theo VAT 10%: `net = round(gross / 1.10)`.
 
@@ -150,17 +150,17 @@ Hai file phải khớp nhau:
 
 | File | Vai trò |
 |---|---|
-| `public/administration/js/anivele-demo-data.js` | component + api service |
+| `public/administration/js/acme-demo-data.js` | component + api service |
 | `public/administration/.vite/entrypoints.json` | Shopware đọc file này để biết nạp JS nào |
 
-Khoá trong `entryPoints` phải đúng **technical name** của bundle — `AniveleDemoData` → `anivele_demo_data` → `anivele-demo-data` (xem `ViteFileAccessorDecorator::getTechnicalBundleName`). Sai khoá thì không có lỗi nào hiện ra, nút chỉ đơn giản là không xuất hiện.
+Khoá trong `entryPoints` phải đúng **technical name** của bundle — `AcmeDemoData` → `acme_demo_data` → `acme-demo-data` (xem `ViteFileAccessorDecorator::getTechnicalBundleName`). Sai khoá thì không có lỗi nào hiện ra, nút chỉ đơn giản là không xuất hiện.
 
 > 🔴 **Không tạo `src/Resources/app/administration/src/main.js`.** Có file đó thì lần chạy `bin/build-administration.sh` đầu tiên sẽ ghi đè cả thư mục `public/administration/`, xoá mất file viết tay.
 
 Sau mỗi lần sửa JS:
 
 ```bash
-php bin/console assets:install     # chép sang public/bundles/aniveledemodata/
+php bin/console assets:install     # chép sang public/bundles/acmedemodata/
 ```
 
 ---
@@ -175,11 +175,11 @@ curl -s "http://shopware-fashion-brand.test/Dam/" | grep -oE '[0-9]{1,3}(\.[0-9]
 curl -s "http://shopware-fashion-brand.test/Dam-maxi-hoa-nhi-dang-xoe/ANV-1001" -o /dev/null -w "%{http_code}\n"
 
 # Route API của nút bấm có tồn tại không
-php bin/console debug:router | grep anivele-demo-data
+php bin/console debug:router | grep acme-demo-data
 
 # File JS có được phục vụ không (Shopware nạp bằng URL có hai dấu gạch chéo)
 curl -s -o /dev/null -w "%{http_code}\n" \
-  "http://shopware-fashion-brand.test//bundles/aniveledemodata/administration/js/anivele-demo-data.js"
+  "http://shopware-fashion-brand.test//bundles/acmedemodata/administration/js/acme-demo-data.js"
 ```
 
 Kết quả thực tế đã kiểm chứng (30/08/2026):
@@ -195,14 +195,14 @@ Kết quả thực tế đã kiểm chứng (30/08/2026):
 
 **Cách 1 — từ Administration (đơn giản nhất)**
 
-Settings → System → Plugins → AniveleDemoData → Gỡ cài đặt → Xoá.
+Settings → System → Plugins → AcmeDemoData → Gỡ cài đặt → Xoá.
 
 **Cách 2 — dòng lệnh**
 
 ```bash
-php bin/console plugin:deactivate AniveleDemoData
-php bin/console plugin:uninstall AniveleDemoData
-rm -rf custom/plugins/AniveleDemoData
+php bin/console plugin:deactivate AcmeDemoData
+php bin/console plugin:uninstall AcmeDemoData
+rm -rf custom/plugins/AcmeDemoData
 php bin/console plugin:refresh
 php bin/console cache:clear
 ```

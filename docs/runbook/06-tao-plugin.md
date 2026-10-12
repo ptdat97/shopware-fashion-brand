@@ -2,7 +2,7 @@
 
 Đây là việc **lặp lại nhiều nhất** từ giờ tới go-live: mỗi cổng thanh toán, mỗi đơn vị vận chuyển là một plugin riêng.
 
-Quy trình dưới đây đã kiểm chứng khi tạo `AniveleVietnam` — dùng nó làm mẫu tham chiếu.
+Quy trình dưới đây đã kiểm chứng khi tạo `AcmeVietnam` — dùng nó làm mẫu tham chiếu.
 
 ---
 
@@ -42,7 +42,7 @@ mkdir -p custom/plugins/TenPlugin/src
 
 ```json
 {
-    "name": "anivele/ten-plugin",
+    "name": "acme/ten-plugin",
     "description": "Mô tả ngắn bằng tiếng Việt",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
@@ -52,14 +52,14 @@ mkdir -p custom/plugins/TenPlugin/src
     },
     "autoload": {
         "psr-4": {
-            "Anivele\\TenPlugin\\": "src/"
+            "Acme\\TenPlugin\\": "src/"
         }
     },
     "extra": {
-        "shopware-plugin-class": "Anivele\\TenPlugin\\TenPlugin",
+        "shopware-plugin-class": "Acme\\TenPlugin\\TenPlugin",
         "label": {
-            "en-GB": "Anivele Ten Plugin",
-            "de-DE": "Anivele Ten Plugin"
+            "en-GB": "Acme Ten Plugin",
+            "de-DE": "Acme Ten Plugin"
         }
     }
 }
@@ -74,7 +74,7 @@ mkdir -p custom/plugins/TenPlugin/src
 ```php
 <?php declare(strict_types=1);
 
-namespace Anivele\TenPlugin;
+namespace Acme\TenPlugin;
 
 use Shopware\Core\Framework\Plugin;
 
@@ -100,7 +100,7 @@ mysql -h 127.0.0.1 -u root shopware -e \
   "SELECT name, active, managed_by_composer FROM plugin WHERE name='TenPlugin';"
 ```
 
-Phải ra `active = 1` và **`managed_by_composer = 0`**. Nếu là `1` → đã lỡ `composer require`, gỡ bằng `composer remove anivele/ten-plugin` rồi `plugin:refresh` lại.
+Phải ra `active = 1` và **`managed_by_composer = 0`**. Nếu là `1` → đã lỡ `composer require`, gỡ bằng `composer remove acme/ten-plugin` rồi `plugin:refresh` lại.
 
 ---
 
@@ -117,7 +117,7 @@ date +%s      # lấy Unix timestamp THẬT tại thời điểm tạo
 ```php
 <?php declare(strict_types=1);
 
-namespace Anivele\TenPlugin\Migration;
+namespace Acme\TenPlugin\Migration;
 
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Migration\MigrationStep;
@@ -172,7 +172,7 @@ php bin/console database:migrate --all TenPlugin
 >
 > Kiểm tra sau khi chạy migration: đếm số dòng bị ảnh hưởng có khớp kỳ vọng không.
 
-> ⚠️ **Cân nhắc kỹ việc hoàn tác khi gỡ plugin.** `AniveleVietnam` **cố ý không** hoàn tác VND/thuế — đưa currency về USD trong khi shop đã có đơn giá VND sẽ làm sai toàn bộ số tiền. Ghi rõ quyết định này vào docblock của class plugin.
+> ⚠️ **Cân nhắc kỹ việc hoàn tác khi gỡ plugin.** `AcmeVietnam` **cố ý không** hoàn tác VND/thuế — đưa currency về USD trong khi shop đã có đơn giá VND sẽ làm sai toàn bộ số tiền. Ghi rõ quyết định này vào docblock của class plugin.
 
 ---
 
@@ -206,7 +206,7 @@ git --no-pager diff composer.json composer.lock
 
 # 3. Plugin không bị composer quản lý
 mysql -h 127.0.0.1 -u root shopware -e \
-  "SELECT name, managed_by_composer FROM plugin WHERE name LIKE 'Anivele%';"
+  "SELECT name, managed_by_composer FROM plugin WHERE name LIKE 'Acme%';"
 
 # 4. Cú pháp PHP
 php -l custom/plugins/TenPlugin/src/**/*.php
@@ -232,5 +232,5 @@ Mục 5 báo tên nào thì tên đó **không tồn tại trong `vendor/`** —
 
 - Quy tắc bắt buộc: [../08-quy-tac-phat-trien.md](../08-quy-tac-phat-trien.md)
 - Kiến trúc code, migration, test: [../09-nguyen-tac-ky-thuat.md](../09-nguyen-tac-ky-thuat.md)
-- Ví dụ thật: `custom/plugins/AniveleVietnam/` và [04-phase0-da-thuc-hien.md](04-phase0-da-thuc-hien.md)
+- Ví dụ thật: `custom/plugins/AcmeVietnam/` và [04-phase0-da-thuc-hien.md](04-phase0-da-thuc-hien.md)
 - Công cụ test/lint: [../11-mcp-va-ai-tooling.md](../11-mcp-va-ai-tooling.md)

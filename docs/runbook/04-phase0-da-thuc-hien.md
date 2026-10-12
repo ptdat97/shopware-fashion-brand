@@ -159,7 +159,7 @@ Gỡ plugin đã dọn sạch: 16 product → 0, property_group → 0, customer 
 
 ## 8. Dữ liệu demo mới
 
-Tạo plugin riêng `custom/plugins/AniveleDemoData` với ảnh đóng gói kèm — xem [05-demo-data.md](05-demo-data.md).
+Tạo plugin riêng `custom/plugins/AcmeDemoData` với ảnh đóng gói kèm — xem [05-demo-data.md](05-demo-data.md).
 
 ---
 

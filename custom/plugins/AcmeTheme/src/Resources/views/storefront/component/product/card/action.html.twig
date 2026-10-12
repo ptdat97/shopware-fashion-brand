@@ -1,0 +1,42 @@
+{% sw_extends '@Storefront/storefront/component/product/card/action.html.twig' %}
+
+{#
+    Ô chọn số lượng ngay ở trang danh mục — bớt một bước cho khách mua nhiều
+    món cùng lúc.
+
+    An toàn với hàng thời trang: listing hiển thị BIẾN THỂ (ANV-1012-01) chứ
+    không phải sản phẩm cha, nên nút "Thêm vào giỏ" đã kèm sẵn size + màu.
+    Đã kiểm chứng qua Store API: line item nhận đúng option "S, Kem".
+
+    Lưu ý: core vẫn render một input hidden `[quantity]` ở block
+    component_product_box_action_buy_info. Form sẽ có hai input trùng tên và
+    trình duyệt lấy giá trị SAU CÙNG — tức là ô nhập của khách, đúng ý muốn.
+    Cố ý không ghi đè block đó để tránh phải sao chép nguyên khối markup của
+    core (vi phạm nguyên tắc "không copy template" ở docs/08).
+#}
+{% block component_product_box_action_buy_button %}
+    <div class="acme-listing-buy d-flex gap-2">
+        {% block acme_product_box_action_quantity %}
+            <div class="acme-listing-quantity">
+                <label class="visually-hidden" for="acme-qty-{{ id }}">
+                    {{ 'checkout.quantity'|trans|striptags }}
+                </label>
+                <input type="number"
+                       id="acme-qty-{{ id }}"
+                       class="form-control"
+                       name="lineItems[{{ id }}][quantity]"
+                       value="{{ product.minPurchase }}"
+                       min="{{ product.minPurchase }}"
+                       {% if product.maxPurchase %}max="{{ product.maxPurchase }}"{% endif %}
+                       step="{{ product.purchaseSteps ?: 1 }}"
+                       aria-label="{{ 'checkout.quantity'|trans|striptags }}">
+            </div>
+        {% endblock %}
+
+        <div class="acme-listing-buy-button d-grid flex-grow-1">
+            <button class="btn btn-buy">
+                {{ 'listing.boxAddProduct'|trans|sw_sanitize }}
+            </button>
+        </div>
+    </div>
+{% endblock %}

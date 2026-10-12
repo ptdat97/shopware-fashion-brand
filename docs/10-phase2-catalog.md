@@ -1,6 +1,6 @@
 # Phase 2 — Catalog thời trang: đánh giá & kết quả
 
-> ✅ **Đã hoàn tất 08/08/2026.** Thực hiện bằng plugin `AniveleCatalog`.
+> ✅ **Đã hoàn tất 08/08/2026.** Thực hiện bằng plugin `AcmeCatalog`.
 
 ---
 

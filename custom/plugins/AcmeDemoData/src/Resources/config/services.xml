@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Acme\DemoData\Service\DemoDataImporter">
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="category.repository"/>
+            <argument type="service" id="media.repository"/>
+            <argument type="service" id="media_folder.repository"/>
+            <argument type="service" id="property_group.repository"/>
+            <argument type="service" id="tax.repository"/>
+            <argument type="service" id="sales_channel.repository"/>
+            <argument type="service" id="language.repository"/>
+            <argument type="service" id="Shopware\Core\Content\Media\File\FileSaver"/>
+        </service>
+
+        <service id="Acme\DemoData\Command\SeedDemoCommand">
+            <argument type="service" id="Acme\DemoData\Service\DemoDataImporter"/>
+            <tag name="console.command"/>
+        </service>
+
+        <service id="Acme\DemoData\Controller\DemoDataController" public="true">
+            <argument type="service" id="Acme\DemoData\Service\DemoDataImporter"/>
+            <tag name="controller.service_arguments"/>
+        </service>
+    </services>
+</container>

@@ -1,0 +1,193 @@
+{
+  "name": "AcmeTheme",
+  "author": "Acme",
+  "description": {
+    "vi-VN": "Giao diện thương hiệu Acme — tông trung tính ấm, tối ưu cho thời trang nữ.",
+    "en-GB": "Acme brand theme — warm neutral palette for womenswear."
+  },
+  "views": [
+    "@Storefront",
+    "@Plugins",
+    "@AcmeTheme"
+  ],
+  "style": [
+    "app/storefront/src/scss/overrides.scss",
+    "@Storefront",
+    "app/storefront/src/scss/base.scss"
+  ],
+  "script": [
+    "@Storefront",
+    "app/storefront/dist/storefront/js/acme-theme/acme-theme.js"
+  ],
+  "asset": [
+    "@Storefront",
+    "app/storefront/src/assets"
+  ],
+  "config": {
+    "blocks": {
+      "themeColors": {
+        "label": {
+          "vi-VN": "Màu thương hiệu",
+          "en-GB": "Theme colours"
+        }
+      },
+      "typography": {
+        "label": {
+          "vi-VN": "Kiểu chữ",
+          "en-GB": "Typography"
+        }
+      },
+      "eCommerce": {
+        "label": {
+          "vi-VN": "Bán hàng",
+          "en-GB": "E-Commerce"
+        }
+      }
+    },
+    "fields": {
+      "sw-color-brand-primary": {
+        "type": "color",
+        "value": "#6b4a34",
+        "editable": true,
+        "block": "themeColors",
+        "order": 100,
+        "label": {
+          "vi-VN": "Màu chính (nâu)",
+          "en-GB": "Primary colour"
+        }
+      },
+      "sw-color-brand-secondary": {
+        "type": "color",
+        "value": "#1a1a1a",
+        "editable": true,
+        "block": "themeColors",
+        "order": 200,
+        "label": {
+          "vi-VN": "Màu phụ (đen)",
+          "en-GB": "Secondary colour"
+        }
+      },
+      "sw-border-color": {
+        "type": "color",
+        "value": "#d9c9b0",
+        "editable": true,
+        "block": "themeColors",
+        "order": 300,
+        "label": {
+          "vi-VN": "Màu viền (be)",
+          "en-GB": "Border colour"
+        }
+      },
+      "sw-background-color": {
+        "type": "color",
+        "value": "#fdfbf7",
+        "editable": true,
+        "block": "themeColors",
+        "order": 400,
+        "label": {
+          "vi-VN": "Màu nền",
+          "en-GB": "Background colour"
+        }
+      },
+      "sw-text-color": {
+        "type": "color",
+        "value": "#2b2521",
+        "editable": true,
+        "block": "typography",
+        "order": 200,
+        "label": {
+          "vi-VN": "Màu chữ",
+          "en-GB": "Text colour"
+        }
+      },
+      "sw-headline-color": {
+        "type": "color",
+        "value": "#1a1a1a",
+        "editable": true,
+        "block": "typography",
+        "order": 400,
+        "label": {
+          "vi-VN": "Màu tiêu đề",
+          "en-GB": "Headline colour"
+        }
+      },
+      "sw-font-family-base": {
+        "type": "fontFamily",
+        "value": "'Inter', -apple-system, 'Segoe UI', sans-serif",
+        "editable": true,
+        "block": "typography",
+        "order": 100,
+        "label": {
+          "vi-VN": "Font chữ nội dung",
+          "en-GB": "Base font"
+        }
+      },
+      "sw-font-family-headline": {
+        "type": "fontFamily",
+        "value": "'Inter', -apple-system, 'Segoe UI', sans-serif",
+        "editable": true,
+        "block": "typography",
+        "order": 300,
+        "label": {
+          "vi-VN": "Font chữ tiêu đề",
+          "en-GB": "Headline font"
+        }
+      },
+      "sw-color-price": {
+        "type": "color",
+        "value": "#1a1a1a",
+        "editable": true,
+        "block": "eCommerce",
+        "order": 100,
+        "label": {
+          "vi-VN": "Màu giá",
+          "en-GB": "Price colour"
+        }
+      },
+      "sw-color-buy-button": {
+        "type": "color",
+        "value": "#1a1a1a",
+        "editable": true,
+        "block": "eCommerce",
+        "order": 200,
+        "label": {
+          "vi-VN": "Màu nút Mua hàng",
+          "en-GB": "Buy button colour"
+        }
+      },
+      "sw-color-buy-button-text": {
+        "type": "color",
+        "value": "#ffffff",
+        "editable": true,
+        "block": "eCommerce",
+        "order": 300,
+        "label": {
+          "vi-VN": "Màu chữ nút Mua hàng",
+          "en-GB": "Buy button text colour"
+        }
+      },
+      "acme-color-sale": {
+        "type": "color",
+        "value": "#9b2c2c",
+        "editable": true,
+        "block": "eCommerce",
+        "order": 400,
+        "label": {
+          "vi-VN": "Màu giá khuyến mãi",
+          "en-GB": "Sale price colour"
+        }
+      },
+      "acme-font-family-display": {
+        "type": "fontFamily",
+        "value": "'Cormorant Garamond', 'Times New Roman', Georgia, serif",
+        "editable": true,
+        "block": "typography",
+        "order": 350,
+        "label": {
+          "vi-VN": "Font chữ hiển thị (tiêu đề lớn)",
+          "en-GB": "Display font (large headings)"
+        }
+      }
+    }
+  }
+}

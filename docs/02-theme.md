@@ -1,6 +1,6 @@
 # Theme thương hiệu
 
-> ✅ **Đã thực hiện giai đoạn 1** (08/08/2026) — plugin `AniveleTheme`. Tài liệu này giữ nguyên phần lý do và nguyên tắc; phần "đã kiểm chứng" bổ sung ở cuối.
+> ✅ **Đã thực hiện giai đoạn 1** (08/08/2026) — plugin `AcmeTheme`. Tài liệu này giữ nguyên phần lý do và nguyên tắc; phần "đã kiểm chứng" bổ sung ở cuối.
 
 Hướng đã chốt: **tự xây theme riêng kế thừa Storefront mặc định**.
 
@@ -69,10 +69,10 @@ Khách VN thường phân vân giữa các bảng size khác nhau. Cần popup b
 ## Cấu trúc thư mục dự kiến
 
 ```
-custom/plugins/AniveleTheme/
+custom/plugins/AcmeTheme/
 ├── composer.json
 ├── src/
-│   ├── AniveleTheme.php
+│   ├── AcmeTheme.php
 │   └── Resources/
 │       ├── theme.json              # khai báo kế thừa + biến cấu hình
 │       ├── app/storefront/
@@ -301,17 +301,17 @@ khung**. Thứ ghìm ảnh là cái khung 430px, không phải bản thân ảnh
 > trị viên đặt làm mức tối thiểu.
 
 ```scss
-$anivele-gallery-height: clamp(430px, 68vh, 820px);
+$acme-gallery-height: clamp(430px, 68vh, 820px);
 
 .product-detail-media {
     .gallery-slider-item,
     .gallery-slider-single-image {
-        height: $anivele-gallery-height;
+        height: $acme-gallery-height;
     }
 
     // cột ảnh nhỏ bên trái phải cao theo, core kẹp cứng 425px cho khung 430px cũ
     .gallery-slider-thumbnails-col.is-left .gallery-slider-thumbnails {
-        max-height: $anivele-gallery-height;
+        max-height: $acme-gallery-height;
     }
 }
 ```

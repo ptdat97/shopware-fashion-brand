@@ -2,7 +2,7 @@
 
 > Chỉ bắt đầu sau khi đã chốt xong VND — xem [01-cau-hinh-vnd.md](01-cau-hinh-vnd.md) để hiểu lý do.
 >
-> ✅ Đã thực hiện: theme `AniveleTheme`, xem [../02-theme.md](../02-theme.md).
+> ✅ Đã thực hiện: theme `AcmeTheme`, xem [../02-theme.md](../02-theme.md).
 
 ## Lệnh đã kiểm chứng trên hệ thống
 
@@ -19,10 +19,10 @@ theme:dump
 
 ```bash
 cd /Users/dat/Ecommerce/shopware
-php bin/console theme:create AniveleTheme
+php bin/console theme:create AcmeTheme
 ```
 
-Lệnh này tạo plugin theme trong `custom/plugins/AniveleTheme/`.
+Lệnh này tạo plugin theme trong `custom/plugins/AcmeTheme/`.
 
 > Dùng `--static` nếu muốn đặt trong `custom/static-plugins/` (phù hợp khi theme được quản lý cùng repo dự án thay vì cài qua composer).
 
@@ -30,7 +30,7 @@ Lệnh này tạo plugin theme trong `custom/plugins/AniveleTheme/`.
 
 ```bash
 php bin/console plugin:refresh
-php bin/console plugin:install --activate AniveleTheme
+php bin/console plugin:install --activate AcmeTheme
 php bin/console cache:clear
 ```
 
@@ -38,7 +38,7 @@ php bin/console cache:clear
 
 ```bash
 # Sales channel anivele
-php bin/console theme:change AniveleTheme -s 019f9d8157c5724999d4b32d220a5b41
+php bin/console theme:change AcmeTheme -s 019f9d8157c5724999d4b32d220a5b41
 ```
 
 Hoặc chạy tương tác để chọn từ danh sách:
@@ -108,7 +108,7 @@ mysql -h 127.0.0.1 -u root shopware -e \
   "SELECT technical_name, name FROM theme;"
 ```
 
-Kỳ vọng: xuất hiện `AniveleTheme` bên cạnh `Storefront`.
+Kỳ vọng: xuất hiện `AcmeTheme` bên cạnh `Storefront`.
 
 ### 🔴 Bắt buộc: chụp ảnh storefront
 

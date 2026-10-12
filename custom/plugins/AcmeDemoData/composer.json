@@ -1,0 +1,22 @@
+{
+    "name": "acme/demo-data",
+    "description": "Dữ liệu demo thời trang cho Acme",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "version": "1.0.0",
+    "require": {
+        "shopware/core": "~6.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Acme\\DemoData\\": "src/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Acme\\DemoData\\AcmeDemoData",
+        "label": {
+            "en-GB": "Acme Demo Data",
+            "de-DE": "Acme Demo Data"
+        }
+    }
+}

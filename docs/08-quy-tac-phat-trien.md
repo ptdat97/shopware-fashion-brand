@@ -36,12 +36,12 @@
 ❌ **Sai:**
 
 ```bash
-composer require "anivele/vietnam:*"     # thêm dòng vào require của dự án
+composer require "acme/vietnam:*"     # thêm dòng vào require của dự án
 ```
 
 ```json
 "require": {
-    "anivele/vietnam": "*",              ← không cần dòng này
+    "acme/vietnam": "*",              ← không cần dòng này
     "shopware/core": "v6.7.12.2"
 }
 ```
@@ -57,7 +57,7 @@ php bin/console plugin:install --activate TenPlugin
 
 Shopware **tự quét** `custom/plugins/` để tìm plugin — không đọc qua `composer.json` của dự án. Cơ chế nằm ở `PluginFinder::loadLocalPlugins()` (`vendor/shopware/core/Framework/Plugin/Util/PluginFinder.php`): nó duyệt thư mục và đọc `composer.json` **của từng plugin**, hoàn toàn độc lập với `require` cấp dự án.
 
-Đã kiểm chứng trên chính dự án này: gỡ `anivele/vietnam` khỏi `composer.json`, chạy `plugin:refresh` → plugin vẫn **Installed + Active**, storefront vẫn render `690.000 ₫` bình thường. Cột duy nhất đổi là *"Required by composer"* → `No`. Plugin `AniveleDemoData` chưa từng có trong `composer.json` mà vẫn chạy suốt từ đầu.
+Đã kiểm chứng trên chính dự án này: gỡ `acme/vietnam` khỏi `composer.json`, chạy `plugin:refresh` → plugin vẫn **Installed + Active**, storefront vẫn render `690.000 ₫` bình thường. Cột duy nhất đổi là *"Required by composer"* → `No`. Plugin `AcmeDemoData` chưa từng có trong `composer.json` mà vẫn chạy suốt từ đầu.
 
 Tác hại nếu cứ thêm vào:
 
@@ -78,15 +78,15 @@ mysql -h 127.0.0.1 -u root shopware -e "SELECT name, managed_by_composer FROM pl
 Plugin tự viết phải là `0`. Hiện trạng đúng của dự án:
 
 ```
-AniveleCatalog       0     ← tự viết, xoá được từ Admin
-AniveleDemoData      0     ← tự viết, xoá được từ Admin
-AniveleVietnam       0     ← tự viết, xoá được từ Admin
+AcmeCatalog       0     ← tự viết, xoá được từ Admin
+AcmeDemoData      0     ← tự viết, xoá được từ Admin
+AcmeVietnam       0     ← tự viết, xoá được từ Admin
 SwagLanguagePack     1     ← bên thứ ba, đúng là phải qua composer
 ```
 
 > 🔴 **Chiều ngược lại cũng nguy hiểm:** xoá thư mục plugin mà quên gỡ khỏi `composer.json`. Autoloader sẽ trỏ vào file không tồn tại và **làm hỏng toàn bộ `bin/console`** — mọi lệnh Shopware đều lỗi. Đã xảy ra thật với `SwagPayPal`, xem [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md). Gỡ plugin bên thứ ba phải dùng `composer remove`, không xoá thư mục bằng tay.
 
-> Chi tiết bối cảnh của bài học này: [runbook/05-demo-data.md](runbook/05-demo-data.md) — `AniveleDemoData` từng phải chuyển từ `custom/static-plugins/` sang `custom/plugins/` chính vì lý do bị khoá nút Xoá.
+> Chi tiết bối cảnh của bài học này: [runbook/05-demo-data.md](runbook/05-demo-data.md) — `AcmeDemoData` từng phải chuyển từ `custom/static-plugins/` sang `custom/plugins/` chính vì lý do bị khoá nút Xoá.
 
 ### Khi nào **được** đụng `composer.json`
 
@@ -100,7 +100,7 @@ SwagLanguagePack     1     ← bên thứ ba, đúng là phải qua composer
 
 > 🔴 **Shopware KHÔNG nạp `vendor/autoload.php` của plugin.** `KernelPluginLoader` chỉ đăng ký các namespace `psr-4` khai báo trong `composer.json` của plugin, không đụng tới thư mục `vendor/` bên trong plugin.
 
-Đã trả giá thật khi làm VietQR: cài `endroid/qr-code` vào `custom/plugins/AnivelePayment/vendor/`, `composer install` báo thành công, `php -r` test riêng cũng chạy — nhưng storefront trả **500**:
+Đã trả giá thật khi làm VietQR: cài `endroid/qr-code` vào `custom/plugins/AcmePayment/vendor/`, `composer install` báo thành công, `php -r` test riêng cũng chạy — nhưng storefront trả **500**:
 
 ```
 ClassNotFoundError: Attempted to load class "QrCode" from namespace "Endroid\QrCode"
@@ -246,7 +246,7 @@ Có thể Shopware **thật sự không có** thứ đó — như trường hợ
 vendor/shopware/core/Defaults.php                       → IGNORED (không track)
 vendor/shopware/storefront/.../base.html.twig           → IGNORED (không track)
 public/bundles/storefront/app.js                        → IGNORED (không track)
-custom/plugins/AniveleDemoData/src/AniveleDemoData.php  → tracked ✅
+custom/plugins/AcmeDemoData/src/AcmeDemoData.php  → tracked ✅
 ```
 
 Sửa core nghĩa là: **không có lịch sử, không review được, không rollback được, đồng đội không nhận được thay đổi.** Máy bạn chạy được nhưng máy người khác thì không — loại lỗi cực kỳ tốn thời gian truy vết.
