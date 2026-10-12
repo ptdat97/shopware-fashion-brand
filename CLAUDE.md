@@ -62,6 +62,6 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 **Sửa giao diện thì phải chụp ảnh storefront kiểm chứng**, không tin `curl`/`grep` — xem [docs/02-theme.md](docs/02-theme.md).
 
-- **Phase MB** (đa thương hiệu) 🔄 — MB0: ✅ ADR-003 đã duyệt, ✅ DB local dựng lại; ⏳ chờ kinh doanh trả lời câu hỏi mở
+- **Phase MB** (đa thương hiệu) 🔄 — MB0 ✅: ADR-003 đã duyệt, DB local dựng lại, kinh doanh đã chốt — Anivele là *một* brand, brand tắt chỉ ẩn trang brand (sản phẩm vẫn bán), SKU mã brand 3 ký tự (`ANV-1001-01`), dev dùng brand demo giả định. Tên nền tảng chưa chốt
 
-Tiếp theo: **MB1 — plugin `AcmeBrand`** (bảng mở rộng `product_manufacturer`, Administration, ACL), sau khi kinh doanh chốt "brand ngừng thì sản phẩm ra sao". Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+Tiếp theo: **MB1 — plugin `AcmeBrand`** (bảng mở rộng `product_manufacturer`, Administration, ACL). Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).

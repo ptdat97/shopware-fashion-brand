@@ -164,7 +164,8 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 |---|---|
 | Duyệt [ADR-003](decisions/ADR-003-mo-hinh-thuong-hieu.md) | ✅ 12/10/2026 — phương án A: brand = `product_manufacturer` + plugin `AcmeBrand` |
 | Dựng lại DB local khớp [00-hien-trang.md](00-hien-trang.md) | ✅ 12/10/2026 — 5 plugin `Acme*` active, 76 sản phẩm (12 cha + 64 biến thể), `AcmeTheme` gán cho `anivele`, storefront HTTP 200 |
-| Trả lời câu hỏi mở: tên nền tảng/domain, danh sách brand, brand ngừng thì sản phẩm ra sao, SKU theo brand | ⏳ **Cần kinh doanh quyết** — chặn MB1 (câu 3) và MB2 (câu 2, 4) |
+| Câu hỏi mở cho kinh doanh | ✅ 12/10/2026 — Anivele là một brand; brand demo giả định; brand tắt chỉ ẩn trang brand, sản phẩm vẫn bán; SKU mã brand 3 ký tự. Chi tiết: [12-da-thuong-hieu.md](12-da-thuong-hieu.md) mục 8 |
+| Tên nền tảng / tên miền | ⏳ Chưa chốt — không chặn MB1–MB3 |
 | `SwagPayPal` vẫn *Installed* (inactive) dù tài liệu ghi đã gỡ hẳn | ⏳ Cần xác nhận rồi `plugin:uninstall` + `composer remove` |
 
 > Dựng lại DB mới kiểm bằng số liệu DB và HTTP status — **chưa chụp ảnh storefront**. Chụp lại trước khi bắt đầu MB3 để có ảnh nền so sánh.
@@ -185,9 +186,9 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 | Việc | Trạng thái |
 |---|---|
 | Gán manufacturer cho sản phẩm — **native**, form sản phẩm + Import/Export | ⏳ Chỉ dữ liệu |
-| `AcmeDemoData` sinh 2–3 brand demo và gán cho 12 mẫu | ⏳ |
+| `AcmeDemoData` sinh Anivele + 2 brand demo giả định và chia 12 mẫu | ⏳ |
 | Bật bộ lọc brand (`manufacturer-filter`) ở listing danh mục | ⏳ Cấu hình CMS |
-| Quy tắc SKU có mã brand | ⏳ Chờ MB0 |
+| SKU mã brand 3 ký tự (`NKE-1001-01`), `ANV-*` = Anivele giữ nguyên | ⏳ Đã chốt quy tắc, chưa áp dụng |
 
 **Nghiệm thu:** lọc theo brand ở danh mục trả đúng sản phẩm; biến thể kế thừa brand của sản phẩm cha.
 
@@ -199,7 +200,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 | Trang `/brands` — danh sách brand đang hoạt động | ⏳ |
 | Trang `/brands/{slug}` — banner, mô tả, CMS layout, sản phẩm của brand | ⏳ |
 | SEO URL route + sitemap cho brand | ⏳ |
-| Brand ngừng hoạt động → 404 | ⏳ |
+| Brand ngừng hoạt động → 404, rời `/brands` và sitemap; **sản phẩm vẫn bán** | ⏳ |
 | Logo brand ở trang sản phẩm, link về trang brand | ⏳ CMS element `manufacturer-logo` có sẵn |
 
 **Nghiệm thu:** test cho route + SEO URL; **chụp ảnh storefront** desktop & mobile; sitemap có URL brand.

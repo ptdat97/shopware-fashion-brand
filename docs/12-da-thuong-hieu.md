@@ -121,7 +121,7 @@ product.manufacturer_id ───► brand     seo_url  (route brand) ◄──�
 
 ### 5.3 Một sales channel
 
-**Không tạo sales channel cho từng brand.** Mọi brand dùng chung storefront `anivele` (tên nền tảng sẽ đổi khi chốt — câu hỏi mở mục 8). Sales channel riêng chỉ hợp lý khi brand có **tên miền riêng** — điều mô hình này cố ý không làm.
+**Không tạo sales channel cho từng brand.** Mọi brand dùng chung storefront `anivele` (Anivele là một brand; tên nền tảng chưa chốt — mục 8). Sales channel riêng chỉ hợp lý khi brand có **tên miền riêng** — điều mô hình này cố ý không làm.
 
 ### 5.4 Theme
 
@@ -172,14 +172,22 @@ Chi tiết từng giai đoạn và tiêu chí nghiệm thu: [01-roadmap.md](01-r
 
 ---
 
-## 8. Câu hỏi mở — cần kinh doanh trả lời
+## 8. Câu hỏi mở — quyết định kinh doanh
+
+Đã chốt 12/10/2026 (câu 1–4):
+
+| # | Câu hỏi | Quyết định | Ảnh hưởng |
+|---|---|---|---|
+| 1 | Anivele trong mô hình mới? | ✅ **Anivele là một brand** trong danh sách. Tên nền tảng/tên miền **chưa chốt** | Logo header sẽ đổi sang tên nền tảng khi có; storefront `anivele` đổi tên theo |
+| 2 | Dữ liệu brand cho phát triển | ✅ **Brand demo giả định** — `AcmeDemoData` sinh Anivele + 2 brand giả, chia 12 mẫu | Thay bằng brand thật trước go-live |
+| 3 | Brand ngừng hoạt động thì sản phẩm? | ✅ **Ẩn trang brand, vẫn bán sản phẩm** — `/brands/{slug}` trả 404, brand rời `/brands` và sitemap; sản phẩm vẫn ở danh mục, tìm kiếm, mua được | `active` chỉ điều khiển storefront brand, **không** đụng visibility sản phẩm hay cart |
+| 4 | Quy tắc SKU | ✅ **Mã brand 3 ký tự**: `NKE-1001-01` (brand – mẫu – biến thể). `ANV` = Anivele, hàng `ANV-*` giữ nguyên | Mã brand lưu ở đâu: quyết định trong MB1 |
+
+Còn mở:
 
 | # | Câu hỏi | Chặn giai đoạn |
 |---|---|---|
-| 1 | **Tên nền tảng / tên miền** là gì? Anivele có trở thành *một* brand trong danh sách không? | MB0 |
-| 2 | Danh sách brand ban đầu, ai cung cấp logo/banner/mô tả? | MB2 |
-| 3 | Brand ngừng hoạt động thì **sản phẩm** của brand còn bán không, hay ẩn theo? | MB1 |
-| 4 | Quy tắc SKU có mã brand (vd. `NKE-1001-01`)? Hàng cũ `ANV-*` xử lý thế nào? | MB2 |
+| 1b | **Tên nền tảng / tên miền** | Không chặn kỹ thuật — chỉ nội dung, logo header |
 | 5 | Có brand nào **giao từ kho riêng** (ảnh hưởng phí ship, tách kiện)? | MB5 |
 | 6 | Bảng size theo brand × danh mục: brand cung cấp số đo hay tự đo? | sau MB3 |
 

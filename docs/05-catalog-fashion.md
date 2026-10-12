@@ -37,7 +37,7 @@ ANV-AOTHUN-001-DEN-M
    └ brand └ loại └ mã └ màu └ size
 ```
 
-> 🧭 **Đa thương hiệu:** tiền tố brand trong SKU trở thành bắt buộc — nhiều brand có thể cùng dùng mã mẫu `1001`. Mã brand nên khớp với brand gán qua `product.manufacturerId`. Hàng demo hiện tại `ANV-*` chỉ thuộc một brand. Chốt quy tắc ở Phase MB0 — [12-da-thuong-hieu.md](12-da-thuong-hieu.md) mục 8.
+> 🧭 **Đa thương hiệu:** tiền tố brand trong SKU trở thành bắt buộc — nhiều brand có thể cùng dùng mã mẫu `1001`. **Đã chốt (12/10/2026): mã brand 3 ký tự** — `NKE-1001-01` (brand – mẫu – biến thể), mã brand phải khớp brand gán qua `product.manufacturerId`. `ANV` = Anivele, hàng `ANV-*` giữ nguyên. Xem [12-da-thuong-hieu.md](12-da-thuong-hieu.md) mục 8.
 
 **2. Tồn kho theo biến thể**
 

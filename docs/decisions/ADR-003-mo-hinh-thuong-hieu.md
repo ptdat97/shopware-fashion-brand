@@ -65,6 +65,7 @@ Cây "Thương hiệu" → mỗi brand một category.
 - **Slug không lưu cột riêng.** Route `frontend.acme.brand.page` đăng ký `SeoUrlRouteInterface` (tag `shopware.seo_url.route`), template mặc định `brands/{{ manufacturer.translated.name }}`. Bản ghi `seo_url` *chính là* slug — sửa tay được trong Administration theo từng ngôn ngữ, Shopware tự giữ redirect URL cũ.
 - **Tên, mô tả, logo** giữ ở manufacturer.
 - **Brand chưa có bản ghi `acme_brand`** được coi là *không hoạt động* — brand chỉ lên storefront khi được bật chủ động.
+- **`active` chỉ điều khiển storefront của brand** (chốt 12/10/2026): brand tắt → `/brands/{slug}` 404, rời `/brands` và sitemap. Sản phẩm của brand **vẫn hiển thị và vẫn bán** — plugin không lọc sản phẩm theo trạng thái brand ở listing, tìm kiếm hay cart. Muốn ngừng bán thì tắt sản phẩm bằng cơ chế native.
 - **Admin:** thêm phần "Thương hiệu" vào trang chi tiết nhà sản xuất có sẵn (override component `sw-manufacturer-detail`), không làm module riêng. Đổi nhãn "Nhà sản xuất" → "Thương hiệu" bằng snippet.
 - **ACL:** quyền đọc/ghi `acme_brand` gắn theo quyền `product_manufacturer` hiện có.
 
