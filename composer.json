@@ -5,11 +5,11 @@
         "composer-runtime-api": "^2.0",
         "endroid/qr-code": "^6.0",
         "shopware/administration": "*",
-        "shopware/core": "v6.7.14.2",
+        "shopware/core": "v6.7.15.1",
         "shopware/elasticsearch": "*",
         "shopware/storefront": "*",
         "swag/language-pack": "dev-master",
-        "swag/paypal": "10.8.4",
+        "swag/paypal": "10.8.5",
         "symfony/flex": "~2"
     },
     "repositories": [
