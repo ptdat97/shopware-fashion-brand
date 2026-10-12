@@ -152,19 +152,22 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 ---
 
-## Phase MB — Đa thương hiệu ⏳ **ĐANG LÊN KẾ HOẠCH** (từ 12/10/2026)
+## Phase MB — Đa thương hiệu 🔄 **ĐANG TRIỂN KHAI** (từ 12/10/2026)
 
 **Mục tiêu:** nhiều thương hiệu bán chung một website, một catalog, một giỏ hàng; mỗi brand có trang riêng tại `/brands/{slug}`.
 
 **Kiến trúc:** brand = `product_manufacturer` của core + plugin `AcmeBrand` lưu phần core không có (active, banner, layout, SEO meta). Một sales channel. Bộ sưu tập = category + product stream. Chi tiết: [12-da-thuong-hieu.md](12-da-thuong-hieu.md).
 
-### MB0 — Chốt quyết định (không code)
+### MB0 — Chốt quyết định (không code) 🔄
 
 | Việc | Trạng thái |
 |---|---|
-| Duyệt [ADR-003](decisions/ADR-003-mo-hinh-thuong-hieu.md) | ⏳ |
-| Trả lời câu hỏi mở: tên nền tảng/domain, danh sách brand, brand ngừng thì sản phẩm ra sao, SKU theo brand | ⏳ Cần kinh doanh quyết |
-| Dựng lại DB local khớp [00-hien-trang.md](00-hien-trang.md) — hiện 5 plugin `Acme*` chưa cài | ⏳ |
+| Duyệt [ADR-003](decisions/ADR-003-mo-hinh-thuong-hieu.md) | ✅ 12/10/2026 — phương án A: brand = `product_manufacturer` + plugin `AcmeBrand` |
+| Dựng lại DB local khớp [00-hien-trang.md](00-hien-trang.md) | ✅ 12/10/2026 — 5 plugin `Acme*` active, 76 sản phẩm (12 cha + 64 biến thể), `AcmeTheme` gán cho `anivele`, storefront HTTP 200 |
+| Trả lời câu hỏi mở: tên nền tảng/domain, danh sách brand, brand ngừng thì sản phẩm ra sao, SKU theo brand | ⏳ **Cần kinh doanh quyết** — chặn MB1 (câu 3) và MB2 (câu 2, 4) |
+| `SwagPayPal` vẫn *Installed* (inactive) dù tài liệu ghi đã gỡ hẳn | ⏳ Cần xác nhận rồi `plugin:uninstall` + `composer remove` |
+
+> Dựng lại DB mới kiểm bằng số liệu DB và HTTP status — **chưa chụp ảnh storefront**. Chụp lại trước khi bắt đầu MB3 để có ảnh nền so sánh.
 
 ### MB1 — Dữ liệu thương hiệu (plugin `AcmeBrand`)
 

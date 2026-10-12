@@ -2,7 +2,7 @@
 
 > **Định hướng mới từ 12/10/2026.** Dự án chuyển từ *shop của một thương hiệu* sang *nền tảng bán lẻ nhiều thương hiệu* — theo mô hình các nhà bán lẻ đa thương hiệu như ACFC, Tam Sơn, FORMAT, Front Row.
 >
-> Tài liệu này là **báo cáo khảo sát + kiến trúc đề xuất**, chưa có dòng code nào được viết. Quyết định kiến trúc chính: [decisions/ADR-003-mo-hinh-thuong-hieu.md](decisions/ADR-003-mo-hinh-thuong-hieu.md). Lộ trình: [01-roadmap.md](01-roadmap.md) mục *Phase MB*.
+> Tài liệu này là **báo cáo khảo sát + kiến trúc đề xuất**, chưa có dòng code nào được viết. Quyết định kiến trúc chính (✅ đã duyệt 12/10/2026): [decisions/ADR-003-mo-hinh-thuong-hieu.md](decisions/ADR-003-mo-hinh-thuong-hieu.md). Lộ trình: [01-roadmap.md](01-roadmap.md) mục *Phase MB*.
 
 ---
 
@@ -38,7 +38,7 @@ Dự án hiện được dựng cho **một brand duy nhất (Anivele)**. Các �
 | Nhà sản xuất | DB chỉ có 1 bản ghi `shopware AG` (mặc định cài đặt), demo data không gán brand | Toàn bộ sản phẩm chưa có thương hiệu |
 | Sales channel | Một storefront `anivele` | **Giữ nguyên một channel** — đúng với mô hình |
 
-> ⚠️ **DB local đang lệch với [00-hien-trang.md](00-hien-trang.md)** (kiểm tra 12/10/2026): 5 plugin `Acme*` *chưa cài*, `product` = 12 (không có biến thể), `theme` = 1 (chỉ Storefront). Tài liệu ghi 76 sản phẩm / 64 biến thể / `AcmeTheme` đang dùng. Cần dựng lại bằng `plugin:install` các plugin `Acme*` trước khi bắt đầu Phase MB — đúng tinh thần "cấu hình phải viết thành migration".
+> ✅ DB local đã dựng lại khớp [00-hien-trang.md](00-hien-trang.md) (12/10/2026, MB0) chỉ bằng `plugin:install` + lệnh seed — đúng tinh thần "cấu hình phải viết thành migration".
 
 ---
 
@@ -160,7 +160,7 @@ Chi tiết từng giai đoạn và tiêu chí nghiệm thu: [01-roadmap.md](01-r
 
 | Giai đoạn | Nội dung | Code? |
 |---|---|---|
-| **MB0** | Chốt ADR-003 + câu hỏi mở; dựng lại DB local đúng hiện trạng | Không |
+| **MB0** 🔄 | ✅ Duyệt ADR-003, ✅ dựng lại DB local; ⏳ câu hỏi mở | Không |
 | **MB1** | Plugin `AcmeBrand`: bảng mở rộng, migration, Administration, ACL | Có |
 | **MB2** | Gán brand cho sản phẩm (dữ liệu), bật bộ lọc brand ở listing | Chủ yếu cấu hình |
 | **MB3** | Storefront brand: `/brands`, `/brands/{slug}`, SEO URL, sitemap | Có |

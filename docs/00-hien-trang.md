@@ -2,7 +2,7 @@
 
 Khảo sát ngày 26/07/2026. Tất cả số liệu dưới đây lấy trực tiếp từ database và CLI của hệ thống đang chạy.
 
-> ⚠️ **Kiểm tra lại 12/10/2026 — DB local đã lệch so với tài liệu này:** 5 plugin `Acme*` **chưa cài** (không có migration nào trong bảng `migration`), `product` = 12 (không có biến thể), `theme` = 1 (chỉ Storefront), `product_manufacturer` = 1 (`shopware AG`). Số liệu bên dưới là trạng thái *sau khi cài đủ plugin*. Cài lại: `plugin:install --activate` từng plugin `Acme*`, rồi `acme:demo:seed`.
+> ✅ **Đối chiếu lại 12/10/2026:** DB local đã dựng lại từ đầu bằng các plugin `Acme*` và khớp số liệu dưới đây. `product_manufacturer` vẫn chỉ có `shopware AG` — chưa gán brand cho sản phẩm (Phase MB2).
 >
 > 🧭 **Định hướng mới:** nền tảng đa thương hiệu — [12-da-thuong-hieu.md](12-da-thuong-hieu.md).
 

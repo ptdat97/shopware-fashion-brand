@@ -1,7 +1,7 @@
 # ADR-003: Mô hình dữ liệu thương hiệu cho nền tảng đa thương hiệu
 
-**Trạng thái:** ⏳ **ĐỀ XUẤT — chờ duyệt** (12/10/2026)
-**Đề xuất:** Phương án A — `product_manufacturer` làm thực thể brand, plugin `AcmeBrand` mở rộng bằng bảng riêng
+**Trạng thái:** ✅ **ĐÃ DUYỆT** — 12/10/2026 (3 điểm ở mục *Cần kiểm chứng* vẫn phải làm trong MB3/MB4)
+**Quyết định:** Phương án A — `product_manufacturer` làm thực thể brand, plugin `AcmeBrand` mở rộng bằng bảng riêng
 
 ## Bối cảnh
 
@@ -13,7 +13,7 @@ Core 6.7.12.2 đã có `product_manufacturer` với `name`, `description`, `link
 
 ## Các lựa chọn
 
-### A. Manufacturer + bảng mở rộng của plugin (đề xuất)
+### A. Manufacturer + bảng mở rộng của plugin (đã chọn)
 
 `product_manufacturer` là brand. Plugin `AcmeBrand` thêm bảng `acme_brand` (1–1, FK cascade) và `acme_brand_translation`, nối bằng `EntityExtension`.
 
@@ -60,7 +60,7 @@ Cây "Thương hiệu" → mỗi brand một category.
 
 **Loại.** Mâu thuẫn trực tiếp với yêu cầu một website / một giỏ hàng; khách không thể mua nhiều brand trong một đơn.
 
-## Đề xuất chi tiết (phương án A)
+## Chi tiết quyết định (phương án A)
 
 - **Slug không lưu cột riêng.** Route `frontend.acme.brand.page` đăng ký `SeoUrlRouteInterface` (tag `shopware.seo_url.route`), template mặc định `brands/{{ manufacturer.translated.name }}`. Bản ghi `seo_url` *chính là* slug — sửa tay được trong Administration theo từng ngôn ngữ, Shopware tự giữ redirect URL cũ.
 - **Tên, mô tả, logo** giữ ở manufacturer.
@@ -76,7 +76,7 @@ Cây "Thương hiệu" → mỗi brand một category.
 | 2 | Override `sw-manufacturer-detail` an toàn qua bản vá 6.7.x | Đọc component gốc, viết Jest test |
 | 3 | SEO URL template cho category tạo được `/collections/new-arrivals` | Cấu hình thử trong MB4 |
 
-Kết quả ghi bổ sung vào ADR này, rồi đổi trạng thái sang ✅.
+Kết quả ghi bổ sung vào ADR này. Nếu PoC #1 thất bại, phải mở lại ADR trước khi viết route.
 
 ## Hệ quả
 

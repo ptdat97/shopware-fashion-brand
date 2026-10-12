@@ -62,6 +62,6 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 **Sửa giao diện thì phải chụp ảnh storefront kiểm chứng**, không tin `curl`/`grep` — xem [docs/02-theme.md](docs/02-theme.md).
 
-> ⚠️ **DB local đang lệch tài liệu** (12/10/2026): 5 plugin `Acme*` chưa cài, 12 sản phẩm không biến thể. Cài lại các plugin trước khi làm tiếp.
+- **Phase MB** (đa thương hiệu) 🔄 — MB0: ✅ ADR-003 đã duyệt, ✅ DB local dựng lại; ⏳ chờ kinh doanh trả lời câu hỏi mở
 
-Tiếp theo: **Phase MB — đa thương hiệu**, bắt đầu từ MB0 (duyệt ADR-003, chốt câu hỏi mở với kinh doanh) rồi MB1 (plugin `AcmeBrand`). Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+Tiếp theo: **MB1 — plugin `AcmeBrand`** (bảng mở rộng `product_manufacturer`, Administration, ACL), sau khi kinh doanh chốt "brand ngừng thì sản phẩm ra sao". Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
