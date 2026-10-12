@@ -2,6 +2,8 @@
 
 Lộ trình được sắp theo **thứ tự phụ thuộc kỹ thuật**, không phải theo mức độ hào hứng. Làm sai thứ tự sẽ phải làm lại.
 
+> 🧭 **Định hướng từ 12/10/2026: nền tảng bán lẻ thời trang đa thương hiệu.** Một website, một catalog, một checkout cho nhiều brand — mỗi brand có logo, banner, landing page, SEO riêng. Phase 0–3 là nền móng dùng lại nguyên vẹn; phần mới nằm ở **Phase MB** bên dưới. Khảo sát và kiến trúc: [12-da-thuong-hieu.md](12-da-thuong-hieu.md), quyết định: [decisions/ADR-003-mo-hinh-thuong-hieu.md](decisions/ADR-003-mo-hinh-thuong-hieu.md).
+
 ## Nguyên tắc sắp xếp
 
 Ba ràng buộc quyết định thứ tự:
@@ -9,6 +11,7 @@ Ba ràng buộc quyết định thứ tự:
 1. **Currency phải chốt trước theme.** Đổi USD → VND làm thay đổi cách hiển thị giá (số chữ số thập phân, vị trí ký hiệu, độ dài chuỗi). Nếu làm theme trước, toàn bộ layout giá phải chỉnh lại.
 2. **Cấu trúc variant phải chốt trước khi nhập catalog.** Sửa property group sau khi đã có 500 sản phẩm là việc rất tốn kém.
 3. **Thanh toán phải xong trước khi test checkout.** Không thể nghiệm thu luồng mua hàng nếu chưa có cổng thanh toán.
+4. **Mô hình brand phải chốt trước khi nhập catalog thật.** Gán brand, mã SKU theo brand và bảng size theo brand đều đi vào từng sản phẩm — đổi sau khi đã có hàng trăm SKU rất tốn kém.
 
 ---
 
@@ -145,13 +148,92 @@ Thực hiện bằng plugin `AcmeCatalog` — migration chuẩn hoá thuộc tí
 
 Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md](runbook/02-tao-theme.md)
 
+> 🧭 **Với định hướng đa thương hiệu**, `AcmeTheme` trở thành giao diện **của nhà bán lẻ**, không phải của một brand. Bản sắc từng brand chuyển sang landing page CMS — xem [12-da-thuong-hieu.md](12-da-thuong-hieu.md) mục 5.4.
+
+---
+
+## Phase MB — Đa thương hiệu ⏳ **ĐANG LÊN KẾ HOẠCH** (từ 12/10/2026)
+
+**Mục tiêu:** nhiều thương hiệu bán chung một website, một catalog, một giỏ hàng; mỗi brand có trang riêng tại `/brands/{slug}`.
+
+**Kiến trúc:** brand = `product_manufacturer` của core + plugin `AcmeBrand` lưu phần core không có (active, banner, layout, SEO meta). Một sales channel. Bộ sưu tập = category + product stream. Chi tiết: [12-da-thuong-hieu.md](12-da-thuong-hieu.md).
+
+### MB0 — Chốt quyết định (không code)
+
+| Việc | Trạng thái |
+|---|---|
+| Duyệt [ADR-003](decisions/ADR-003-mo-hinh-thuong-hieu.md) | ⏳ |
+| Trả lời câu hỏi mở: tên nền tảng/domain, danh sách brand, brand ngừng thì sản phẩm ra sao, SKU theo brand | ⏳ Cần kinh doanh quyết |
+| Dựng lại DB local khớp [00-hien-trang.md](00-hien-trang.md) — hiện 5 plugin `Acme*` chưa cài | ⏳ |
+
+### MB1 — Dữ liệu thương hiệu (plugin `AcmeBrand`)
+
+| Việc | Trạng thái |
+|---|---|
+| Migration bảng `acme_brand` + `acme_brand_translation` | ⏳ |
+| `EntityExtension` trên `product_manufacturer` | ⏳ |
+| Administration: phần "Thương hiệu" trong trang nhà sản xuất (active, banner, layout, thứ tự, nổi bật, SEO meta) | ⏳ |
+| ACL theo quyền `product_manufacturer` | ⏳ |
+
+**Nghiệm thu:** integration test ghi/đọc qua DAL (kể cả xoá manufacturer → xoá phần mở rộng); migration chạy hai lần không lỗi; Jest test cho component admin; tạo brand bằng Admin API thành công.
+
+### MB2 — Gán brand cho sản phẩm
+
+| Việc | Trạng thái |
+|---|---|
+| Gán manufacturer cho sản phẩm — **native**, form sản phẩm + Import/Export | ⏳ Chỉ dữ liệu |
+| `AcmeDemoData` sinh 2–3 brand demo và gán cho 12 mẫu | ⏳ |
+| Bật bộ lọc brand (`manufacturer-filter`) ở listing danh mục | ⏳ Cấu hình CMS |
+| Quy tắc SKU có mã brand | ⏳ Chờ MB0 |
+
+**Nghiệm thu:** lọc theo brand ở danh mục trả đúng sản phẩm; biến thể kế thừa brand của sản phẩm cha.
+
+### MB3 — Storefront thương hiệu
+
+| Việc | Trạng thái |
+|---|---|
+| **Spike:** listing có phân trang/sắp xếp/bộ lọc trên trang không phải category | ⏳ **Làm đầu tiên** — rủi ro kỹ thuật chính |
+| Trang `/brands` — danh sách brand đang hoạt động | ⏳ |
+| Trang `/brands/{slug}` — banner, mô tả, CMS layout, sản phẩm của brand | ⏳ |
+| SEO URL route + sitemap cho brand | ⏳ |
+| Brand ngừng hoạt động → 404 | ⏳ |
+| Logo brand ở trang sản phẩm, link về trang brand | ⏳ CMS element `manufacturer-logo` có sẵn |
+
+**Nghiệm thu:** test cho route + SEO URL; **chụp ảnh storefront** desktop & mobile; sitemap có URL brand.
+
+### MB4 — Bộ sưu tập
+
+| Việc | Trạng thái |
+|---|---|
+| Cây category "Bộ sưu tập" + product stream (Hàng mới về, Sale…) | ⏳ Cấu hình native |
+| SEO URL `/collections/{slug}` | ⏳ Kiểm chứng template navigation |
+| Bộ sưu tập của một brand trên landing page brand | ⏳ |
+
+### MB5 — Nghiệm thu commerce hợp nhất
+
+| Việc | Trạng thái |
+|---|---|
+| Một đơn chứa sản phẩm của ≥2 brand: thanh toán COD/VietQR, trừ tồn kho đúng | ⏳ |
+| Khuyến mãi theo brand bằng `LineItemOfManufacturerRule` | ⏳ |
+| Brand có trong payload `order_line_item` để báo cáo | ⏳ |
+
+### MB6 — Sẵn sàng mở rộng
+
+| Việc | Ghi chú |
+|---|---|
+| Đồng bộ ERP / PIM | Admin API / Sync API qua Integration; App nếu cần server trung gian |
+| Đa kho | Decorate `AbstractStockStorage` hoặc Shopware Commercial — chỉ khi có nhu cầu thật |
+| Bảng size theo brand × danh mục | Mở rộng cơ chế size chart của `AcmeTheme` |
+
+> **Không đánh dấu ✅** khi chưa có automated test và ảnh chụp storefront kiểm chứng.
+
 ---
 
 ## Phase 4 — Marketing & Vận hành
 
 | Việc | Ghi chú |
 |---|---|
-| SEO (URL tiếng Việt không dấu, meta, sitemap) | |
+| SEO (URL tiếng Việt không dấu, meta, sitemap) | Gồm cả trang brand và bộ sưu tập từ Phase MB |
 | Tích hợp Zalo OA / Facebook Messenger | Kênh CSKH chủ đạo tại VN |
 | Email transactional (xác nhận đơn, vận chuyển) | Cần SMTP thật, hiện chưa cấu hình |
 | Analytics (GA4, Facebook Pixel) | Lưu ý tuân thủ quy định dữ liệu cá nhân |

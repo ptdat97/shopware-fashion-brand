@@ -1,8 +1,8 @@
-# Anivele — Shop thời trang trên Shopware 6.7
+# Nền tảng bán lẻ thời trang đa thương hiệu trên Shopware 6.7
 
-Shop bán lẻ thời trang cho thị trường Việt Nam. Toàn bộ tài liệu kỹ thuật nằm ở [docs/](docs/).
+Một website, một catalog, một checkout cho **nhiều thương hiệu** thời trang tại thị trường Việt Nam; mỗi thương hiệu có logo, banner, landing page, SEO riêng (`/brands/{slug}`, `/collections/{slug}`). Toàn bộ tài liệu kỹ thuật nằm ở [docs/](docs/); kiến trúc đa thương hiệu ở [docs/12-da-thuong-hieu.md](docs/12-da-thuong-hieu.md).
 
-## Bốn quy tắc cứng
+## Năm quy tắc cứng
 
 **1. Không sửa `vendor/`.** Mọi tuỳ biến viết qua Plugin, App hoặc Theme trong `custom/`. `composer update` ghi đè sạch `vendor/`, git không track thư mục này.
 
@@ -15,6 +15,8 @@ php bin/check-plugin-api.php     # bắt lỗi class không tồn tại
 ```
 
 **4. Backup trước mọi thay đổi dữ liệu.** Xem [docs/runbook/00-backup.md](docs/runbook/00-backup.md).
+
+**5. Brand là `product_manufacturer` — mở rộng, không xây lại.** Không tạo entity brand song song, không dùng category/tag để đánh dấu brand, không tạo sales channel/theme/domain theo brand, không chèn logic brand vào cart/checkout/payment (chính sách theo brand dùng Rule Builder). Phần core thiếu (active, banner, layout, SEO meta) đặt trong plugin `AcmeBrand`. Xem [docs/decisions/ADR-003-mo-hinh-thuong-hieu.md](docs/decisions/ADR-003-mo-hinh-thuong-hieu.md).
 
 Chi tiết và lý do: [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) · [docs/09-nguyen-tac-ky-thuat.md](docs/09-nguyen-tac-ky-thuat.md)
 
@@ -30,7 +32,7 @@ Database  mysql://root@127.0.0.1:3306/shopware
 Shopware  6.7.12.2 · PHP 8.4 · MySQL 8.0.33
 ```
 
-Storefront `anivele` chạy `vi-VN`, tiền tệ VND. Channel `Headless` giữ `en-US` — đúng như mong muốn.
+Storefront `anivele` chạy `vi-VN`, tiền tệ VND — đây là storefront **duy nhất**, dùng chung cho mọi thương hiệu. Channel `Headless` giữ `en-US` — đúng như mong muốn.
 
 ## Cấu hình dữ liệu phải viết thành migration
 
@@ -60,4 +62,6 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 **Sửa giao diện thì phải chụp ảnh storefront kiểm chứng**, không tin `curl`/`grep` — xem [docs/02-theme.md](docs/02-theme.md).
 
-Tiếp theo: **Phase 4 — marketing & vận hành** (SEO, Zalo OA, email, analytics). Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+> ⚠️ **DB local đang lệch tài liệu** (12/10/2026): 5 plugin `Acme*` chưa cài, 12 sản phẩm không biến thể. Cài lại các plugin trước khi làm tiếp.
+
+Tiếp theo: **Phase MB — đa thương hiệu**, bắt đầu từ MB0 (duyệt ADR-003, chốt câu hỏi mở với kinh doanh) rồi MB1 (plugin `AcmeBrand`). Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).

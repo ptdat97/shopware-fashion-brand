@@ -31,6 +31,8 @@ Các mục đánh dấu 🔴 là **chặn go-live** — không được bỏ qua
 - [x] ✅ Bật `is_closeout` để chặn bán quá tồn kho
 - [ ] Tồn kho khớp thực tế **theo từng variant** (hiện là số chia đều của dữ liệu demo)
 - [ ] Dựng size chart bằng CMS block — khách VN rất hay cần
+- [ ] 🔴 **Mọi sản phẩm đã gán thương hiệu** (trường Nhà sản xuất) — thiếu brand thì sản phẩm không xuất hiện ở trang brand và bộ lọc brand
+- [ ] Xoá nhà sản xuất mặc định `shopware AG`
 
 > `SwagPlatformDemoData` đã gỡ từ Phase 0, không còn trong hệ thống.
 
@@ -62,7 +64,7 @@ Phần lớn đã xong ở Phase 0 qua plugin `AcmeVietnam` — chạy `plugin:i
 
 - [x] ✅ Theme `AcmeTheme` đã compile và gán cho sales channel
 - [x] ✅ Việt hoá nhãn còn sót ("Home" → "Trang chủ", "Pattern" → "Hoạ tiết")
-- [ ] 🔴 **Tải logo thật của brand** — Administration → Themes → Giao diện Acme → Media. Hiện đang dùng chữ ANIVELE tạm
+- [ ] 🔴 **Tải logo thật của nhà bán lẻ** (logo header, khác logo từng brand) — Administration → Themes → Giao diện Acme → Media. Hiện đang dùng chữ ANIVELE tạm
 - [ ] 🔴 **Thay số đo bảng size bằng số đo THẬT** — Administration → Danh mục → tab Tuỳ chỉnh → Bảng size. Số hiện tại chỉ là tham khảo theo thang thị trường VN; số đo sai là nguyên nhân đổi trả hàng đầu
 - [ ] 🔴 **Favicon** — vẫn là favicon mặc định của Shopware
 - [ ] Kiểm tra trên thiết bị thật: điện thoại, tablet, máy tính
@@ -71,6 +73,16 @@ Phần lớn đã xong ở Phase 0 qua plugin `AcmeVietnam` — chạy `plugin:i
 - [ ] Ảnh đã tối ưu dung lượng (chưa có WebP/AVIF)
 - [ ] Trang 404 và trang lỗi hiển thị đúng
 - [ ] Thông tin liên hệ đúng (hiện footer còn số điện thoại mẫu `0180 - 000000`)
+
+## Đa thương hiệu
+
+Xem [12-da-thuong-hieu.md](12-da-thuong-hieu.md) — chỉ áp dụng khi Phase MB đã xong.
+
+- [ ] 🔴 Mỗi brand đang hoạt động có đủ: logo, banner, mô tả, layout landing, meta title/description
+- [ ] 🔴 `/brands` và `/brands/{slug}` hiển thị đúng trên mobile — **có ảnh chụp kiểm chứng**
+- [ ] Brand ngừng hoạt động trả 404, không còn trong `/brands` và sitemap
+- [ ] Đặt thử một đơn chứa sản phẩm của **≥2 brand**, thanh toán và trừ tồn kho đúng
+- [ ] Bảng size đúng theo **từng brand**, không dùng chung số đo giữa các brand
 
 ## Pháp lý
 

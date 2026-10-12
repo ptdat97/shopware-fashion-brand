@@ -37,6 +37,16 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 
 ---
 
+### Dự kiến — Phase MB (đa thương hiệu)
+
+| Plugin | Mục đích | Trạng thái |
+|---|---|---|
+| `AcmeBrand` | Mở rộng `product_manufacturer` (active, banner, layout, SEO meta) + trang `/brands`, `/brands/{slug}`, SEO URL, sitemap | ⏳ Chờ duyệt [ADR-003](decisions/ADR-003-mo-hinh-thuong-hieu.md) |
+
+Không cần plugin bên thứ ba cho đa thương hiệu — brand, bộ lọc brand, rule khuyến mãi theo brand đều có sẵn trong core. Xem [12-da-thuong-hieu.md](12-da-thuong-hieu.md).
+
+---
+
 ## Nhóm 2 — Thanh toán (hạng mục then chốt)
 
 ### Hiện có sẵn, dùng được ngay
@@ -118,6 +128,8 @@ Khác biệt cần nắm:
 | Quyền hạn | Rất sâu, gần như không giới hạn | Giới hạn theo permission khai báo |
 | Phù hợp | Tùy biến sâu, payment handler, theme | Tích hợp dịch vụ ngoài (chatbot, CRM, ERP) |
 | Yêu cầu hạ tầng | Không | Cần server riêng chạy liên tục |
+
+**Với đa thương hiệu:** tích hợp ERP / PIM (đồng bộ sản phẩm, giá, tồn kho theo brand) đi qua **Admin API / Sync API** hoặc **App** — đúng loại việc App sinh ra để làm. Phần storefront và dữ liệu brand vẫn là Plugin.
 
 **Khuyến nghị:** giai đoạn đầu ưu tiên Plugin. App chỉ nên dùng khi cần tích hợp hệ thống bên ngoài — ví dụ nối với phần mềm quản lý kho, hoặc chatbot Zalo OA. Dùng App sớm sẽ phát sinh chi phí vận hành server mà chưa cần thiết.
 

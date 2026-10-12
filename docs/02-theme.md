@@ -4,6 +4,8 @@
 
 Hướng đã chốt: **tự xây theme riêng kế thừa Storefront mặc định**.
 
+> 🧭 **Đa thương hiệu (từ 12/10/2026):** `AcmeTheme` là giao diện **của nhà bán lẻ**, dùng chung cho mọi brand — Shopware gán theme theo sales channel, mà mọi brand chung một channel. Bản sắc riêng từng brand (banner, màu khối, lookbook) đặt trong **CMS layout của landing page brand**, không làm theme con theo brand. Các nguyên tắc kỹ thuật bên dưới giữ nguyên. Xem [12-da-thuong-hieu.md](12-da-thuong-hieu.md) mục 5.4.
+
 ## Vì sao chọn hướng này
 
 | Tiêu chí | Theme riêng | Theme mua sẵn |

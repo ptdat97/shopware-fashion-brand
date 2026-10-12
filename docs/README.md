@@ -1,6 +1,8 @@
-# Tài liệu kỹ thuật — Fashion Brand trên Shopware 6.7
+# Tài liệu kỹ thuật — Nền tảng thời trang đa thương hiệu trên Shopware 6.7
 
-Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong bộ tài liệu này lấy trực tiếp từ hệ thống đang chạy tại `/Users/dat/Ecommerce/shopware`.
+Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một website** cho thị trường Việt Nam: một catalog, một giỏ hàng, một checkout; mỗi thương hiệu có trang riêng. Toàn bộ số liệu trong bộ tài liệu này lấy trực tiếp từ hệ thống đang chạy tại `/Users/dat/Ecommerce/shopware-fashion-brand`.
+
+> 🧭 **Định hướng hiện tại:** [12-da-thuong-hieu.md](12-da-thuong-hieu.md) — khảo sát, khoảng trống và kiến trúc đa thương hiệu.
 
 ## Đọc trước khi code
 
@@ -17,6 +19,7 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 | Hệ thống đang ở trạng thái nào | [00-hien-trang.md](00-hien-trang.md) |
 | Lệnh Symfony/Shopware | [07-lenh-thuong-dung.md](07-lenh-thuong-dung.md) |
 | Còn bao nhiêu việc tới go-live | [01-roadmap.md](01-roadmap.md) |
+| **Kiến trúc đa thương hiệu** | **[12-da-thuong-hieu.md](12-da-thuong-hieu.md)** |
 
 ## Theo chủ đề
 
@@ -33,7 +36,8 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 
 | Chủ đề | Tài liệu |
 |---|---|
-| Theme riêng cho brand | [02-theme.md](02-theme.md) |
+| **Đa thương hiệu — brand, trang brand, bộ sưu tập** | **[12-da-thuong-hieu.md](12-da-thuong-hieu.md)** |
+| Theme của nền tảng | [02-theme.md](02-theme.md) |
 | Catalog thời trang — size, màu, variant | [05-catalog-fashion.md](05-catalog-fashion.md) |
 | **Phase 2 — đánh giá catalog & kế hoạch variant** | **[10-phase2-catalog.md](10-phase2-catalog.md)** |
 
@@ -55,6 +59,7 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 |---|---|
 | Chọn MySQL 8.0.33 | [decisions/ADR-001-mysql.md](decisions/ADR-001-mysql.md) |
 | Hướng đi cho thanh toán | [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md) |
+| Mô hình dữ liệu thương hiệu ⏳ đề xuất | [decisions/ADR-003-mo-hinh-thuong-hieu.md](decisions/ADR-003-mo-hinh-thuong-hieu.md) |
 
 ## Quy tắc quan trọng nhất
 
@@ -65,6 +70,8 @@ Shop thời trang cho thị trường Việt Nam. Toàn bộ số liệu trong b
 > **2. Không `composer require` plugin tự viết.** Shopware tự quét `custom/plugins/`. Thêm vào `composer.json` sẽ khoá nút Xoá plugin trong Administration và gây xung đột merge.
 >
 > **3. Đọc kiến trúc Shopware trước khi viết. Không bịa API.** Shopware xoá interface giữa các bản major — code chép từ tutorial cũ sẽ không chạy. Xác nhận mọi tên class trong `vendor/` bằng `php bin/check-plugin-api.php`.
+>
+> **4. Brand là `product_manufacturer`, mọi brand chung một sales channel.** Không tạo entity brand song song, không tạo sales channel/theme theo brand, không chèn logic brand vào cart/checkout — xem [12-da-thuong-hieu.md](12-da-thuong-hieu.md) mục 6.
 >
 > Chi tiết và cách làm đúng cho từng nhu cầu: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md)
 

@@ -2,6 +2,10 @@
 
 Khảo sát ngày 26/07/2026. Tất cả số liệu dưới đây lấy trực tiếp từ database và CLI của hệ thống đang chạy.
 
+> ⚠️ **Kiểm tra lại 12/10/2026 — DB local đã lệch so với tài liệu này:** 5 plugin `Acme*` **chưa cài** (không có migration nào trong bảng `migration`), `product` = 12 (không có biến thể), `theme` = 1 (chỉ Storefront), `product_manufacturer` = 1 (`shopware AG`). Số liệu bên dưới là trạng thái *sau khi cài đủ plugin*. Cài lại: `plugin:install --activate` từng plugin `Acme*`, rồi `acme:demo:seed`.
+>
+> 🧭 **Định hướng mới:** nền tảng đa thương hiệu — [12-da-thuong-hieu.md](12-da-thuong-hieu.md).
+
 ## Nền tảng
 
 | Thành phần | Phiên bản | Ghi chú |
@@ -105,7 +109,7 @@ Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên ti
 | anivele | VND | Việt Nam | vi-VN, en-US |
 | Headless | VND | Việt Nam | de-DE, en-US |
 
-`anivele` là storefront chính. `Headless` là API channel mặc định của Shopware.
+`anivele` là storefront chính — và là storefront **duy nhất** cho mọi thương hiệu theo mô hình đa thương hiệu. `Headless` là API channel mặc định của Shopware.
 
 ## Plugin đang cài
 
@@ -130,8 +134,9 @@ Hệ thống đã là **shop tiếng Việt với nền tảng thị trường V
 2. Cổng thanh toán nội địa — *hạng mục tốn kém nhất*
 3. Đơn vị vận chuyển nội địa
 4. Theme thương hiệu
-5. Catalog thật thay demo data
+5. Catalog thật thay demo data — **có gán thương hiệu** cho từng sản phẩm
 6. Hạ tầng production (HTTPS, mail, backup tự động)
+7. **Đa thương hiệu** — trang brand, bộ sưu tập, SEO theo brand: [12-da-thuong-hieu.md](12-da-thuong-hieu.md)
 
 > ✅ Phiên bản MySQL và nền tảng thị trường VN không nằm trong danh sách rủi ro chặn go-live.
 

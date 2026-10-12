@@ -37,6 +37,8 @@ ANV-AOTHUN-001-DEN-M
    └ brand └ loại └ mã └ màu └ size
 ```
 
+> 🧭 **Đa thương hiệu:** tiền tố brand trong SKU trở thành bắt buộc — nhiều brand có thể cùng dùng mã mẫu `1001`. Mã brand nên khớp với brand gán qua `product.manufacturerId`. Hàng demo hiện tại `ANV-*` chỉ thuộc một brand. Chốt quy tắc ở Phase MB0 — [12-da-thuong-hieu.md](12-da-thuong-hieu.md) mục 8.
+
 **2. Tồn kho theo biến thể**
 
 Bắt buộc. Áo đen size M hết hàng không có nghĩa áo đỏ size L hết. Shopware hỗ trợ sẵn.
@@ -82,7 +84,9 @@ Popup ngay dưới bộ chọn size, kèm hướng dẫn cách đo. Không bắt
 
 ### Sửa số đo ở đâu
 
-Bảng size gắn theo **danh mục**, không phải từng sản phẩm — đầm và chân váy không cùng thang số đo, nhưng mọi mẫu đầm dùng chung một bảng. Nhập một lần cho cả danh mục thay vì lặp lại cho hàng trăm SKU.
+> 🧭 **Đa thương hiệu:** gắn theo danh mục chỉ đúng khi cả danh mục là một brand. Với nhiều brand, cùng "Đầm" nhưng số đo mỗi brand khác nhau — bảng size phải theo **brand × danh mục**. Thiết kế lại ở Phase MB6, xem [12-da-thuong-hieu.md](12-da-thuong-hieu.md).
+
+Hiện tại bảng size gắn theo **danh mục**, không phải từng sản phẩm — đầm và chân váy không cùng thang số đo, nhưng mọi mẫu đầm dùng chung một bảng. Nhập một lần cho cả danh mục thay vì lặp lại cho hàng trăm SKU.
 
 ```
 Administration → Danh mục → chọn danh mục (Đầm / Áo / Chân váy)
@@ -108,6 +112,7 @@ Kỹ thuật: custom field `acme_size_chart_table` / `acme_size_chart_note` trê
 | Chất liệu | Property | Khách VN quan tâm (cotton, linen thoáng mát) |
 | Kiểu dáng | Property | Form rộng, ôm, suông |
 | Giới tính | Property | Nam / Nữ / Unisex |
+| **Thương hiệu** | `product.manufacturerId` (native) | Trang brand, bộ lọc brand, khuyến mãi theo brand — **không** làm thành property |
 | Mùa / Bộ sưu tập | Property | Quản lý hàng theo mùa |
 | Hướng dẫn giặt | Custom field | Giảm khiếu nại hỏng sản phẩm |
 | Người mẫu mặc size | Custom field | Giúp khách ước lượng — rất hiệu quả |
@@ -129,10 +134,12 @@ Nam / Nữ
  ├─ Quần (jean, tây, short...)
  ├─ Đầm / Váy
  └─ Phụ kiện
-Bộ sưu tập (theo mùa/chiến dịch)
+Bộ sưu tập (theo mùa/chiến dịch)   → /collections/...  (category + product stream)
 Sale
 Hàng mới về
 ```
+
+**Thương hiệu không phải một nhánh của cây danh mục.** Brand gán qua trường *Nhà sản xuất* của sản phẩm; trang `/brands/{slug}` và bộ lọc brand ở listing lấy từ đó. Đặt brand vào cây danh mục sẽ tạo hai nguồn sự thật — xem [decisions/ADR-003-mo-hinh-thuong-hieu.md](decisions/ADR-003-mo-hinh-thuong-hieu.md) phương án D.
 
 Tránh lồng quá 3 cấp — khách sẽ lạc.
 
