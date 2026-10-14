@@ -114,6 +114,15 @@ class GenerateVariantsCommand extends Command
                 // upsert chứ không phải update: payload vừa sửa sản phẩm cha
                 // vừa TẠO MỚI các biến thể con — update() chỉ chấp nhận UpdateCommand.
                 $this->productRepository->upsert([$payload], $context);
+
+                // SEO: mọi biến thể cùng một canonical (biến thể đầu tiên) — trường native
+                // `canonicalProductId`, biến thể kế thừa từ cha. Sitemap của core khi đó chỉ
+                // đưa biến thể canonical vào (ProductUrlProvider). Ghi riêng sau upsert vì cột
+                // có khoá ngoại tới chính bảng product — biến thể phải tồn tại trước.
+                $this->productRepository->update([[
+                    'id' => $parent['id'],
+                    'canonicalProductId' => $payload['children'][0]['id'],
+                ]], $context);
             }
 
             $created += $count;

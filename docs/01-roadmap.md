@@ -294,11 +294,31 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 | Việc | Ghi chú |
 |---|---|
-| SEO (URL tiếng Việt không dấu, meta, sitemap) | Gồm cả trang brand và bộ sưu tập từ Phase MB |
+| SEO (URL tiếng Việt không dấu, meta, sitemap) | 🔄 Phần kỹ thuật ✅ 14/10/2026 — xem *SEO* bên dưới. Còn: meta trang chủ (chờ tên nền tảng), nội dung meta cho hàng thật |
 | Tích hợp Zalo OA / Facebook Messenger | Kênh CSKH chủ đạo tại VN |
 | Email transactional (xác nhận đơn, vận chuyển) | Cần SMTP thật, hiện chưa cấu hình |
 | Analytics (GA4, Facebook Pixel) | Lưu ý tuân thủ quy định dữ liệu cá nhân |
 | Chương trình khuyến mãi, mã giảm giá | Shopware có sẵn Rule Builder |
+
+---
+
+### SEO — đã làm (14/10/2026), toàn bộ bằng trường native
+
+| Việc | Kết quả |
+|---|---|
+| **Canonical biến thể** — trường `canonicalProductId` của sản phẩm cha (biến thể kế thừa) trỏ về biến thể đầu | Trang `MAY-1002-03` → canonical `MAY-1002-01`. Sitemap: **64 → 12** URL sản phẩm (core tự lọc theo canonical). Lệnh `acme:catalog:variants` tự đặt khi sinh biến thể mới; seed demo đặt cho dữ liệu cũ (chỉ khi trống) |
+| **Meta description** danh mục, bộ sưu tập (trường `metaDescription`) | Demo có sẵn; trang Đầm, Sale có mô tả |
+| **Meta description sản phẩm** | Demo sinh từ câu đầu mô tả, cắt ở ranh giới từ ≤155 ký tự (trước: 248 ký tự, core cắt cứng ở 255) |
+| Canonical, `index,follow`, OG title/image | Đã đúng sẵn trên mọi loại trang (đo bằng script khảo sát) |
+
+Không làm, có lý do:
+
+| Việc | Vì sao |
+|---|---|
+| Gắn tên shop vào sau tiêu đề trang | Core không có cấu hình này — phải sửa template; chờ chốt tên nền tảng rồi quyết |
+| JSON-LD (`JSON_LD_DATA`) | Là feature flag của bản **6.8** (major). Hiện storefront đã có microdata schema.org (Google đọc được). Bật khi nâng 6.8 |
+| `hreflang` | Storefront chỉ có một domain tiếng Việt |
+| URL chữ thường cho sản phẩm/danh mục (`/dam/` thay `/Dam/`) | Hiện brand/bộ sưu tập chữ thường, sản phẩm/danh mục giữ hoa — không sai, chỉ chưa đồng nhất. Đổi template SEO là native, nhưng là quyết định về URL lâu dài — cần chốt trước go-live |
 
 ---
 

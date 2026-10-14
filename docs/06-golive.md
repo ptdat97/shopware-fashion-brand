@@ -114,10 +114,14 @@ Nếu sau lệnh trên có tính năng nào hỏng → nghĩa là tính năng đ
 
 ## SEO & Analytics
 
-- [ ] URL thân thiện, tiếng Việt không dấu
-- [ ] Sitemap sinh tự động
-- [ ] `robots.txt` đúng — **kiểm tra kỹ không chặn nhầm toàn site**
-- [ ] Meta title/description cho trang chính
+- [x] ✅ URL thân thiện, tiếng Việt không dấu — sản phẩm, danh mục, `/brands/…`, `/collections/…`
+- [x] ✅ Mỗi mẫu một URL canonical: biến thể trỏ về biến thể đầu (`canonicalProductId`), sitemap chỉ có URL canonical
+- [ ] Sitemap sinh tự động trên production — scheduled task `sitemap_generate` chạy được (cần worker/cron)
+- [ ] 🔴 **`robots.txt` trả HTTP 200** trên server thật — máy dev (Herd) trả **404** dù nội dung đúng, do nginx coi `.txt` là file tĩnh. Cấu hình nginx phải chuyển `/robots.txt` vào `index.php`. Kiểm: `curl -I https://<domain>/robots.txt`
+- [ ] `robots.txt` không chặn nhầm toàn site và có dòng `Sitemap:`
+- [ ] 🔴 **Meta trang chủ** — Sales Channel → tab SEO → *Meta title / description trang chủ*. Chờ chốt tên nền tảng; hiện tiêu đề trang chủ chỉ là "Trang chủ", mô tả trống
+- [ ] Meta description cho danh mục, bộ sưu tập, sản phẩm **thật** (Administration → tab SEO). Dữ liệu demo đã có mẫu
+- [ ] Google Search Console: xác minh domain, gửi sitemap
 - [ ] Analytics đã gắn và nhận được dữ liệu
 
 ## Hiệu năng

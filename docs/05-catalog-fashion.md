@@ -143,6 +143,19 @@ Hàng mới về
 
 Tránh lồng quá 3 cấp — khách sẽ lạc.
 
+## SEO cho sản phẩm có biến thể
+
+Mỗi biến thể (màu × size) có URL riêng — 1 mẫu 28 biến thể là 28 trang gần như trùng nội dung. Shopware có sẵn trường **canonical** để gộp:
+
+```
+Administration → sản phẩm (sản phẩm cha) → tab SEO → "Canonical URL"
+  → chọn một biến thể làm URL chính cho cả mẫu
+```
+
+Biến thể kế thừa từ sản phẩm cha. Sitemap của core khi đó chỉ đưa biến thể canonical vào. Lệnh `acme:catalog:variants` tự đặt biến thể đầu tiên làm canonical; nhập hàng qua Import/Export thì đặt trường `canonicalProductId`.
+
+Meta description sản phẩm: tab SEO → *Meta description*, ~155 ký tự. Bỏ trống thì core lấy nguyên mô tả và cắt ở 255 ký tự — dài hơn mức Google hiển thị.
+
 ## Bộ sưu tập (`/collections/…`)
 
 Bộ sưu tập là **danh mục bình thường của core** lấy sản phẩm bằng *Nhóm sản phẩm động* (product stream). Plugin `AcmeCatalog` chỉ thêm một ô đánh dấu để URL thành `/collections/{tên}`.

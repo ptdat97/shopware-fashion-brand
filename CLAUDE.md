@@ -76,6 +76,7 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 - **MB4** ✅ — bộ sưu tập `/collections/{tên}` = category + product stream của core; `AcmeCatalog` thêm ô "Là bộ sưu tập" + template SEO navigation. Sau khi cập nhật `AcmeCatalog`: `bin/console dal:refresh:index`
 
+- **Phase 4 — SEO kỹ thuật** ✅ (14/10) — canonical biến thể native (sitemap 64 → 12 URL sản phẩm), meta description danh mục/bộ sưu tập/sản phẩm. Còn: meta trang chủ chờ tên nền tảng, robots.txt 200 trên server thật
 - **Dọn MB** ✅ (14/10) — nhãn Admin "Thương hiệu" qua file snippet native, menu không tô "Trang chủ" ở trang brand, bộ sưu tập `/collections/sale` (stream % giảm giá native)
 - **MB5** ✅ — đơn COD thật 2 brand (VAT, phí ship, tồn kho, huỷ hoàn kho đúng), khuyến mãi theo brand bằng Rule Builder, `manufacturerId` trong payload dòng đơn. Không code — chỉ test. Mọi brand dùng chung **một kho** → một kiện/đơn, một bảng phí ship
 

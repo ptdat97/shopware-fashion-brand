@@ -111,4 +111,32 @@ class DemoProductCatalogTest extends TestCase
 
         static::assertGreaterThanOrEqual(2, \count($brands), 'Bộ sưu tập Sale cần ≥2 brand');
     }
+
+    public function testEveryDemoCategoryAndCollectionHasAShortMetaDescription(): void
+    {
+        $descriptions = DemoProductCatalog::metaDescriptions();
+
+        foreach ([...DemoProductCatalog::categories(), ...array_keys(DemoProductCatalog::collections())] as $name) {
+            static::assertArrayHasKey($name, $descriptions, $name);
+            // Google cắt đoạn mô tả ở khoảng 160 ký tự
+            static::assertLessThanOrEqual(160, mb_strlen($descriptions[$name]), $name);
+        }
+    }
+
+    public function testProductMetaDescriptionCutsAtWordBoundary(): void
+    {
+        $text = trim(str_repeat('Đầm lụa mềm ', 30));
+        $meta = DemoProductCatalog::productMetaDescription('<p>' . $text . '</p>');
+        $kept = mb_substr($meta, 0, -1);
+
+        static::assertLessThanOrEqual(156, mb_strlen($meta));
+        static::assertStringEndsWith('…', $meta);
+        static::assertStringStartsWith($kept, $text);
+        static::assertSame(' ', mb_substr($text, mb_strlen($kept), 1), 'Cắt ở cuối một từ, không cắt giữa chữ');
+    }
+
+    public function testShortDescriptionIsKeptAsIs(): void
+    {
+        static::assertSame('Đầm maxi hoa nhí.', DemoProductCatalog::productMetaDescription("<p>Đầm maxi\n hoa nhí.</p>"));
+    }
 }

@@ -260,6 +260,44 @@ final class DemoProductCatalog
         ];
     }
 
+    /**
+     * Meta description demo cho danh mục và bộ sưu tập (trường native `metaDescription`).
+     * Nội dung thật do người vận hành viết lại — đây chỉ để trang không trống meta.
+     *
+     * @return array<string, string> tên danh mục => meta description
+     */
+    public static function metaDescriptions(): array
+    {
+        return [
+            'Đầm' => 'Đầm nữ từ nhiều thương hiệu: đầm maxi, midi, dạ hội, đi làm. Giao toàn quốc, thanh toán khi nhận hàng.',
+            'Áo' => 'Áo nữ: polo dệt kim, sơ mi, áo thun phối đồ. Nhiều thương hiệu, đủ size S–XL, thanh toán khi nhận hàng.',
+            'Chân váy' => 'Chân váy dài, xếp ly, chữ A cho đi làm và dạo phố. Đổi size dễ dàng, thanh toán khi nhận hàng.',
+            'Bộ sưu tập' => 'Bộ sưu tập theo mùa và chủ đề từ các thương hiệu thời trang nữ.',
+            'Hàng mới về' => 'Mẫu thời trang nữ mới về trong 30 ngày qua từ mọi thương hiệu.',
+            self::TAG_AUTUMN_WINTER => 'Bộ sưu tập Thu Đông 2026: dệt kim, đầm dài tay, gam trầm ấm.',
+            'Sale' => 'Thời trang nữ đang giảm giá so với giá niêm yết, cập nhật liên tục.',
+        ];
+    }
+
+    /**
+     * Meta description sản phẩm (trường native `metaDescription`): câu đầu của mô tả,
+     * cắt ở ranh giới từ cho vừa ~155 ký tự. Bỏ trống thì core lấy nguyên mô tả, cắt
+     * cứng ở 255 ký tự — Google chỉ hiện khoảng 160.
+     */
+    public static function productMetaDescription(string $descriptionHtml, int $maxLength = 155): string
+    {
+        $text = trim((string) preg_replace('/\s+/u', ' ', strip_tags(str_replace('</p>', ' ', $descriptionHtml))));
+
+        if (mb_strlen($text) <= $maxLength) {
+            return $text;
+        }
+
+        $cut = mb_substr($text, 0, $maxLength);
+        $lastSpace = mb_strrpos($cut, ' ');
+
+        return rtrim(mb_substr($cut, 0, $lastSpace === false ? $maxLength : $lastSpace), ' ,.;:—-') . '…';
+    }
+
     /** Danh mục cần có, theo đúng thứ tự hiển thị */
     public static function categories(): array
     {

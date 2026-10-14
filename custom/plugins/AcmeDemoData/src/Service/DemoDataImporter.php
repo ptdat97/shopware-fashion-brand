@@ -131,6 +131,7 @@ class DemoDataImporter
             $this->ensureProperties($context);
             $this->ensureBrands($context);
             $this->ensureCollections($context, $warnings);
+            $this->ensureCategoryMetaDescriptions($context);
         }
 
         // Đợt cuối: tạo sản phẩm khi ảnh đã nạp xong
@@ -348,6 +349,7 @@ class DemoDataImporter
                 'translations' => $this->translate($context, [
                     'name' => $definition['name'],
                     'description' => $definition['description'],
+                    'metaDescription' => DemoProductCatalog::productMetaDescription($definition['description']),
                     'customFields' => [
                         'acme_material' => $definition['material'],
                         'acme_model_size' => $definition['modelSize'],
@@ -376,6 +378,7 @@ class DemoDataImporter
         }
 
         $this->renumberVariants($context, array_column($payload, 'productNumber', 'id'));
+        $this->ensureVariantCanonical($context, array_column($payload, 'id'));
 
         return count($payload);
     }
@@ -410,6 +413,74 @@ class DemoDataImporter
 
         if ($updates !== []) {
             $this->productRepository->update($updates, $context);
+        }
+    }
+
+    /**
+     * SEO: mọi biến thể của một mẫu cùng canonical về biến thể đầu (mã nhỏ nhất) —
+     * trường native `canonicalProductId` trên sản phẩm cha, biến thể kế thừa. Nhờ vậy
+     * sitemap của core chỉ còn một URL cho mỗi mẫu. Chỉ đặt khi đang trống: người vận
+     * hành có thể đã chọn canonical khác trong Administration.
+     *
+     * @param list<string> $parentIds
+     */
+    private function ensureVariantCanonical(Context $context, array $parentIds): void
+    {
+        if ($parentIds === []) {
+            return;
+        }
+
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsAnyFilter('parentId', $parentIds));
+
+        $firstVariant = [];
+        foreach ($this->productRepository->search($criteria, $context)->getEntities() as $variant) {
+            $parentId = (string) $variant->getParentId();
+            $current = $firstVariant[$parentId] ?? null;
+            if ($current === null || strcmp($variant->getProductNumber(), $current[1]) < 0) {
+                $firstVariant[$parentId] = [$variant->getId(), $variant->getProductNumber()];
+            }
+        }
+
+        $updates = [];
+        foreach ($this->productRepository->search(new Criteria(array_keys($firstVariant)), $context)->getEntities() as $parent) {
+            if ($parent->getCanonicalProductId() === null) {
+                $updates[] = ['id' => $parent->getId(), 'canonicalProductId' => $firstVariant[$parent->getId()][0]];
+            }
+        }
+
+        if ($updates !== []) {
+            $this->productRepository->update($updates, $context);
+        }
+    }
+
+    /**
+     * Meta description demo cho danh mục chính — chỉ điền khi đang trống, không ghi đè
+     * nội dung người vận hành đã viết.
+     */
+    private function ensureCategoryMetaDescriptions(Context $context): void
+    {
+        $descriptions = DemoProductCatalog::metaDescriptions();
+        $updates = [];
+
+        foreach ($this->findCategoryIds($context) as $name => $categoryId) {
+            if (!isset($descriptions[$name])) {
+                continue;
+            }
+
+            $category = $this->categoryRepository->search(new Criteria([$categoryId]), $context)->first();
+            if ($category === null || trim((string) $category->getTranslation('metaDescription')) !== '') {
+                continue;
+            }
+
+            $updates[] = [
+                'id' => $categoryId,
+                'translations' => $this->translate($context, ['metaDescription' => $descriptions[$name]]),
+            ];
+        }
+
+        if ($updates !== []) {
+            $this->categoryRepository->upsert($updates, $context);
         }
     }
 
@@ -472,6 +543,7 @@ class DemoDataImporter
                 'productStreamId' => $streamId,
                 'translations' => $this->translate($context, [
                     'name' => $name,
+                    'metaDescription' => DemoProductCatalog::metaDescriptions()[$name] ?? null,
                     'customFields' => ['acme_collection' => true],
                 ]),
             ];
