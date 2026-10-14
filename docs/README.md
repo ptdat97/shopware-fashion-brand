@@ -21,6 +21,7 @@ Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một websit
 | Lệnh Symfony/Shopware | [07-lenh-thuong-dung.md](07-lenh-thuong-dung.md) |
 | Còn bao nhiêu việc tới go-live | [01-roadmap.md](01-roadmap.md) |
 | **Kiến trúc đa thương hiệu** | **[12-da-thuong-hieu.md](12-da-thuong-hieu.md)** |
+| MB6 — khảo sát ERP/PIM, đa kho, bảng size theo brand | [14-mb6-khao-sat.md](14-mb6-khao-sat.md) |
 
 ## Theo chủ đề
 
@@ -61,7 +62,7 @@ Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một websit
 | Chọn MySQL 8.0.33 | [decisions/ADR-001-mysql.md](decisions/ADR-001-mysql.md) |
 | Hướng đi cho thanh toán | [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md) |
 | Mô hình dữ liệu thương hiệu ✅ đã duyệt | [decisions/ADR-003-mo-hinh-thuong-hieu.md](decisions/ADR-003-mo-hinh-thuong-hieu.md) |
-| Giữ namespace `AcmeTheme\` — ngoại lệ STR-01 ✅ | [decisions/ADR-004-namespace-acme-theme.md](decisions/ADR-004-namespace-acme-theme.md) |
+| Đổi namespace `AcmeTheme\` → `Acme\Theme\` ✅ | [decisions/ADR-004-namespace-acme-theme.md](decisions/ADR-004-namespace-acme-theme.md) |
 
 ## Quy tắc quan trọng nhất
 

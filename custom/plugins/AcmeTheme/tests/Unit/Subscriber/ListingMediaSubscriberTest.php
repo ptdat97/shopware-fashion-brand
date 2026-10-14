@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace AcmeTheme\Tests\Unit\Subscriber;
+namespace Acme\Theme\Tests\Unit\Subscriber;
 
-use AcmeTheme\Subscriber\ListingMediaSubscriber;
+use Acme\Theme\Subscriber\ListingMediaSubscriber;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Content\Product\Events\ProductListingCriteriaEvent;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;

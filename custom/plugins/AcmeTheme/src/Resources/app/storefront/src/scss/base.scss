@@ -299,6 +299,13 @@ h4, h5, h6,
 // --- Bảng size ------------------------------------------------------------
 // Số đo sai là nguyên nhân đổi trả hàng đầu với thời trang online, nên nút
 // mở bảng đặt ngay dưới bộ chọn size chứ không giấu trong tab mô tả.
+.acme-model-size {
+    margin: 0.75rem 0 0;
+    color: $acme-ink;
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
 .acme-size-chart-trigger {
     margin-top: 0.75rem;
 

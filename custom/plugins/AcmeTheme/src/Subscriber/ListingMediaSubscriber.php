@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace AcmeTheme\Subscriber;
+namespace Acme\Theme\Subscriber;
 
 use Shopware\Core\Content\Product\Events\ProductListingCriteriaEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

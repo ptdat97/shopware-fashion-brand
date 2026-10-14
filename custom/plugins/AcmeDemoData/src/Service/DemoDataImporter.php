@@ -269,7 +269,7 @@ class DemoDataImporter
     {
         $mediaMap = $this->findImportedMedia($context, $this->mediaFiles());
         $categories = $this->findCategoryIds($context);
-        [$colorMap, $sizeMap] = $this->findPropertyIds($context);
+        [$colorMap, $sizeMap, $materialMap] = $this->findPropertyIds($context);
         $salesChannelId = $this->findStorefrontSalesChannelId($context);
 
         $payload = [];
@@ -311,6 +311,9 @@ class DemoDataImporter
             foreach ($sizeMap as $sizeId) {
                 $properties[] = ['id' => $sizeId];
             }
+            if (isset($materialMap[$definition['material']])) {
+                $properties[] = ['id' => $materialMap[$definition['material']]];
+            }
 
             $gross = $definition['price'];
             $listGross = $definition['listPrice'] ?? null;
@@ -350,8 +353,11 @@ class DemoDataImporter
                     'description' => $definition['description'],
                     'metaDescription' => DemoProductCatalog::productMetaDescription($definition['description']),
                     'customFields' => [
-                        'acme_material' => $definition['material'],
+                        // Định nghĩa bởi AcmeCatalog ("Người mẫu mặc size")
                         'acme_model_size' => $definition['modelSize'],
+                        // Bản ≤ 1.0.1 ghi chất liệu vào custom field không ai định nghĩa — nay là
+                        // thuộc tính native "Chất liệu" ở trên; xoá giá trị cũ khi chạy lại
+                        'acme_material' => null,
                     ],
                 ]),
             ];
@@ -587,6 +593,8 @@ class DemoDataImporter
         $colors = DemoProductCatalog::colors();
         $this->ensurePropertyGroup($context, 'Màu sắc', 'color', array_keys($colors), $colors);
         $this->ensurePropertyGroup($context, 'Kích cỡ', 'text', DemoProductCatalog::sizes(), []);
+        // Nhóm "Chất liệu" do AcmeCatalog tạo; không cài AcmeCatalog thì tạo ở đây (có thì dùng)
+        $this->ensurePropertyGroup($context, 'Chất liệu', 'text', DemoProductCatalog::materials(), []);
     }
 
     /**
@@ -673,29 +681,23 @@ class DemoDataImporter
         return $map;
     }
 
-    /** @return array{0: array<string,string>, 1: array<string,string>} màu, size */
+    /** @return array{0: array<string,string>, 1: array<string,string>, 2: array<string,string>} màu, size, chất liệu */
     private function findPropertyIds(Context $context): array
     {
-        $criteria = new Criteria();
-        $criteria->addFilter(new EqualsAnyFilter('name', ['Màu sắc', 'Kích cỡ']));
-        $criteria->addAssociation('options');
-        $criteria->setLimit(2);
+        $groups = ['Màu sắc' => [], 'Kích cỡ' => [], 'Chất liệu' => []];
 
-        $colors = [];
-        $sizes = [];
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsAnyFilter('name', array_keys($groups)));
+        $criteria->addAssociation('options');
+        $criteria->setLimit(\count($groups));
 
         foreach ($this->propertyGroupRepository->search($criteria, $context)->getEntities() as $group) {
-            $target = $group->getName() === 'Màu sắc' ? 'colors' : 'sizes';
             foreach ($group->getOptions() ?? [] as $option) {
-                if ($target === 'colors') {
-                    $colors[(string) $option->getName()] = $option->getId();
-                } else {
-                    $sizes[(string) $option->getName()] = $option->getId();
-                }
+                $groups[(string) $group->getName()][(string) $option->getName()] = $option->getId();
             }
         }
 
-        return [$colors, $sizes];
+        return array_values($groups);
     }
 
     /**

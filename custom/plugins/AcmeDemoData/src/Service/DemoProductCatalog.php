@@ -323,4 +323,17 @@ final class DemoProductCatalog
     {
         return ['S', 'M', 'L', 'XL'];
     }
+
+    /**
+     * Giá trị của nhóm thuộc tính "Chất liệu" (native) — lấy từ chính danh sách sản phẩm.
+     *
+     * @return list<string>
+     */
+    public static function materials(): array
+    {
+        $materials = array_values(array_unique(array_column(self::definitions(), 'material')));
+        sort($materials);
+
+        return $materials;
+    }
 }

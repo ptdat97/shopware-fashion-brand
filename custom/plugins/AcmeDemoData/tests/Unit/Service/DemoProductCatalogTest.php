@@ -139,4 +139,15 @@ class DemoProductCatalogTest extends TestCase
     {
         static::assertSame('Đầm maxi hoa nhí.', DemoProductCatalog::productMetaDescription("<p>Đầm maxi\n hoa nhí.</p>"));
     }
+
+    public function testEveryMaterialBecomesOneOptionOfTheNativeMaterialGroup(): void
+    {
+        $materials = DemoProductCatalog::materials();
+
+        static::assertSame(array_values(array_unique($materials)), $materials, 'Mỗi chất liệu một option, không trùng');
+        foreach (DemoProductCatalog::definitions() as $definition) {
+            static::assertContains($definition['material'], $materials);
+            static::assertNotSame('', trim($definition['modelSize']), $definition['number'] . ' thiếu "người mẫu mặc size"');
+        }
+    }
 }

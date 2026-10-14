@@ -53,7 +53,7 @@ custom/plugins/AcmeX/
 
 | Mã | Mức | Quy tắc |
 |---|---|---|
-| STR-01 | BẮT BUỘC | Tên plugin `Acme<Nghiệp vụ>`, namespace PHP `Acme\<Nghiệp vụ>\`, gói composer `acme/<nghiệp-vụ>`. Ngoại lệ duy nhất: `AcmeTheme\` — [ADR-004](decisions/ADR-004-namespace-acme-theme.md) |
+| STR-01 | BẮT BUỘC | Tên plugin `Acme<Nghiệp vụ>`, namespace PHP `Acme\<Nghiệp vụ>\`, gói composer `acme/<nghiệp-vụ>`. Đổi namespace plugin đã cài: [ADR-004](decisions/ADR-004-namespace-acme-theme.md) |
 | STR-02 | BẮT BUỘC | Mọi định danh kỹ thuật mang tiền tố của dự án để không đụng core/plugin khác: bảng & entity `acme_*`, custom field `acme_*`, cấu hình `AcmeX.config.*`, route `frontend.acme.*` / `api.action.acme_*`, khoá snippet `acme-<plugin>.*`, class CSS `.acme-*` |
 | STR-03 | BẮT BUỘC | `composer.json` đủ: `name`, `type: shopware-platform-plugin`, `version` (semver), `require.shopware/core: ~6.7`, `autoload.psr-4`, `autoload-dev` (tests), `extra.shopware-plugin-class`, `extra.label` + `extra.description` cho `vi-VN` và `en-GB` |
 | STR-04 | BẮT BUỘC | **Không** `composer require` plugin tự viết — [08 · Quy tắc 2](08-quy-tac-phat-trien.md) |
@@ -183,7 +183,7 @@ custom/plugins/AcmeX/
 | Mã | Mức | Quy tắc | Nguồn |
 |---|---|---|---|
 | REL-01 | BẮT BUỘC | `version` theo semver: thêm migration / tính năng → tăng minor; chỉ sửa lỗi → tăng patch; bỏ hoặc đổi bề mặt công khai → tăng major + ghi lộ trình | — |
-| REL-02 | BẮT BUỘC | Commit đổi plugin ghi **các bước triển khai** cho môi trường khác (`plugin:update`, `dal:refresh:index`, `theme:compile`…) | lịch sử commit Phase MB |
+| REL-02 | BẮT BUỘC | Commit đổi plugin ghi **các bước triển khai** cho môi trường khác (`plugin:update`, `dal:refresh:index`, `theme:compile`…). `plugin:update` chạy **từng plugin một lệnh** — nhiều plugin trong một lệnh sẽ hỏi xác nhận, chạy không tương tác thì `Aborted` (gặp 14/10/2026) | lịch sử commit Phase MB |
 | REL-03 | BẮT BUỘC | Xoá/đổi tên class → `rm -rf var/cache/prod_*` trước khi chạy `bin/console` | sự cố rà soát 14/10 |
 | REL-04 | BẮT BUỘC | Backup DB trước mọi thao tác thay đổi dữ liệu | [runbook/00-backup.md](runbook/00-backup.md) |
 
@@ -207,12 +207,12 @@ Một thay đổi plugin chỉ được coi là xong khi:
 | Plugin | Version | Test tự động | Ghi chú tuân thủ |
 |---|---|---|---|
 | `AcmeBrand` | 1.2.1 | 31 integration + unit | Đạt. Route SEO dùng `StorefrontFrameworkException` như route SEO của core (DATA-07) |
-| `AcmeCatalog` | 1.4.1 | 15 integration | Đạt. Logic sinh biến thể tách khỏi lệnh sang service `VariantGenerator` (ARCH-07), lỗi miền `CatalogException` (DATA-07), bỏ association nạp thừa (PERF-01) |
+| `AcmeCatalog` | 1.5.0 | 18 integration | Đạt. Nhóm thuộc tính native "Chất liệu" + custom field `acme_model_size` (ARCH-04). Logic sinh biến thể tách khỏi lệnh sang service `VariantGenerator` (ARCH-07), lỗi miền `CatalogException` (DATA-07), bỏ association nạp thừa (PERF-01) |
 | `AcmeShipping` | 1.0.0 | 3 integration | Đạt; test chạy một mình (TEST-03) |
 | `AcmeVietnam` | 1.1.1 | 5 integration | Đạt. Test gọi migration trong transaction, **không** cài plugin vào DB test dùng chung (đổi tiền tệ, tắt quốc gia sẽ làm hỏng test plugin khác) |
 | `AcmePayment` | 1.1.1 | 5 unit | Đạt. Payload VietQR so với chuỗi sinh bằng cài đặt CRC độc lập. Test bắt được lỗi thật: `iconv` trên macOS xoá "Đơ" khỏi nội dung chuyển khoản → đổi sang `UnicodeString::ascii()` |
-| `AcmeTheme` | 1.0.1 | 2 unit + ảnh chụp | Đạt; namespace là ngoại lệ có ADR (STR-01 · [ADR-004](decisions/ADR-004-namespace-acme-theme.md)). Bảng size lọc qua `sw_sanitize` (SEC-03) |
-| `AcmeDemoData` | 1.0.1 | 12 unit | Lỗi miền `DemoDataException` kế thừa `HttpException`, mã `ACME_DEMO_DATA__*` (DATA-07). Còn: importer chưa có integration test; ghi custom field `acme_material`, `acme_model_size` không ai định nghĩa — chờ quyết định |
+| `AcmeTheme` | 1.1.0 | 2 unit + ảnh chụp | Đạt. Namespace đổi sang `Acme\Theme\` (STR-01 · [ADR-004](decisions/ADR-004-namespace-acme-theme.md)). Bảng size lọc qua `sw_sanitize` (SEC-03) |
+| `AcmeDemoData` | 1.1.0 | 13 unit | Lỗi miền `DemoDataException` kế thừa `HttpException`, mã `ACME_DEMO_DATA__*` (DATA-07). Chất liệu ghi bằng thuộc tính native thay cho custom field không ai định nghĩa. Còn: importer chưa có integration test |
 
 Đợt refactor 14/10 còn sửa trên mọi plugin: `composer.json` đủ trường (STR-03: `require shopware/core ~6.7`, nhãn và mô tả `vi-VN`, `autoload-dev`), docblock class plugin ghi bề mặt công khai và hành vi tắt/gỡ (STR-06), `@internal` cho controller/command (STR-07), khoá snippet `acme-theme.*`, `acme-payment.*` (STR-02).
 
@@ -220,7 +220,7 @@ Một thay đổi plugin chỉ được coi là xong khi:
 
 | Chỗ | Quy tắc | Lý do giữ |
 |---|---|---|
-| `AcmeTheme\Migration\Migration1786166716EnableWishlist` ghi đè giá trị wishlist đã có | MIG-03 | Migration đã chạy — MIG-04 cấm sửa. Hiện giá trị là `true`, đúng ý kinh doanh |
+| `Acme\Theme\Migration\Migration1786166716EnableWishlist` ghi đè giá trị wishlist đã có | MIG-03 | Migration đã chạy — MIG-04 cấm sửa. Hiện giá trị là `true`, đúng ý kinh doanh |
 | `Migration1786157044VietnamMarketBaseline` ném `\RuntimeException` khi thiếu quốc gia VN | DATA-07 | Migration đã chạy (MIG-04); lỗi chỉ xảy ra khi DB core hỏng, không phải lỗi nghiệp vụ |
 
 **Nợ kỹ thuật cấp dự án:**

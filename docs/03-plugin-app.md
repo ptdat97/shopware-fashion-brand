@@ -35,6 +35,8 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 >
 > `SwagPayPal` **đã gỡ hẳn** (08/08/2026). Thư mục plugin bị xoá khỏi git nhưng `composer.json` vẫn require → autoloader trỏ vào file không tồn tại và **làm hỏng toàn bộ `bin/console`**. Đã `composer remove swag/paypal` và dọn thư mục thừa. Nếu sau này cần bán quốc tế thì cài lại từ đầu.
 >
+> **14/10/2026:** sau đó plugin bị cài lại (vào `custom/plugins/SwagPayPal`, *Installed* nhưng không bật). Gỡ lần hai: `plugin:uninstall` → `composer remove swag/paypal` → **tự xoá thư mục `custom/plugins/SwagPayPal`** (composer không xoá thư mục plugin đã cài vào `custom/plugins/`) → `plugin:refresh`. Uninstall của PayPal để sót 4 bảng `swag_paypal_*` rỗng — đã xoá.
+>
 > `SwagExtensionStore` cũng không còn — gỡ cùng đợt dọn dẹp.
 >
 > Cột `managed_by_composer` phải là **0** với plugin tự viết, nếu không Administration sẽ khoá nút Xoá — xem [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 2.

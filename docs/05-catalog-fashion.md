@@ -13,7 +13,7 @@ Phần này quyết định chất lượng dữ liệu lâu dài. **Sai cấu t
 | Màu sắc | `color` | 7 (có mã hex, storefront render swatch) | Cần tách "Hoa nhiều màu" sang nhóm Hoạ tiết |
 | Kích cỡ | `text` | 4 (S/M/L/XL) | Cần thiết kế lại theo chuẩn VN từng loại hàng |
 
-**Chưa có** nhóm Chất liệu, Kiểu dáng, Giới tính, Mùa — các thuộc tính đề xuất ở mục dưới đều là *việc cần làm*, không phải thứ đang có.
+**Chưa có** nhóm Kiểu dáng, Giới tính, Mùa — các thuộc tính đề xuất ở mục dưới đều là *việc cần làm*, không phải thứ đang có. Nhóm **Chất liệu** có từ 14/10/2026 (`AcmeCatalog` 1.5.0), lọc được ở danh mục.
 
 12 sản phẩm demo hiện tại do plugin `AcmeDemoData` sinh ra, **chưa có variant nào** — đây là hạng mục chặn go-live. Kế hoạch xử lý: [10-phase2-catalog.md](10-phase2-catalog.md).
 

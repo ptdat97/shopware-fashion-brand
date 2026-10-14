@@ -141,7 +141,7 @@ Bộ ảnh 78 MB nạp một lần trong một request HTTP dễ chạm `max_exe
 | ANV-1011 | Chân váy dài xếp ly tông be | 790.000 ₫ |
 | ANV-1012 | Đầm dạ hội dáng dài tay bồng | 1.890.000 ₫ |
 
-Mỗi sản phẩm có 3–4 ảnh, custom field `acme_material` (chất liệu) và `acme_model_size` (người mẫu mặc size) — đúng các trường đã đề xuất trong [../05-catalog-fashion.md](../05-catalog-fashion.md).
+Mỗi sản phẩm có 3–4 ảnh, thuộc tính native **Chất liệu** (nhóm do `AcmeCatalog` tạo; không cài `AcmeCatalog` thì importer tự tạo) và custom field `acme_model_size` (người mẫu mặc size, định nghĩa trong `AcmeCatalog`) — đúng các trường đã đề xuất trong [../05-catalog-fashion.md](../05-catalog-fashion.md). Bản ≤ 1.0.1 ghi chất liệu vào custom field `acme_material`; chạy lại importer sẽ xoá giá trị đó.
 
 Giá net tính ngược từ giá gross theo VAT 10%: `net = round(gross / 1.10)`.
 

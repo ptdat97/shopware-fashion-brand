@@ -15,6 +15,13 @@
 {% block element_buy_box_inner %}
     {{ parent() }}
 
+    {# "Người mẫu mặc size" — custom field sản phẩm của AcmeCatalog, biến thể kế thừa từ
+       cha. Không có (AcmeCatalog tắt, chưa nhập) thì không hiện gì. #}
+    {% set modelSize = page.product.translated.customFields.acme_model_size ?? null %}
+    {% if modelSize and modelSize|trim is not empty %}
+        <p class="acme-model-size">{{ modelSize }}</p>
+    {% endif %}
+
     {% set sizeChartCategory = page.product.seoCategory ?? null %}
     {% set sizeChartFields = sizeChartCategory ? sizeChartCategory.translated.customFields ?? {} : {} %}
     {% set sizeChart = {

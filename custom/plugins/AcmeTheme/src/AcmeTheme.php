@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace AcmeTheme;
+namespace Acme\Theme;
 
 use Shopware\Core\Framework\Plugin;
 use Shopware\Storefront\Framework\ThemeInterface;
@@ -19,8 +19,8 @@ use Shopware\Storefront\Framework\ThemeInterface;
  * LIFE-06). Sau đó storefront dùng theme Storefront mặc định; mua hàng không ảnh hưởng.
  * Wishlist đã bật vẫn giữ — là cấu hình core, không hoàn tác (LIFE-02).
  *
- * Namespace `AcmeTheme\` (không phải `Acme\Theme\`) là ngoại lệ của STR-01 —
- * xem decisions/ADR-004-namespace-acme-theme.md.
+ * Namespace đổi từ `AcmeTheme\` sang `Acme\Theme\` ngày 14/10/2026 — cách chuyển một
+ * bản cài cũ: decisions/ADR-004-namespace-acme-theme.md.
  */
 class AcmeTheme extends Plugin implements ThemeInterface
 {

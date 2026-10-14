@@ -367,7 +367,7 @@ php bin/console plugin:activate AcmeX
 
 Chuyển logic đã làm cùng đợt: phí vận chuyển `AcmePayment` → `AcmeShipping` (bảng giá đang có giữ nguyên, cùng id); Việt hoá dữ liệu core `AcmeTheme` → `AcmeVietnam`; custom field bảng size `AcmeTheme` → `AcmeCatalog`; canonical biến thể `AcmeDemoData` → `AcmeCatalog`; CSS VietQR `AcmeTheme` → `AcmePayment`.
 
-> Phát hiện chưa xử lý: `AcmeDemoData` ghi custom field `acme_material`, `acme_model_size` vào sản phẩm nhưng **không plugin nào định nghĩa hay hiển thị** hai trường này — dữ liệu không ai dùng.
+> ~~Phát hiện chưa xử lý: `AcmeDemoData` ghi custom field `acme_material`, `acme_model_size` không plugin nào định nghĩa.~~ ✅ 14/10/2026: chất liệu → nhóm thuộc tính **native** "Chất liệu" (bảng thông số, bộ lọc — đúng thiết kế ở [05-catalog-fashion.md](05-catalog-fashion.md)); người mẫu mặc size → custom field `acme_model_size` do `AcmeCatalog` định nghĩa, `AcmeTheme` hiển thị.
 
 ---
 

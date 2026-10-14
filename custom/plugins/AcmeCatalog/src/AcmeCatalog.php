@@ -17,6 +17,8 @@ use Shopware\Core\Framework\Plugin;
  * - Lệnh `acme:catalog:variants [--sku=] [--dry-run]` và service `VariantGenerator`
  * - Custom field danh mục: `acme_collection` (Là bộ sưu tập), `acme_size_chart_table`,
  *   `acme_size_chart_note`
+ * - Custom field sản phẩm: `acme_model_size` (Người mẫu mặc size)
+ * - Nhóm thuộc tính native "Chất liệu" (cùng "Màu sắc", "Kích cỡ" là dữ liệu catalog)
  *
  * Tắt / gỡ: template SEO, thuộc tính, biến thể và canonical đã ghi là dữ liệu core nên
  * giữ nguyên (LIFE-02) — URL không đổi, không 404. Chỉ mất lệnh sinh biến thể. Custom

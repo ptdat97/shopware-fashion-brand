@@ -172,7 +172,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 | Dựng lại DB local khớp [00-hien-trang.md](00-hien-trang.md) | ✅ 12/10/2026 — 5 plugin `Acme*` active, 76 sản phẩm (12 cha + 64 biến thể), `AcmeTheme` gán cho `anivele`, storefront HTTP 200 |
 | Câu hỏi mở cho kinh doanh | ✅ 12/10/2026 — Anivele là một brand; brand demo giả định; brand tắt chỉ ẩn trang brand, sản phẩm vẫn bán; SKU mã brand 3 ký tự. Chi tiết: [12-da-thuong-hieu.md](12-da-thuong-hieu.md) mục 8 |
 | Tên nền tảng / tên miền | ⏳ Chưa chốt — không chặn MB1–MB3 |
-| `SwagPayPal` vẫn *Installed* (inactive) dù tài liệu ghi đã gỡ hẳn | ⏳ Cần xác nhận rồi `plugin:uninstall` + `composer remove` |
+| `SwagPayPal` vẫn *Installed* (inactive) dù tài liệu ghi đã gỡ hẳn | ✅ 14/10/2026: `plugin:uninstall` + `composer remove swag/paypal`, xoá thư mục `custom/plugins/SwagPayPal` (composer không tự xoá) và 4 bảng `swag_paypal_*` rỗng còn sót |
 
 > Dựng lại DB mới kiểm bằng số liệu DB và HTTP status — **chưa chụp ảnh storefront**. Chụp lại trước khi bắt đầu MB3 để có ảnh nền so sánh.
 
@@ -281,11 +281,13 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 ### MB6 — Sẵn sàng mở rộng
 
+> 📋 **Báo cáo khảo sát 14/10/2026:** [14-mb6-khao-sat.md](14-mb6-khao-sat.md) — chờ quyết định ở mục 5 của báo cáo.
+
 | Việc | Ghi chú |
 |---|---|
-| Đồng bộ ERP / PIM | Admin API / Sync API qua Integration; App nếu cần server trung gian |
+| Đồng bộ ERP / PIM | Sync API + Integration quyền tối thiểu; App nếu cần webhook. Thiếu duy nhất: FK resolver `acme_brand.code` trong `AcmeBrand` |
 | Đa kho | **Không cần** — mọi brand chung một kho (14/10/2026). Chỉ xem lại nếu mở kho thứ hai: decorate `AbstractStockStorage` hoặc Shopware Commercial |
-| Bảng size theo brand × danh mục | Mở rộng cơ chế size chart của `AcmeTheme` |
+| Bảng size theo brand × danh mục | Tra cứu 3 tầng sản phẩm → brand → danh mục bằng custom field (`AcmeCatalog` định nghĩa, `AcmeTheme` hiển thị) — chờ brand thật |
 
 > **Không đánh dấu ✅** khi chưa có automated test và ảnh chụp storefront kiểm chứng.
 
