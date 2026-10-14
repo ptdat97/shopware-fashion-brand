@@ -204,10 +204,10 @@ php bin/console assets:install     # chép sang public/bundles/acmedemodata/
 
 ```bash
 # Trang danh mục
-curl -s "http://shopware-fashion-brand.test/Dam/" | grep -oE '[0-9]{1,3}(\.[0-9]{3})+\s*₫' | sort -u
+curl -s "http://shopware-fashion-brand.test/dam/" | grep -oE '[0-9]{1,3}(\.[0-9]{3})+\s*₫' | sort -u
 
 # Trang chi tiết
-curl -s "http://shopware-fashion-brand.test/Dam-maxi-hoa-nhi-dang-xoe/ANV-1001" -o /dev/null -w "%{http_code}\n"
+curl -s "http://shopware-fashion-brand.test/dam-maxi-hoa-nhi-dang-xoe/anv-1001" -o /dev/null -w "%{http_code}\n"
 
 # Route API của nút bấm có tồn tại không
 php bin/console debug:router | grep acme-demo-data
@@ -219,7 +219,7 @@ curl -s -o /dev/null -w "%{http_code}\n" \
 
 Kết quả thực tế đã kiểm chứng (30/08/2026):
 - Giá render `1.250.000 ₫` đúng chuẩn VN
-- SEO URL tiếng Việt không dấu: `Dam-maxi-hoa-nhi-dang-xoe/ANV-1001`
+- SEO URL tiếng Việt không dấu: `Dam-maxi-hoa-nhi-dang-xoe/ANV-1001` (từ 14/10/2026 chữ thường: `dam-maxi-hoa-nhi-dang-xoe/anv-1001`)
 - Ảnh gốc phục vụ HTTP 200, trang chi tiết hiện đủ 4 ảnh
 - Hai route API trả 401 khi chưa đăng nhập → đúng scope `api`
 - **Chụp ảnh màn hình storefront** (danh mục + chi tiết), không chỉ đọc HTML — theo [../02-theme.md](../02-theme.md)

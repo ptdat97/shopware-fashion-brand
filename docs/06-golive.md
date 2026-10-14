@@ -114,7 +114,7 @@ Nếu sau lệnh trên có tính năng nào hỏng → nghĩa là tính năng đ
 
 ## SEO & Analytics
 
-- [x] ✅ URL thân thiện, tiếng Việt không dấu — sản phẩm, danh mục, `/brands/…`, `/collections/…`
+- [x] ✅ URL thân thiện, tiếng Việt không dấu, **chữ thường** — sản phẩm, danh mục, `/brands/…`, `/collections/…`
 - [x] ✅ Mỗi mẫu một URL canonical: biến thể trỏ về biến thể đầu (`canonicalProductId`), sitemap chỉ có URL canonical
 - [ ] Sitemap sinh tự động trên production — scheduled task `sitemap_generate` chạy được (cần worker/cron)
 - [ ] 🔴 **`robots.txt` trả HTTP 200** trên server thật — máy dev (Herd) trả **404** dù nội dung đúng, do nginx coi `.txt` là file tĩnh. Cấu hình nginx phải chuyển `/robots.txt` vào `index.php`. Kiểm: `curl -I https://<domain>/robots.txt`

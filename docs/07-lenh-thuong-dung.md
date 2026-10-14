@@ -40,6 +40,9 @@ php bin/console dal:refresh:index
 > 🔴 **Vừa xoá class trong plugin** (đổi tên, refactor) → `rm -rf var/cache/prod_*` trước. Container đã biên dịch vẫn trỏ tới class cũ, mọi lệnh `bin/console` kể cả `cache:clear` đều lỗi `Class ... not found`. Thư mục này chỉ là cache, xoá an toàn.
 
 ```bash
+# 🟢 Sinh lại toàn bộ SEO URL — sau khi cập nhật AcmeCatalog (template SEO danh mục/sản phẩm)
+php bin/console dal:refresh:index
+
 # 🟢 Sinh lại URL /brands/... — sau khi cài/cập nhật AcmeBrand hoặc sửa template SEO
 php bin/console dal:refresh:index --only=acme_brand.indexer
 ```

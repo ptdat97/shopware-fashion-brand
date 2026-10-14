@@ -310,6 +310,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 | **Meta description** danh mục, bộ sưu tập (trường `metaDescription`) | Demo có sẵn; trang Đầm, Sale có mô tả |
 | **Meta description sản phẩm** | Demo sinh từ câu đầu mô tả, cắt ở ranh giới từ ≤155 ký tự (trước: 248 ký tự, core cắt cứng ở 255) |
 | Canonical, `index,follow`, OG title/image | Đã đúng sẵn trên mọi loại trang (đo bằng script khảo sát) |
+| **URL chữ thường** cho sản phẩm và danh mục — đồng nhất với `/brands/…`, `/collections/…` | ✅ Chốt 14/10/2026. Chỉ thêm bộ lọc `lower` vào template SEO của core (migration `AcmeCatalog` 1.2.0, không ghi đè template đã sửa tay). `/dam/`, `/ao-polo-det-kim-tay-ngan/may-1002-01`; menu, listing, sitemap (23 URL) đều chữ thường. URL hoa cũ vẫn trả 200 (DB so khớp không phân biệt hoa thường) nhưng canonical trỏ về bản chữ thường → không trùng lặp. 3 integration test |
 
 Không làm, có lý do:
 
@@ -318,7 +319,6 @@ Không làm, có lý do:
 | Gắn tên shop vào sau tiêu đề trang | Core không có cấu hình này — phải sửa template; chờ chốt tên nền tảng rồi quyết |
 | JSON-LD (`JSON_LD_DATA`) | Là feature flag của bản **6.8** (major). Hiện storefront đã có microdata schema.org (Google đọc được). Bật khi nâng 6.8 |
 | `hreflang` | Storefront chỉ có một domain tiếng Việt |
-| URL chữ thường cho sản phẩm/danh mục (`/dam/` thay `/Dam/`) | Hiện brand/bộ sưu tập chữ thường, sản phẩm/danh mục giữ hoa — không sai, chỉ chưa đồng nhất. Đổi template SEO là native, nhưng là quyết định về URL lâu dài — cần chốt trước go-live |
 
 ---
 
