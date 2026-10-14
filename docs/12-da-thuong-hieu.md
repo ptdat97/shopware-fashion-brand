@@ -136,7 +136,7 @@ product.manufacturer_id ───► brand     seo_url  (route brand) ◄──�
 |---|---|---|
 | Brand master data, storefront brand, SEO, sitemap | **Plugin `AcmeBrand`** | Cần route storefront PHP, `EntityExtension`, `SeoUrlRouteInterface`, subscriber listing — App không làm được hoặc làm rất hạn chế |
 | Đồng bộ ERP / PIM | **Admin API / Sync API**, hoặc **App** nếu cần server trung gian | Hệ ngoài nói chuyện qua API — không cần code trong Shopware |
-| Đa kho | Decorate `AbstractStockStorage` trong plugin, hoặc Shopware Commercial `[CHƯA KIỂM CHỨNG giấy phép]` | Chỉ làm khi có nhu cầu thật |
+| Đa kho | Decorate `AbstractStockStorage` trong plugin, hoặc Shopware Commercial `[CHƯA KIỂM CHỨNG giấy phép]` | **Không cần** — mọi brand chung một kho (câu hỏi 5). Chỉ xem lại nếu mở kho thứ hai |
 
 Đúng với khuyến nghị ở [03-plugin-app.md](03-plugin-app.md) Nhóm 5: Plugin cho tuỳ biến sâu, App cho tích hợp bên ngoài.
 
@@ -185,13 +185,13 @@ Chi tiết từng giai đoạn và tiêu chí nghiệm thu: [01-roadmap.md](01-r
 | 2 | Dữ liệu brand cho phát triển | ✅ **Brand demo giả định** — `AcmeDemoData` sinh Anivele + 2 brand giả, chia 12 mẫu | Thay bằng brand thật trước go-live |
 | 3 | Brand ngừng hoạt động thì sản phẩm? | ✅ **Ẩn trang brand, vẫn bán sản phẩm** — `/brands/{slug}` trả 404, brand rời `/brands` và sitemap; sản phẩm vẫn ở danh mục, tìm kiếm, mua được | `active` chỉ điều khiển storefront brand, **không** đụng visibility sản phẩm hay cart |
 | 4 | Quy tắc SKU | ✅ **Mã brand 3 ký tự**: `NKE-1001-01` (brand – mẫu – biến thể). `ANV` = Anivele, hàng `ANV-*` giữ nguyên | Mã brand lưu ở đâu: quyết định trong MB1 |
+| 5 | Brand giao từ kho riêng? | ✅ **Mọi brand dùng chung một kho** (chốt 14/10/2026) | Một kiện cho mỗi đơn, một bảng phí ship chung — không tách kiện theo brand, không cần đa kho |
 
 Còn mở:
 
 | # | Câu hỏi | Chặn giai đoạn |
 |---|---|---|
 | 1b | **Tên nền tảng / tên miền** | Không chặn kỹ thuật — chỉ nội dung, logo header |
-| 5 | Có brand nào **giao từ kho riêng** (ảnh hưởng phí ship, tách kiện)? | MB5 |
 | 6 | Bảng size theo brand × danh mục: brand cung cấp số đo hay tự đo? | sau MB3 |
 
 ---

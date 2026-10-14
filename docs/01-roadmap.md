@@ -256,20 +256,30 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 > Sau khi cập nhật `AcmeCatalog` trên môi trường khác: `bin/console dal:refresh:index` để sinh lại URL danh mục. Cách tạo bộ sưu tập mới: [05-catalog-fashion.md](05-catalog-fashion.md) mục *Bộ sưu tập*.
 
-### MB5 — Nghiệm thu commerce hợp nhất
+### MB5 — Nghiệm thu commerce hợp nhất ✅ (14/10/2026)
 
 | Việc | Trạng thái |
 |---|---|
-| Một đơn chứa sản phẩm của ≥2 brand: thanh toán **COD**, trừ tồn kho đúng | ⏳ |
-| Khuyến mãi theo brand bằng `LineItemOfManufacturerRule` | ⏳ |
-| Brand có trong payload `order_line_item` để báo cáo | ⏳ |
+| Một đơn chứa sản phẩm của ≥2 brand: thanh toán **COD**, trừ tồn kho đúng | ✅ Native, không code |
+| Khuyến mãi theo brand bằng `LineItemOfManufacturerRule` | ✅ Native — Rule Builder + *Khuyến mãi* → *Giảm giá* → "Áp dụng cho sản phẩm khớp rule" |
+| Brand có trong payload `order_line_item` để báo cáo | ✅ `payload.manufacturerId` |
+
+**Nghiệm thu đã chạy:**
+
+- **Đơn COD thật trên DB dev qua Store API** (khách vãng lai, địa chỉ Hải Châu – Đà Nẵng): `MAY-1002-01` (Mây Atelier) + `LLN-1003-01` (Linh Lan) → đơn 10001, **2.140.000 ₫** gồm VAT 10% (194.545 ₫), phí ship 0 ₫ (đơn từ 500k), thanh toán COD trạng thái `open`. Mỗi dòng đơn lưu đúng `manufacturerId`. Tồn kho từng biến thể −1.
+- **Huỷ đơn qua Admin API** → tồn kho hoàn về đúng. Sau đó xoá đơn + khách thử; DB trở về 1 đơn, 1 khách có sẵn từ trước. Bộ đếm số đơn đã tăng — đơn thật tiếp theo là 10002.
+- **3 integration test** (`MultiBrandCheckoutTest`): giỏ 2 brand giữ brand trong payload và vào dòng đơn; đơn trừ tồn kho cả hai brand; khuyến mãi 10% gắn rule "nhà sản xuất = Brand A" chỉ giảm −10 trên sản phẩm Brand A (không giới hạn đúng sẽ là −30).
+
+> Không dòng code nào của plugin chạy trong luồng giỏ hàng / checkout / đơn hàng — đúng nguyên tắc 3 của [12-da-thuong-hieu.md](12-da-thuong-hieu.md). Test giữ giả định đó cho các bản nâng Shopware sau.
+>
+> **Mọi brand dùng chung một kho** (chốt 14/10/2026, câu hỏi mở số 5): một đơn nhiều brand là một kiện, một bảng phí ship chung — đúng cấu hình hiện tại, không cần tách kiện hay đa kho.
 
 ### MB6 — Sẵn sàng mở rộng
 
 | Việc | Ghi chú |
 |---|---|
 | Đồng bộ ERP / PIM | Admin API / Sync API qua Integration; App nếu cần server trung gian |
-| Đa kho | Decorate `AbstractStockStorage` hoặc Shopware Commercial — chỉ khi có nhu cầu thật |
+| Đa kho | **Không cần** — mọi brand chung một kho (14/10/2026). Chỉ xem lại nếu mở kho thứ hai: decorate `AbstractStockStorage` hoặc Shopware Commercial |
 | Bảng size theo brand × danh mục | Mở rộng cơ chế size chart của `AcmeTheme` |
 
 > **Không đánh dấu ✅** khi chưa có automated test và ảnh chụp storefront kiểm chứng.
