@@ -83,7 +83,7 @@ Dự án hiện được dựng cho **một brand duy nhất (Anivele)**. Các �
 | G8 | Thứ tự / brand nổi bật | ❌ | Bảng mở rộng |
 | G9 | Sitemap có URL brand | ❌ | `AbstractUrlProvider` mới |
 | G10 | Bảng size theo brand × danh mục | ❌ (hiện theo danh mục) | Thiết kế lại ở `AcmeTheme` — giai đoạn sau |
-| G11 | Bộ sưu tập `/collections/...` | ✅ Category + product stream | **Chỉ cấu hình**, không code — cần kiểm chứng SEO template |
+| G11 | Bộ sưu tập `/collections/...` | ✅ Category + product stream | ✅ MB4 — ô "Là bộ sưu tập" + template SEO navigation (migration `AcmeCatalog`) |
 
 `slug` **không** lưu thành cột riêng: slug chính là bản ghi `seo_url` mà route G3 sinh ra — sửa được trong Administration theo từng ngôn ngữ, không trùng lặp dữ liệu. Xem ADR-003.
 

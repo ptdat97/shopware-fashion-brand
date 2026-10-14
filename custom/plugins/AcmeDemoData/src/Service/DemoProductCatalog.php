@@ -15,11 +15,14 @@ namespace Acme\DemoData\Service;
  */
 final class DemoProductCatalog
 {
+    public const TAG_AUTUMN_WINTER = 'Thu Đông 2026';
+
     /**
      * @return list<array{
      *     key: string,
      *     number: string,
      *     brand: string,
+     *     tags?: list<string>,
      *     name: string,
      *     category: string,
      *     price: int,
@@ -49,6 +52,7 @@ final class DemoProductCatalog
             [
                 'brand' => 'MAY',
                 'name' => 'Áo polo dệt kim tay ngắn',
+                'tags' => [self::TAG_AUTUMN_WINTER],
                 'category' => 'Áo',
                 'price' => 690_000,
                 'stock' => 65,
@@ -61,6 +65,7 @@ final class DemoProductCatalog
             [
                 'brand' => 'LLN',
                 'name' => 'Đầm midi cổ thuyền xếp ly',
+                'tags' => [self::TAG_AUTUMN_WINTER],
                 'category' => 'Đầm',
                 'price' => 1_450_000,
                 'stock' => 28,
@@ -73,6 +78,7 @@ final class DemoProductCatalog
             [
                 'brand' => 'ANV',
                 'name' => 'Đầm đen cổ chữ V dáng xoè',
+                'tags' => [self::TAG_AUTUMN_WINTER],
                 'category' => 'Đầm',
                 'price' => 1_390_000,
                 'stock' => 37,
@@ -109,6 +115,7 @@ final class DemoProductCatalog
             [
                 'brand' => 'ANV',
                 'name' => 'Đầm đen tay loe dáng ôm',
+                'tags' => [self::TAG_AUTUMN_WINTER],
                 'category' => 'Đầm',
                 'price' => 1_490_000,
                 'stock' => 19,
@@ -169,6 +176,7 @@ final class DemoProductCatalog
             [
                 'brand' => 'LLN',
                 'name' => 'Đầm dạ hội dáng dài tay bồng',
+                'tags' => [self::TAG_AUTUMN_WINTER],
                 'category' => 'Đầm',
                 'price' => 1_890_000,
                 'stock' => 16,
@@ -218,6 +226,27 @@ final class DemoProductCatalog
                 'description' => '<p>Thương hiệu demo — đầm dự tiệc và lụa mềm.</p>',
                 'position' => 3,
                 'featured' => false,
+            ],
+        ];
+    }
+
+    /**
+     * Bộ sưu tập — danh mục con của "Bộ sưu tập", sản phẩm lấy bằng product stream của
+     * core, URL /collections/{tên} nhờ ô "Là bộ sưu tập" (AcmeCatalog).
+     *
+     * Bộ lọc viết đúng dạng Administration lưu: multi OR → multi AND → điều kiện.
+     *
+     * @return array<string, list<array<string, mixed>>> tên => điều kiện (nối AND)
+     */
+    public static function collections(): array
+    {
+        return [
+            // Tương đối theo thời điểm request — tự cập nhật, không cần chạy lại gì
+            'Hàng mới về' => [
+                ['type' => 'since', 'field' => 'createdAt', 'value' => 'P30D', 'parameters' => ['operator' => 'lte']],
+            ],
+            self::TAG_AUTUMN_WINTER => [
+                ['type' => 'equals', 'field' => 'tags.name', 'value' => self::TAG_AUTUMN_WINTER],
             ],
         ];
     }

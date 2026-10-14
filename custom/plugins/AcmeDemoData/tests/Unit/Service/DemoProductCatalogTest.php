@@ -73,4 +73,27 @@ class DemoProductCatalogTest extends TestCase
             static::assertGreaterThanOrEqual(2, \count($brands[$category]), 'Danh mục ' . $category . ' cần ≥2 brand để thử bộ lọc thương hiệu');
         }
     }
+
+    public function testAutumnWinterCollectionSpansSeveralBrands(): void
+    {
+        $brands = [];
+        foreach (DemoProductCatalog::definitions() as $definition) {
+            if (\in_array(DemoProductCatalog::TAG_AUTUMN_WINTER, $definition['tags'] ?? [], true)) {
+                $brands[$definition['brand']] = true;
+            }
+        }
+
+        static::assertGreaterThanOrEqual(2, \count($brands), 'Cần ≥2 brand để thử lọc thương hiệu trong một bộ sưu tập');
+    }
+
+    public function testEveryCollectionHasAtLeastOneCondition(): void
+    {
+        foreach (DemoProductCatalog::collections() as $name => $conditions) {
+            static::assertNotEmpty($conditions, $name);
+            foreach ($conditions as $condition) {
+                static::assertArrayHasKey('type', $condition, $name);
+                static::assertArrayHasKey('field', $condition, $name);
+            }
+        }
+    }
 }

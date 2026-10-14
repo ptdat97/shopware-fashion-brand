@@ -143,6 +143,26 @@ Hàng mới về
 
 Tránh lồng quá 3 cấp — khách sẽ lạc.
 
+## Bộ sưu tập (`/collections/…`)
+
+Bộ sưu tập là **danh mục bình thường của core** lấy sản phẩm bằng *Nhóm sản phẩm động* (product stream). Plugin `AcmeCatalog` chỉ thêm một ô đánh dấu để URL thành `/collections/{tên}`.
+
+Tạo bộ sưu tập mới:
+
+```
+1. Danh mục → Nhóm sản phẩm động → Thêm
+     vd. "Tag = Xuân Hè 2027"  hoặc  "Ngày tạo trong vòng 30 ngày"
+2. Danh mục → tạo danh mục con dưới "Bộ sưu tập"
+     → tab Sản phẩm: Kiểu gán = Nhóm sản phẩm động → chọn nhóm ở bước 1
+     → tab Tuỳ chỉnh → bật "Là bộ sưu tập (URL /collections/…)"
+3. Lưu → URL /collections/xuan-he-2027 tự sinh
+```
+
+- Không bật ô ở bước 2 thì URL theo cây danh mục (`/Bo-suu-tap/Xuan-He-2027/`) — vẫn chạy, chỉ khác dạng URL.
+- Tên bộ sưu tập là slug: đổi tên → URL mới, URL cũ tự chuyển hướng 301.
+- Bộ lọc "Thương hiệu" có sẵn trong trang bộ sưu tập — một bộ sưu tập dùng chung cho mọi brand, không tạo bản riêng theo brand.
+- Template SEO nằm ở Settings → SEO → *Trang danh mục*. Sửa tay template thì migration không ghi đè lại.
+
 ---
 
 ## Xóa demo data

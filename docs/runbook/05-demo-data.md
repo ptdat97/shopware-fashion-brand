@@ -55,6 +55,15 @@ Từ Phase MB2, 12 mẫu chia cho 3 brand (khai báo ở `DemoProductCatalog::br
 
 Brand là **nhà sản xuất** của core (id `acme-demo-manufacturer-<mã>`). Có cài `AcmeBrand` thì importer ghi kèm mã brand, bật trang thương hiệu và meta title; không cài thì chỉ tạo nhà sản xuất — plugin này **không bắt buộc** phụ thuộc `AcmeBrand`.
 
+### Bộ sưu tập demo
+
+Hai danh mục con dưới "Bộ sưu tập", bật cờ `acme_collection` → URL `/collections/…`:
+
+| Bộ sưu tập | Product stream | Kết quả |
+|---|---|---|
+| Hàng mới về | `createdAt` trong 30 ngày (`since P30D`) | Cả 12 mẫu khi dữ liệu còn mới; tự rút dần theo thời gian |
+| Thu Đông 2026 | tag `Thu Đông 2026` | 5 mẫu, đủ 3 brand |
+
 ### Khoá id ≠ mã SKU
 
 ```

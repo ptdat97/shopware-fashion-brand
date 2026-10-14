@@ -72,4 +72,6 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 > 🔴 **`cache:clear` không xoá HTTP cache.** Đổi template/code → thêm `bin/console cache:clear:http`. Đổi template SEO brand → `bin/console acme:brand:seo-urls`.
 
-Tiếp theo: **MB4 — bộ sưu tập** `/collections/{slug}` (category + product stream, chủ yếu cấu hình). Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+- **MB4** ✅ — bộ sưu tập `/collections/{tên}` = category + product stream của core; `AcmeCatalog` thêm ô "Là bộ sưu tập" + template SEO navigation. Sau khi cập nhật `AcmeCatalog`: `bin/console dal:refresh:index`
+
+Tiếp theo: **MB5 — nghiệm thu commerce hợp nhất**: một đơn COD chứa sản phẩm ≥2 brand, khuyến mãi theo brand, brand trong payload đơn hàng. Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).

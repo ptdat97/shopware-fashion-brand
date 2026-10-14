@@ -77,7 +77,7 @@ Cây "Thương hiệu" → mỗi brand một category.
 |---|---|---|
 | 1 | Listing có phân trang/sắp xếp/bộ lọc native trên trang **không phải category** (`AbstractProductListingRoute::load()` bắt buộc `$categoryId`) | ✅ **Đạt** (spike MB3, 14/10/2026) — xem bên dưới |
 | 2 | Override `sw-manufacturer-detail` an toàn qua bản vá 6.7.x | Đọc component gốc, viết Jest test |
-| 3 | SEO URL template cho category tạo được `/collections/new-arrivals` | Cấu hình thử trong MB4 |
+| 3 | SEO URL template cho category tạo được `/collections/new-arrivals` | ✅ **Đạt** (MB4) — template navigation có điều kiện theo custom field `acme_collection` của danh mục (`AcmeCatalog`) |
 
 Kết quả ghi bổ sung vào ADR này. Nếu PoC #1 thất bại, phải mở lại ADR trước khi viết route.
 

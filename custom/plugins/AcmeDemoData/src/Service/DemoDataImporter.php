@@ -49,7 +49,8 @@ class DemoDataImporter
         private readonly EntityRepository $languageRepository,
         private readonly FileSaver $fileSaver,
         private readonly EntityRepository $manufacturerRepository,
-        private readonly DefinitionInstanceRegistry $definitionRegistry
+        private readonly DefinitionInstanceRegistry $definitionRegistry,
+        private readonly EntityRepository $productStreamRepository
     ) {
     }
 
@@ -125,6 +126,7 @@ class DemoDataImporter
             $this->ensureCategories($context, $rootId);
             $this->ensureProperties($context);
             $this->ensureBrands($context);
+            $this->ensureCollections($context, $warnings);
         }
 
         // Đợt cuối: tạo sản phẩm khi ảnh đã nạp xong
@@ -310,6 +312,10 @@ class DemoDataImporter
 
             $row = [
                 'id' => $productId,
+                'tags' => array_map(
+                    fn (string $tag): array => ['id' => $this->tagId($tag), 'name' => $tag],
+                    $definition['tags'] ?? []
+                ),
                 'productNumber' => $number,
                 'manufacturerId' => $this->manufacturerId($definition['brand']),
                 'stock' => $definition['stock'],
@@ -393,6 +399,74 @@ class DemoDataImporter
         if ($updates !== []) {
             $this->productRepository->update($updates, $context);
         }
+    }
+
+    /**
+     * Bộ sưu tập demo: danh mục con của "Bộ sưu tập" + product stream, có cờ
+     * `acme_collection` để URL thành /collections/{tên}.
+     *
+     * Id stream và filter suy ra từ tên → chạy lại seed ghi đè đúng chỗ, không nhân bản.
+     *
+     * @param list<string> $warnings
+     */
+    private function ensureCollections(Context $context, array &$warnings): void
+    {
+        $parentId = $this->findCategoryIds($context)['Bộ sưu tập'] ?? null;
+        if ($parentId === null) {
+            $warnings[] = 'Không thấy danh mục "Bộ sưu tập" — bỏ qua bộ sưu tập demo';
+
+            return;
+        }
+
+        $streams = [];
+        $categories = [];
+        foreach (DemoProductCatalog::collections() as $name => $conditions) {
+            $streamId = Uuid::fromStringToHex('acme-demo-stream-' . $name);
+            $orId = Uuid::fromStringToHex('acme-demo-stream-filter-or-' . $name);
+            $andId = Uuid::fromStringToHex('acme-demo-stream-filter-and-' . $name);
+
+            $queries = [];
+            foreach ($conditions as $position => $condition) {
+                $queries[] = $condition + [
+                    'id' => Uuid::fromStringToHex('acme-demo-stream-filter-' . $name . '-' . $position),
+                    'position' => $position,
+                ];
+            }
+
+            $streams[] = [
+                'id' => $streamId,
+                'translations' => $this->translate($context, ['name' => 'Bộ sưu tập: ' . $name]),
+                'filters' => [[
+                    'id' => $orId,
+                    'type' => 'multi',
+                    'operator' => 'OR',
+                    'position' => 0,
+                    'queries' => [[
+                        'id' => $andId,
+                        'type' => 'multi',
+                        'operator' => 'AND',
+                        'position' => 0,
+                        'queries' => $queries,
+                    ]],
+                ]],
+            ];
+
+            $categories[] = [
+                'id' => $this->categoryId($name),
+                'parentId' => $parentId,
+                'active' => true,
+                'type' => 'page',
+                'productAssignmentType' => 'product_stream',
+                'productStreamId' => $streamId,
+                'translations' => $this->translate($context, [
+                    'name' => $name,
+                    'customFields' => ['acme_collection' => true],
+                ]),
+            ];
+        }
+
+        $this->productStreamRepository->upsert($streams, $context);
+        $this->categoryRepository->upsert($categories, $context);
     }
 
     /**
@@ -667,6 +741,11 @@ class DemoDataImporter
     private function productId(string $key): string
     {
         return Uuid::fromStringToHex('acme-demo-product-' . $key);
+    }
+
+    private function tagId(string $name): string
+    {
+        return Uuid::fromStringToHex('acme-demo-tag-' . $name);
     }
 
     private function manufacturerId(string $brandCode): string

@@ -239,13 +239,22 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 >
 > Sau khi cài/cập nhật `AcmeBrand` hoặc sửa template SEO: `bin/console acme:brand:seo-urls` — `dal:refresh:index` của core không phủ route brand.
 
-### MB4 — Bộ sưu tập
+### MB4 — Bộ sưu tập ✅ (14/10/2026)
 
 | Việc | Trạng thái |
 |---|---|
-| Cây category "Bộ sưu tập" + product stream (Hàng mới về, Sale…) | ⏳ Cấu hình native |
-| SEO URL `/collections/{slug}` | ⏳ Kiểm chứng template navigation |
-| Bộ sưu tập của một brand trên landing page brand | ⏳ |
+| Bộ sưu tập = category + product stream của core | ✅ Không code — demo có "Hàng mới về" (tạo trong 30 ngày, `since P30D`) và "Thu Đông 2026" (theo tag) |
+| SEO URL `/collections/{tên}` | ✅ Kinh doanh chốt dạng `/collections/…` (14/10/2026). `AcmeCatalog` thêm ô **"Là bộ sưu tập"** trên danh mục + template SEO navigation có điều kiện; danh mục thường giữ `Dam/`, `Ao/` |
+| Bộ sưu tập theo brand | ✅ Native: bộ lọc "Thương hiệu" trong trang bộ sưu tập (`/collections/thu-dong-2026?manufacturer=…`). Muốn khối riêng trên trang brand: thêm CMS *product slider* nguồn product stream "brand + tag" vào layout landing page của brand — chưa dựng mẫu |
+| Bộ sưu tập "Sale" | ⏳ Cần giá niêm yết (`listPrice`) — dữ liệu demo chưa có |
+
+**Nghiệm thu đã chạy:**
+
+- `plugin:update AcmeCatalog` + `dal:refresh:index` → URL `collections/hang-moi-ve`, `collections/thu-dong-2026`; các danh mục khác không đổi (`Ao/`, `Dam/`, `Chan-vay/`, `Bo-suu-tap/`).
+- Storefront: Hàng mới về 12 mẫu, Thu Đông 2026 5 mẫu từ 3 brand; lọc Thu Đông × Linh Lan → 2. Canonical đúng, menu chính có link 2 bộ sưu tập. Chụp ảnh desktop + mobile.
+- Test: `AcmeCatalog` 4 integration test (đổi template khi còn mặc định, **không ghi đè template người vận hành đã sửa**, chạy lại không nhân đôi field, URL đúng cho danh mục có/không đánh dấu). `AcmeDemoData` thêm 2 unit test. Tổng 3 plugin: 23 + 4 + 8 test đạt.
+
+> Sau khi cập nhật `AcmeCatalog` trên môi trường khác: `bin/console dal:refresh:index` để sinh lại URL danh mục. Cách tạo bộ sưu tập mới: [05-catalog-fashion.md](05-catalog-fashion.md) mục *Bộ sưu tập*.
 
 ### MB5 — Nghiệm thu commerce hợp nhất
 
