@@ -17,6 +17,13 @@
             <argument type="service" id="product_manufacturer.repository"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\DefinitionInstanceRegistry"/>
             <argument type="service" id="product_stream.repository"/>
+            <argument type="service">
+                <service class="Cocur\Slugify\Slugify">
+                    <argument type="collection">
+                        <argument key="lowercase">true</argument>
+                    </argument>
+                </service>
+            </argument>
         </service>
 
         <service id="Acme\DemoData\Command\SeedDemoCommand">

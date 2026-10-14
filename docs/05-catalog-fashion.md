@@ -95,7 +95,7 @@ Administration → Danh mục → chọn danh mục (Đầm / Áo / Chân váy)
      └── Ghi chú dưới bảng
 ```
 
-Sản phẩm tự lấy bảng của danh mục chứa nó. Danh mục chưa nhập bảng thì nút "Bảng size" **không hiện** — không có popup rỗng.
+Sản phẩm lấy bảng của **danh mục chính** — chính danh mục core dùng cho breadcrumb và SEO ở trang chi tiết (`page.product.seoCategory`). Sản phẩm nằm ở nhiều danh mục thì chọn danh mục chính trong Administration: sản phẩm → tab *SEO* → "Danh mục chính". Danh mục chưa nhập bảng thì nút "Bảng size" **không hiện** — không có popup rỗng.
 
 > 🔴 **Số đo hiện tại là SỐ THAM KHẢO** theo thang phổ biến của thị trường VN, không phải số đo thật của Anivele. Phải đo trên sản phẩm thật rồi thay lại trước go-live.
 

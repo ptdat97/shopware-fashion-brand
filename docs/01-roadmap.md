@@ -156,6 +156,8 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 ## Phase MB — Đa thương hiệu 🔄 **ĐANG TRIỂN KHAI** (từ 12/10/2026)
 
+> **Rà soát các plugin còn lại 14/10/2026:** VietQR dùng handler `PrePayment` của core (`AcmePayment` 1.1.0, bỏ handler tự viết); bảng size đọc danh mục chính `seoCategory` core đã nạp (bỏ subscriber + struct); demo dùng `Cocur\Slugify` của core. Bảng kết quả: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 4.
+>
 > **Rà soát 14/10/2026 — tận dụng thứ Shopware đã có** (AcmeBrand 1.2.0): meta SEO chuyển sang custom field dịch được của nhà sản xuất (bỏ bảng dịch riêng, 3 class, 3 ô nhập JS); SEO URL brand chuyển sang `EntityIndexer` (bỏ subscriber + lệnh `acme:brand:seo-urls`). 31 test đạt; Admin chụp ảnh kiểm chứng thẻ custom field native. Chi tiết: [ADR-003](decisions/ADR-003-mo-hinh-thuong-hieu.md) mục *Rà soát*, quy tắc mới: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 4.
 
 **Mục tiêu:** nhiều thương hiệu bán chung một website, một catalog, một giỏ hàng; mỗi brand có trang riêng tại `/brands/{slug}`.

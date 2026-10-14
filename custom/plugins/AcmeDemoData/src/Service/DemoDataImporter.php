@@ -2,6 +2,7 @@
 
 namespace Acme\DemoData\Service;
 
+use Cocur\Slugify\SlugifyInterface;
 use Shopware\Core\Content\Media\File\FileSaver;
 use Shopware\Core\Content\Media\File\MediaFile;
 use Shopware\Core\Content\Media\MediaEntity;
@@ -50,7 +51,10 @@ class DemoDataImporter
         private readonly FileSaver $fileSaver,
         private readonly EntityRepository $manufacturerRepository,
         private readonly DefinitionInstanceRegistry $definitionRegistry,
-        private readonly EntityRepository $productStreamRepository
+        private readonly EntityRepository $productStreamRepository,
+        // Thư viện slugify core đang dùng (Cocur), cấu hình chữ thường — khớp 67/67 tên
+        // file với hàm tự viết trước đây, nên tên file media đã nạp không đổi
+        private readonly SlugifyInterface $slugify
     ) {
     }
 
@@ -196,7 +200,7 @@ class DemoDataImporter
 
         $bySlug = [];
         foreach ($files as $file) {
-            $bySlug[$this->slugify(pathinfo($file, \PATHINFO_FILENAME))] = $file;
+            $bySlug[$this->slugify->slugify(pathinfo($file, \PATHINFO_FILENAME))] = $file;
         }
 
         $criteria = new Criteria();
@@ -248,7 +252,7 @@ class DemoDataImporter
             try {
                 $this->fileSaver->persistFileToMedia(
                     $mediaFile,
-                    $this->slugify(pathinfo($file, \PATHINFO_FILENAME)),
+                    $this->slugify->slugify(pathinfo($file, \PATHINFO_FILENAME)),
                     $mediaId,
                     $context
                 );
@@ -762,11 +766,4 @@ class DemoDataImporter
         return Uuid::fromStringToHex('acme-demo-property-group-' . $name);
     }
 
-    private function slugify(string $text): string
-    {
-        $text = \transliterator_transliterate('Any-Latin; Latin-ASCII; Lower()', $text) ?: strtolower($text);
-        $text = preg_replace('/[^a-z0-9]+/', '-', $text) ?? $text;
-
-        return trim($text, '-');
-    }
 }

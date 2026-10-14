@@ -261,6 +261,26 @@ Bản đầu của plugin đã dùng nhà sản xuất làm brand, nhưng vẫn 
 
 Những gì **giữ lại có lý do**: bảng `acme_brand` (mã `UNIQUE`, khoá ngoại banner/layout), trang storefront `/brands` (core không có trang nhà sản xuất), route SEO và sitemap (điểm mở rộng chính thức, không phải bản sao).
 
+### Rà soát các plugin còn lại (14/10/2026)
+
+| Plugin | Đã tự làm | Shopware có sẵn | Xử lý | Kiểm chứng |
+|---|---|---|---|---|
+| `AcmePayment` | `VietQrPaymentHandler` — `pay()` trả null, giao dịch giữ "open" | Giống hệt `DefaultPayment`/`PrePayment` của core | VietQR dùng handler **`PrePayment`** ("Chuyển khoản trước"); bỏ class. Phần riêng của VietQR chỉ còn mã QR trên trang cảm ơn | Đặt đơn VietQR thật qua Store API → giao dịch `open`; huỷ + xoá đơn thử |
+| `AcmeTheme` | `SizeChartSubscriber` truy vấn lại danh mục của sản phẩm + struct `SizeChartData` | Trang chi tiết đã nạp **danh mục chính** `page.product.seoCategory` (đủ custom field; chọn được trong Admin) | Template đọc thẳng `seoCategory`; bỏ subscriber, struct, một truy vấn DB mỗi trang | HTML bảng size của 12 trang sản phẩm **giống hệt** trước khi sửa; chụp ảnh popup |
+| `AcmeDemoData` | Hàm `slugify()` tự viết | Thư viện `Cocur\Slugify` mà core dùng | Dùng Cocur, cấu hình chữ thường | So 67/67 tên file khớp tuyệt đối; seed lại không sinh thêm media nào |
+
+Giữ nguyên sau khi kiểm:
+
+| Plugin | Phần | Vì sao không trùng |
+|---|---|---|
+| `AcmeCatalog` | Lệnh `acme:catalog:variants` | Core chỉ có bộ sinh biến thể trong Admin (JS, từng sản phẩm), không có service/lệnh phía server. Lệnh ghi đúng cấu trúc native |
+| `AcmeVietnam` | Migration VND, VAT, quốc gia, 34 tỉnh/thành | Toàn bộ là dữ liệu cấu hình trên entity core; core không có tỉnh/thành Việt Nam |
+| `AcmePayment` | Phí ship theo khu vực | Rule Builder + shipping price matrix của core, chỉ là dữ liệu |
+| `AcmeTheme` | `ListingMediaSubscriber`, override Twig, migration nhãn tiếng Việt | Dùng đúng điểm mở rộng (`ProductListingCriteriaEvent`, block Twig) và dịch dữ liệu native |
+| `AcmeDemoData` | Importer + nút trong Admin | Core không có cơ chế nhập dữ liệu demo kèm ảnh |
+
+> 🔴 **Xoá class của plugin → phải xoá container đã biên dịch** (`rm -rf var/cache/prod_*`) trước khi chạy `bin/console`. Container cũ vẫn tham chiếu class đã xoá và mọi lệnh, kể cả `cache:clear`, đều lỗi `Class ... not found`.
+
 ### Tự kiểm trước khi tạo mới
 
 ```bash

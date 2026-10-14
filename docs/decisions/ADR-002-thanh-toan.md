@@ -93,7 +93,7 @@ Kiến thức thu được khi triển khai, hữu ích cho VNPay/MoMo về sau.
 
 Shopware 6.7 chỉ còn **một** abstract class: `AbstractPaymentHandler`. Bốn interface mà phần lớn tutorial trên mạng vẫn dạy (`SynchronousPaymentHandlerInterface`, `AsynchronousPaymentHandlerInterface`, `PaymentHandlerInterface`, `PreparedPaymentHandlerInterface`) **đã bị xoá** — xem [08-quy-tac-phat-trien.md](../08-quy-tac-phat-trien.md) Quy tắc số 3.
 
-Phương thức không cần redirect (COD, chuyển khoản, VietQR) thì `pay()` trả `null`, giống `DefaultPayment` của core. Có redirect (VNPay, MoMo) thì trả `RedirectResponse`, và `finalize()` sẽ được gọi sau khi khách quay lại.
+Phương thức không cần redirect (COD, chuyển khoản, VietQR) thì `pay()` trả `null`, giống `DefaultPayment` của core — và khi đó **dùng luôn handler của core, không viết class mới**. VietQR dùng `PrePayment` ("Chuyển khoản trước") từ `AcmePayment` 1.1.0; bản handler tự viết trước đó giống hệt từng dòng nên đã bỏ ([08-quy-tac-phat-trien.md](../08-quy-tac-phat-trien.md) Quy tắc số 4). Chỉ viết handler riêng khi có redirect hoặc gọi API cổng thanh toán. Có redirect (VNPay, MoMo) thì trả `RedirectResponse`, và `finalize()` sẽ được gọi sau khi khách quay lại.
 
 Mẫu tham chiếu tốt nhất: `swag/paypal` 10.8.0, class `Swag\PayPal\Checkout\Payment\Method\AbstractPaymentMethodHandler`.
 

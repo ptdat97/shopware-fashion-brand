@@ -70,7 +70,7 @@ Không cần plugin bên thứ ba cho đa thương hiệu — brand, bộ lọc 
 
 **Thứ tự đã chọn:** VietQR → VNPay → MoMo. VietQR đơn giản nhất (chỉ sinh mã QR theo chuẩn NAPAS, không cần redirect) mà hiệu quả cao — đã hoàn thành. Ghi chú kỹ thuật để làm VNPay/MoMo: [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md).
 
-Cơ chế kỹ thuật: Shopware cho phép tự viết payment handler bằng cách implement interface handler tương ứng và đăng ký như một plugin. Xem [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md).
+Cơ chế kỹ thuật: phương thức không redirect (COD, chuyển khoản, VietQR) **dùng handler sẵn có của core** (`CashPayment`, `PrePayment`) — VietQR chỉ thêm mã QR ở trang cảm ơn. Chỉ cổng có redirect/API (VNPay, MoMo) mới cần handler riêng kế thừa `AbstractPaymentHandler`. Xem [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md).
 
 ---
 

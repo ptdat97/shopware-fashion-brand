@@ -3,9 +3,11 @@
 {#
     Nút mở bảng size ngay dưới bộ chọn size/màu.
 
-    Bảng size lấy từ custom field của danh mục (SizeChartSubscriber gắn vào
-    page dưới tên `acmeSizeChart`), nên người bán sửa số đo trong
-    Administration mà không cần đụng code.
+    Bảng size lấy từ custom field của DANH MỤC CHÍNH của sản phẩm —
+    `page.product.seoCategory`, danh mục core đã nạp sẵn cho breadcrumb/SEO ở trang
+    chi tiết (chọn được trong Administration: sản phẩm → "Danh mục chính").
+    Không tự truy vấn lại danh mục (08-quy-tac-phat-trien.md, Quy tắc số 4).
+    Người bán sửa số đo trong Administration mà không cần đụng code.
 
     Số đo sai là nguyên nhân đổi trả hàng đầu với thời trang online, nên
     bảng size đặt ngay cạnh nút mua chứ không giấu dưới tab mô tả.
@@ -13,9 +15,15 @@
 {% block element_buy_box_inner %}
     {{ parent() }}
 
-    {% set sizeChart = page.extensions.acmeSizeChart %}
+    {% set sizeChartCategory = page.product.seoCategory ?? null %}
+    {% set sizeChartFields = sizeChartCategory ? sizeChartCategory.translated.customFields ?? {} : {} %}
+    {% set sizeChart = {
+        table: sizeChartFields.acme_size_chart_table ?? null,
+        note: sizeChartFields.acme_size_chart_note ?? null,
+        categoryName: sizeChartCategory ? sizeChartCategory.translated.name : null
+    } %}
 
-    {% if sizeChart %}
+    {% if sizeChart.table and sizeChart.table|trim is not empty %}
         <div class="acme-size-chart-trigger">
             <button type="button"
                     class="btn btn-link p-0"

@@ -10,10 +10,6 @@
             <argument type="service" id="Acme\Payment\Service\VietQrPayloadBuilder"/>
         </service>
 
-        <service id="Acme\Payment\Payment\VietQrPaymentHandler">
-            <tag name="shopware.payment.method"/>
-        </service>
-
         <service id="Acme\Payment\Subscriber\CheckoutFinishSubscriber">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="Acme\Payment\Service\VietQrRenderer"/>

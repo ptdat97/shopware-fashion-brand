@@ -2,7 +2,7 @@
 
 namespace Acme\Payment;
 
-use Acme\Payment\Payment\VietQrPaymentHandler;
+use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\PrePayment;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -12,6 +12,7 @@ use Shopware\Core\Framework\Plugin\Context\ActivateContext;
 use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
+use Shopware\Core\Framework\Plugin\Context\UpdateContext;
 use Shopware\Core\Framework\Plugin\Util\PluginIdProvider;
 use Shopware\Core\Framework\Uuid\Uuid;
 
@@ -30,6 +31,17 @@ class AcmePayment extends Plugin
         parent::install($installContext);
 
         $this->upsertVietQrPaymentMethod($installContext->getContext());
+    }
+
+    /**
+     * Ghi lại phương thức thanh toán khi cập nhật plugin — từ 1.1.0 handler đổi sang
+     * `PrePayment` của core, bản ghi đã có phải được cập nhật theo.
+     */
+    public function update(UpdateContext $updateContext): void
+    {
+        parent::update($updateContext);
+
+        $this->upsertVietQrPaymentMethod($updateContext->getContext());
     }
 
     public function activate(ActivateContext $activateContext): void
@@ -66,7 +78,11 @@ class AcmePayment extends Plugin
 
         $data = [
             'id' => $existingId ?? Uuid::randomHex(),
-            'handlerIdentifier' => VietQrPaymentHandler::class,
+            // Handler "Chuyển khoản trước" của core: không redirect, giao dịch giữ "open"
+            // chờ đối soát — đúng hành vi VietQR cần. Bản handler tự viết trước 1.1.0 giống
+            // hệt từng dòng, nên đã bỏ (08-quy-tac-phat-trien.md, Quy tắc số 4). Phần riêng
+            // của VietQR chỉ là mã QR trên trang cảm ơn (CheckoutFinishSubscriber).
+            'handlerIdentifier' => PrePayment::class,
             'technicalName' => self::VIETQR_TECHNICAL_NAME,
             'name' => 'Chuyển khoản QR (VietQR)',
             'position' => 10,

@@ -20,6 +20,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * Trục biến thể cố ý chỉ có 2 (Màu, Size) — thêm trục thứ ba nhân số SKU lên
  * quá tầm vận hành: 7 màu × 4 size = 28 SKU/mẫu, thêm chất liệu thành 84.
  * Chất liệu/kiểu dáng giữ nguyên dạng property mô tả. Xem docs/10-phase2-catalog.md.
+ *
+ * Vì sao không dùng bộ sinh biến thể của core (Quy tắc số 4): core chỉ có bộ sinh trong
+ * Administration (`sw-products-variants-generator.js`, chạy ở trình duyệt, từng sản phẩm
+ * một) — không có service hay lệnh phía server. Lệnh này ghi đúng cấu trúc native mà bộ
+ * sinh của Admin tạo ra (`configuratorSettings` + `children` + `options`), nên sản phẩm
+ * sinh ở đây sửa tiếp được bằng Admin như bình thường. Hàng thật nhập qua Import/Export
+ * native hoặc bộ sinh của Admin; lệnh này phục vụ nhập hàng loạt và dữ liệu demo.
  */
 #[AsCommand(
     name: 'acme:catalog:variants',

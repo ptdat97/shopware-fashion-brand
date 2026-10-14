@@ -7,10 +7,5 @@
         <service id="AcmeTheme\Subscriber\ListingMediaSubscriber">
             <tag name="kernel.event_subscriber"/>
         </service>
-
-        <service id="AcmeTheme\Subscriber\SizeChartSubscriber">
-            <argument type="service" id="category.repository"/>
-            <tag name="kernel.event_subscriber"/>
-        </service>
     </services>
 </container>

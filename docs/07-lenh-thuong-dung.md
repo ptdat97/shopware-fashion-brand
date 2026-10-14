@@ -37,6 +37,8 @@ php bin/console dal:refresh:index
 >
 > 🔴 **`cache:clear` không xoá HTTP cache** (đã kiểm ở Shopware 6.7.15.1). Sửa template/Twig/code mà trang vẫn cũ → chạy thêm `php bin/console cache:clear:http`. Kiểm nhanh: header `Age:` khác 0 là đang nhận bản cache.
 
+> 🔴 **Vừa xoá class trong plugin** (đổi tên, refactor) → `rm -rf var/cache/prod_*` trước. Container đã biên dịch vẫn trỏ tới class cũ, mọi lệnh `bin/console` kể cả `cache:clear` đều lỗi `Class ... not found`. Thư mục này chỉ là cache, xoá an toàn.
+
 ```bash
 # 🟢 Sinh lại URL /brands/... — sau khi cài/cập nhật AcmeBrand hoặc sửa template SEO
 php bin/console dal:refresh:index --only=acme_brand.indexer
