@@ -10,9 +10,7 @@ Một website, một catalog, một checkout cho **nhiều thương hiệu** th�
 
 **3. Đọc kiến trúc Shopware trước khi viết plugin. Không bịa API.** Shopware xoá interface giữa các bản major — `SynchronousPaymentHandlerInterface`, `AsynchronousPaymentHandlerInterface`, `PaymentHandlerInterface` đều **không còn tồn tại** trong 6.7 dù tutorial trên mạng vẫn dạy. Mọi tên class phải xác nhận trong `vendor/` trước khi dùng:
 
-```bash
-php bin/check-plugin-api.php     # bắt lỗi class không tồn tại
-```
+Lệnh kiểm tra (hỏi autoloader, bắt class ma): [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) mục "Kiểm tra tự động".
 
 **4. Backup trước mọi thay đổi dữ liệu.** Xem [docs/runbook/00-backup.md](docs/runbook/00-backup.md).
 
@@ -23,6 +21,8 @@ php bin/check-plugin-api.php     # bắt lỗi class không tồn tại
 **7. Mỗi plugin một nghiệp vụ, độc lập.** Không `use`/inject class của plugin khác; phụ thuộc dữ liệu kiểu "có thì dùng, không có thì bỏ qua"; markup plugin nào thì CSS plugin đó. Tắt một plugin chỉ mất chức năng của chính nó — xem hàng, giỏ hàng, COD vẫn chạy. Bản đồ trách nhiệm 7 plugin và cách kiểm tắt/bật: [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) Quy tắc số 5.
 
 Chi tiết và lý do: [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) · [docs/09-nguyen-tac-ky-thuat.md](docs/09-nguyen-tac-ky-thuat.md)
+
+**Luật chi tiết khi viết plugin:** [docs/13-chuan-phat-trien-plugin.md](docs/13-chuan-phat-trien-plugin.md) — mỗi quy tắc có mã (`ARCH`, `DATA`, `MIG`, `API`, `EXT`, `SF`, `ADM`, `PERF`, `SEC`, `OBS`, `TEST`, `REL`) để trích khi review; mục 15 là Definition of Done, mục 16 là hiện trạng tuân thủ và nợ kỹ thuật.
 
 ## Ngôn ngữ
 

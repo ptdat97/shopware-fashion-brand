@@ -1,5 +1,7 @@
 # Quy tắc phát triển
 
+> Năm quy tắc nền tảng. Luật chi tiết có mã để trích khi review (`DATA-04`, `MIG-03`…), Definition of Done và hiện trạng tuân thủ: [13-chuan-phat-trien-plugin.md](13-chuan-phat-trien-plugin.md).
+
 > **Đây là quy tắc bắt buộc của dự án.** Áp dụng cho mọi người tham gia phát triển, mọi giai đoạn.
 
 ## Quy tắc số 1 — Không can thiệp core Shopware
@@ -209,16 +211,28 @@ Class đánh dấu `@experimental` có thể đổi API ở minor tiếp theo �
 
 ### Kiểm tra tự động
 
-Không cần tự nhớ — có script kiểm tra sẵn:
+Chạy trực tiếp từ thư mục gốc dự án (không lưu thành script trong repo):
 
 ```bash
-php bin/check-plugin-api.php                           # toàn bộ custom/plugins
-php bin/check-plugin-api.php custom/plugins/TenPlugin  # một plugin
+rc=0; for p in custom/plugins/Acme*; do
+  printf "%-14s " "${p##*/}"
+  grep -rhoE "^use (Shopware|Symfony|Doctrine)\\\\[A-Za-z0-9_\\\\]+" "$p/src" | sed 's/^use //' | sort -u |
+  php -r 'require "vendor/autoload.php"; $n = 0; $bad = 0;
+    foreach (file("php://stdin", FILE_IGNORE_NEW_LINES) as $c) { $n++;
+      if (!class_exists($c) && !interface_exists($c) && !trait_exists($c) && !enum_exists($c)) { echo "\n  KHÔNG TỒN TẠI: $c"; $bad = 1; } }
+    echo "\n  $n class đã kiểm\n"; exit($bad);' || rc=1
+done; echo "Kết quả: $([ $rc = 0 ] && echo SẠCH || echo 'CÓ CLASS MA')"
 ```
 
-Script duyệt mọi câu `use Shopware\...` trong plugin và dùng **chính autoloader của Shopware** để xác nhận class có tồn tại — đáng tin hơn đoán theo đường dẫn file. Exit code `1` nếu phát hiện class ma.
+Lệnh gom mọi câu `use Shopware\…` / `Symfony\…` / `Doctrine\…` trong `src/` của từng plugin và hỏi **chính autoloader của dự án** xem class/interface/trait/enum có tồn tại không — đáng tin hơn đoán theo đường dẫn file. Có class ma thì in `KHÔNG TỒN TẠI: …` và dòng cuối `Kết quả: CÓ CLASS MA`. Ví dụ với `SynchronousPaymentHandlerInterface` (đã xoá ở 6.7):
 
-Chạy trước mỗi commit có đụng code plugin.
+```
+KHÔNG TỒN TẠI: Shopware\Core\Checkout\Payment\Cart\PaymentHandler\SynchronousPaymentHandlerInterface
+```
+
+Giới hạn: chỉ bắt tên **class**. Tên method, tham số, service id vẫn phải đọc trong `vendor/` và được test bắt (xem [13-chuan-phat-trien-plugin.md](13-chuan-phat-trien-plugin.md)).
+
+Chạy trước mỗi commit có đụng code plugin. Kết quả 14/10/2026: 7 plugin Acme, 158 class, 0 class ma.
 
 ### Khi tìm mãi không thấy
 

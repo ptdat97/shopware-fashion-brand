@@ -224,6 +224,8 @@ Xem đầy đủ: `php bin/console list make`
 
 ## Checklist trước khi commit
 
+> Checklist đầy đủ (Definition of Done) ở [../13-chuan-phat-trien-plugin.md](../13-chuan-phat-trien-plugin.md) mục 15. Phần dưới là các lệnh kiểm tự động.
+
 ```bash
 # 1. Không đụng vendor/
 git status --short vendor/
@@ -239,21 +241,15 @@ mysql -h 127.0.0.1 -u root shopware -e \
 php -l custom/plugins/TenPlugin/src/**/*.php
 
 # 5. Mọi class Shopware đang dùng đều có thật (bắt lỗi bịa API)
-php bin/check-plugin-api.php custom/plugins/TenPlugin
+#    → chạy lệnh ở ../08-quy-tac-phat-trien.md, mục "Kiểm tra tự động"
 ```
 
 Cả 5 phải sạch.
 
 **Thêm hoặc chuyển logic giữa các plugin** → chạy thêm phép thử tắt/bật từng plugin của [../08-quy-tac-phat-trien.md](../08-quy-tac-phat-trien.md) Quy tắc số 5: tắt plugin nào thì chỉ được mất chức năng của plugin đó. Mục 2 chỉ được có thay đổi khi cài plugin **bên thứ ba**.
 
-Mục 5 báo tên nào thì tên đó **không tồn tại trong `vendor/`** — đang bịa API, quay lại bước 0. Script dùng chính autoloader của Shopware nên kết quả đáng tin, không phải đoán theo đường dẫn:
+Mục 5 báo `KHÔNG TỒN TẠI` tên nào thì tên đó **không có trong `vendor/`** — đang bịa API, quay lại bước 0. Lệnh hỏi chính autoloader của dự án nên kết quả đáng tin, không phải đoán theo đường dẫn.
 
-```
-❌ Class Shopware KHÔNG TỒN TẠI trong vendor/:
-
-  Shopware\Core\Checkout\Payment\Cart\PaymentHandler\SynchronousPaymentHandlerInterface
-      dùng ở: custom/plugins/TenPlugin/src/Service/VnpayHandler.php
-```
 
 ---
 

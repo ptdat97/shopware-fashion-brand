@@ -1,6 +1,6 @@
 # Nguyên tắc kỹ thuật
 
-Nguồn quyết định khi có mâu thuẫn vẫn là [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md).
+Nguồn quyết định khi có mâu thuẫn vẫn là [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md). Bản rút gọn thành quy tắc có mã: [13-chuan-phat-trien-plugin.md](13-chuan-phat-trien-plugin.md).
 
 ---
 

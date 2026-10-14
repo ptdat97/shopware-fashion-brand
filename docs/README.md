@@ -10,6 +10,7 @@ Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một websit
 |---|---|---|
 | ⚠️ | **[08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md)** | **Được sửa ở đâu** — không can thiệp core, không `composer require` plugin tự viết |
 | ⚠️ | **[09-nguyen-tac-ky-thuat.md](09-nguyen-tac-ky-thuat.md)** | **Sửa như thế nào** — phạm vi thay đổi, kiến trúc PHP, migration, test |
+| 📐 | **[13-chuan-phat-trien-plugin.md](13-chuan-phat-trien-plugin.md)** | **Luật chi tiết** — quy tắc có mã (`DATA-04`…) theo chuẩn Shopware, Definition of Done, hiện trạng tuân thủ |
 | 🔧 | **[runbook/06-tao-plugin.md](runbook/06-tao-plugin.md)** | **Bắt tay vào làm** — quy trình tạo plugin mới đúng chuẩn |
 
 ## Tra cứu nhanh
@@ -69,7 +70,7 @@ Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một websit
 >
 > **2. Không `composer require` plugin tự viết.** Shopware tự quét `custom/plugins/`. Thêm vào `composer.json` sẽ khoá nút Xoá plugin trong Administration và gây xung đột merge.
 >
-> **3. Đọc kiến trúc Shopware trước khi viết. Không bịa API.** Shopware xoá interface giữa các bản major — code chép từ tutorial cũ sẽ không chạy. Xác nhận mọi tên class trong `vendor/` bằng `php bin/check-plugin-api.php`.
+> **3. Đọc kiến trúc Shopware trước khi viết. Không bịa API.** Shopware xoá interface giữa các bản major — code chép từ tutorial cũ sẽ không chạy. Xác nhận mọi tên class trong `vendor/` bằng lệnh ở [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md#kiểm-tra-tự-động).
 >
 > **4. Brand là `product_manufacturer`, mọi brand chung một sales channel.** Không tạo entity brand song song, không tạo sales channel/theme theo brand, không chèn logic brand vào cart/checkout — xem [12-da-thuong-hieu.md](12-da-thuong-hieu.md) mục 6.
 >
