@@ -79,7 +79,7 @@ Không chịu thuế (0%)    0.000%
 
 Đã có VietQR (chuyển khoản QR chuẩn NAPAS) tự viết. Chưa có VNPay/MoMo — xem [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md).
 
-> ⚠️ VietQR **chưa cấu hình số tài khoản thật**. Phải nhập tại Administration → Extensions trước khi mở bán.
+> 🧭 **COD là phương thức ưu tiên** (14/10/2026). VietQR tạm gác — **chưa cấu hình số tài khoản thật**, chỉ cần nhập khi bật lại.
 
 ### Vận chuyển
 

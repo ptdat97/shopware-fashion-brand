@@ -43,6 +43,29 @@ So sánh trong hệ thống hiện tại:
 | SwagExtensionStore | `custom/plugins/` | 0 | ✅ Được |
 | SwagLanguagePack | `vendor/` | 1 | ❌ Phải dùng `composer remove` |
 
+## Thương hiệu demo
+
+Từ Phase MB2, 12 mẫu chia cho 3 brand (khai báo ở `DemoProductCatalog::brands()`):
+
+| Mã | Brand | Ghi chú |
+|---|---|---|
+| `ANV` | Anivele | Brand thật của dự án |
+| `MAY` | Mây Atelier | **Giả định** — chỉ để thử bộ lọc, trang brand, đơn nhiều brand |
+| `LLN` | Linh Lan | **Giả định** |
+
+Brand là **nhà sản xuất** của core (id `acme-demo-manufacturer-<mã>`). Có cài `AcmeBrand` thì importer ghi kèm mã brand, bật trang thương hiệu và meta title; không cài thì chỉ tạo nhà sản xuất — plugin này **không bắt buộc** phụ thuộc `AcmeBrand`.
+
+### Khoá id ≠ mã SKU
+
+```
+key     ANV-1005   ← sinh id sản phẩm, ảnh sản phẩm, visibility — KHÔNG BAO GIỜ ĐỔI
+number  MAY-1005   ← mã SKU hiển thị, mang tiền tố brand
+```
+
+Tách hai thứ này để đổi brand của một mẫu (đổi tiền tố SKU) mà chạy lại seed vẫn **cập nhật** sản phẩm cũ thay vì tạo sản phẩm thứ hai. Biến thể do `acme:catalog:variants` sinh ra (`ANV-1005-01`) được importer đổi theo mã cha (`MAY-1005-01`), giữ nguyên hậu tố.
+
+Unit test bảo vệ các bất biến này: `vendor/bin/phpunit -c custom/plugins/AcmeDemoData`.
+
 ## Cách dùng
 
 > ⚠️ **Cài và kích hoạt plugin KHÔNG tự nhập sản phẩm.** Phải bấm nút (hoặc chạy lệnh) — đây là chủ ý, khác `SwagPlatformDemoData` (plugin đó nhập ngay khi activate).
@@ -209,11 +232,17 @@ php bin/console cache:clear
 
 Không cần `composer remove` vì plugin không được composer quản lý.
 
-> ⚠️ Plugin này **không tự xoá sản phẩm** khi gỡ (khác `SwagPlatformDemoData`). Đã kiểm chứng: sau `plugin:uninstall`, 12 sản phẩm vẫn còn nguyên. Muốn dọn sạch phải xoá thủ công sản phẩm mã `ANV-*`:
+> ⚠️ Plugin này **không tự xoá sản phẩm** khi gỡ (khác `SwagPlatformDemoData`). Đã kiểm chứng: sau `plugin:uninstall`, 12 sản phẩm vẫn còn nguyên. Muốn dọn sạch phải xoá thủ công sản phẩm của **cả ba** tiền tố demo, rồi hai brand giả định:
 >
 > ```sql
-> DELETE FROM product WHERE product_number LIKE 'ANV-%';
+> DELETE FROM product WHERE product_number REGEXP '^(ANV|MAY|LLN)-';
+> -- Brand giả định — phần mở rộng acme_brand tự xoá theo (CASCADE)
+> DELETE pm FROM product_manufacturer pm
+>   JOIN product_manufacturer_translation t ON t.product_manufacturer_id = pm.id
+>  WHERE t.name IN ('Mây Atelier', 'Linh Lan');
 > ```
+>
+> Anivele là brand thật — giữ lại, chỉ thay logo/banner/mô tả thật.
 >
 > Đây là chủ ý: dữ liệu demo vẫn dùng được để test theme kể cả khi đã gỡ plugin sinh ra nó.
 

@@ -7,6 +7,7 @@ use Shopware\Core\Content\Media\File\MediaFile;
 use Shopware\Core\Content\Media\MediaEntity;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\DefinitionInstanceRegistry;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
@@ -46,7 +47,9 @@ class DemoDataImporter
         private readonly EntityRepository $taxRepository,
         private readonly EntityRepository $salesChannelRepository,
         private readonly EntityRepository $languageRepository,
-        private readonly FileSaver $fileSaver
+        private readonly FileSaver $fileSaver,
+        private readonly EntityRepository $manufacturerRepository,
+        private readonly DefinitionInstanceRegistry $definitionRegistry
     ) {
     }
 
@@ -61,7 +64,7 @@ class DemoDataImporter
         $definitions = DemoProductCatalog::definitions();
 
         $productIds = array_map(
-            fn (array $definition): string => $this->productId($definition['number']),
+            fn (array $definition): string => $this->productId($definition['key']),
             $definitions
         );
 
@@ -121,6 +124,7 @@ class DemoDataImporter
 
             $this->ensureCategories($context, $rootId);
             $this->ensureProperties($context);
+            $this->ensureBrands($context);
         }
 
         // Đợt cuối: tạo sản phẩm khi ảnh đã nạp xong
@@ -275,13 +279,14 @@ class DemoDataImporter
                 continue;
             }
 
+            $key = $definition['key'];
             $number = $definition['number'];
-            $productId = $this->productId($number);
+            $productId = $this->productId($key);
 
             $mediaPayload = [];
             $coverId = null;
             foreach ($images as $position => $file) {
-                $productMediaId = Uuid::fromStringToHex('acme-demo-product-media-' . $number . '-' . $file);
+                $productMediaId = Uuid::fromStringToHex('acme-demo-product-media-' . $key . '-' . $file);
                 $coverId ??= $productMediaId;
 
                 $mediaPayload[] = [
@@ -306,6 +311,7 @@ class DemoDataImporter
             $row = [
                 'id' => $productId,
                 'productNumber' => $number,
+                'manufacturerId' => $this->manufacturerId($definition['brand']),
                 'stock' => $definition['stock'],
                 'taxId' => $taxId,
                 'price' => [[
@@ -334,7 +340,7 @@ class DemoDataImporter
             if ($salesChannelId !== null) {
                 $row['visibilities'] = [[
                     // Id cố định: cặp (sản phẩm, kênh bán) là duy nhất, id ngẫu nhiên sẽ vỡ ở lần chạy thứ hai
-                    'id' => Uuid::fromStringToHex('acme-demo-visibility-' . $number . '-' . $salesChannelId),
+                    'id' => Uuid::fromStringToHex('acme-demo-visibility-' . $key . '-' . $salesChannelId),
                     'salesChannelId' => $salesChannelId,
                     'visibility' => 30,
                 ]];
@@ -351,7 +357,80 @@ class DemoDataImporter
             $this->productRepository->upsert($part, $context);
         }
 
+        $this->renumberVariants($context, array_column($payload, 'productNumber', 'id'));
+
         return count($payload);
+    }
+
+    /**
+     * Biến thể do `acme:catalog:variants` sinh ra mang mã của cha tại thời điểm sinh
+     * (`ANV-1005-01`). Khi cha đổi sang mã brand (`MAY-1005`) thì đổi theo, giữ nguyên
+     * hậu tố thứ tự — để mã biến thể luôn mang đúng tiền tố brand của sản phẩm.
+     *
+     * @param array<string, string> $parentNumbers id sản phẩm cha => mã SKU mới
+     */
+    private function renumberVariants(Context $context, array $parentNumbers): void
+    {
+        if ($parentNumbers === []) {
+            return;
+        }
+
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsAnyFilter('parentId', array_keys($parentNumbers)));
+
+        $updates = [];
+        foreach ($this->productRepository->search($criteria, $context) as $variant) {
+            $parentNumber = $parentNumbers[$variant->getParentId()] ?? null;
+            $current = $variant->getProductNumber();
+            if ($parentNumber === null || str_starts_with($current, $parentNumber . '-')) {
+                continue;
+            }
+
+            $suffix = substr($current, (int) strrpos($current, '-') + 1);
+            $updates[] = ['id' => $variant->getId(), 'productNumber' => $parentNumber . '-' . $suffix];
+        }
+
+        if ($updates !== []) {
+            $this->productRepository->update($updates, $context);
+        }
+    }
+
+    /**
+     * Thương hiệu demo = nhà sản xuất của core. Có cài `AcmeBrand` thì ghi kèm mã brand
+     * và bật trang thương hiệu; không có thì chỉ tạo nhà sản xuất — plugin này không bắt
+     * buộc phụ thuộc `AcmeBrand`.
+     */
+    private function ensureBrands(Context $context): void
+    {
+        $withBrandData = $this->definitionRegistry->has('acme_brand');
+
+        $payload = [];
+        foreach (DemoProductCatalog::brands() as $code => $brand) {
+            $row = [
+                'id' => $this->manufacturerId($code),
+                'translations' => $this->translate($context, [
+                    'name' => $brand['name'],
+                    'description' => $brand['description'],
+                ]),
+            ];
+
+            if ($withBrandData) {
+                $row['acmeBrand'] = [
+                    'id' => Uuid::fromStringToHex('acme-demo-brand-' . $code),
+                    'code' => $code,
+                    'active' => true,
+                    'featured' => $brand['featured'],
+                    'position' => $brand['position'],
+                    'translations' => $this->translate($context, [
+                        'metaTitle' => $brand['name'] . ' — thời trang nữ',
+                    ]),
+                ];
+            }
+
+            $payload[] = $row;
+        }
+
+        $this->manufacturerRepository->upsert($payload, $context);
     }
 
     private function ensureCategories(Context $context, string $rootId): void
@@ -584,9 +663,15 @@ class DemoDataImporter
         return Uuid::fromStringToHex('acme-demo-media-' . $file);
     }
 
-    private function productId(string $number): string
+    /** Suy ra từ khoá cố định (ANV-1001…), KHÔNG từ mã SKU — xem DemoProductCatalog */
+    private function productId(string $key): string
     {
-        return Uuid::fromStringToHex('acme-demo-product-' . $number);
+        return Uuid::fromStringToHex('acme-demo-product-' . $key);
+    }
+
+    private function manufacturerId(string $brandCode): string
+    {
+        return Uuid::fromStringToHex('acme-demo-manufacturer-' . $brandCode);
     }
 
     private function categoryId(string $name): string

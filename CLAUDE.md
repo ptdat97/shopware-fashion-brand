@@ -54,7 +54,7 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 - **Phase 1** (thanh toán & vận chuyển) ✅ giai đoạn 1 — plugin `AcmePayment`: COD, chuyển khoản, VietQR + phí ship theo khu vực
 - **Phase 3** (theme thương hiệu) ✅ giai đoạn 1 — plugin `AcmeTheme`: bảng màu nâu/be/kem, swatch tròn, mobile-first
 
-> ⚠️ **VietQR chưa có số tài khoản thật.** Nhập tại Administration → Extensions → Acme Payment trước khi mở bán. Đối soát vẫn thủ công — đơn không tự chuyển "đã thanh toán".
+> 🧭 **COD là phương thức thanh toán ưu tiên** (14/10/2026). VietQR tạm gác — chưa có số tài khoản thật, không chặn go-live; chỉ cấu hình khi bật lại.
 >
 > ⚠️ **Chưa có file logo thật.** Đang dùng chữ ANIVELE; tải logo tại Administration → Themes → Giao diện Acme → Media.
 >
@@ -66,4 +66,6 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 - **MB1** ✅ — plugin `AcmeBrand`: bảng mở rộng `product_manufacturer`, mã brand, thẻ "Thương hiệu" trong Administration, ACL. Test: `vendor/bin/phpunit -c custom/plugins/AcmeBrand` (DB riêng `shopware_test`)
 
-Tiếp theo: **MB2 — gán brand cho sản phẩm** (brand demo Anivele + 2 brand giả, bộ lọc brand ở listing, SKU mã brand), rồi **MB3** bắt đầu bằng spike listing ngoài category. Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+- **MB2** ✅ — 3 brand demo (`ANV` Anivele, `MAY`/`LLN` giả định), SKU mang mã brand, bộ lọc "Thương hiệu" ở listing (native, chỉ đổi nhãn). Id demo suy ra từ khoá `ANV-10xx` cố định, **không** từ SKU — xem [docs/runbook/05-demo-data.md](docs/runbook/05-demo-data.md)
+
+Tiếp theo: **MB3 — storefront thương hiệu**, bắt đầu bằng spike listing có phân trang/sắp xếp/bộ lọc trên trang không phải category. Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).

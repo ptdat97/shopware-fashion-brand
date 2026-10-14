@@ -23,7 +23,7 @@ Các mục đánh dấu 🔴 là **chặn go-live** — không được bỏ qua
 
 ## Dữ liệu
 
-- [ ] 🔴 **Xóa sạch demo data** — 12 sản phẩm `ANV-*`, xem [runbook/03-xoa-demo-data.md](runbook/03-xoa-demo-data.md)
+- [ ] 🔴 **Xóa sạch demo data** — 12 sản phẩm `ANV-*`/`MAY-*`/`LLN-*` và 2 brand giả định Mây Atelier, Linh Lan — xem [runbook/05-demo-data.md](runbook/05-demo-data.md), [runbook/03-xoa-demo-data.md](runbook/03-xoa-demo-data.md)
 - [ ] 🔴 Gỡ plugin `AcmeDemoData` (xoá được trực tiếp từ Administration)
 - [ ] Xóa khách hàng demo
 - [ ] Catalog thật đã nhập đầy đủ, có ảnh
@@ -54,7 +54,8 @@ Phần lớn đã xong ở Phase 0 qua plugin `AcmeVietnam` — chạy `plugin:i
 - [x] ✅ Phương thức thanh toán hoạt động: COD, chuyển khoản trước, VietQR
 - [x] ✅ Phí vận chuyển theo khu vực (25k nội thành / 35k tỉnh / miễn phí từ 500k)
 - [x] ✅ Đã test đặt hàng thật từ đầu đến cuối qua Store API
-- [ ] 🔴 **Nhập số tài khoản ngân hàng thật cho VietQR** — Administration → Extensions → Acme Payment. Chưa nhập thì khách không chuyển khoản được
+- [ ] **COD là phương thức ưu tiên** (14/10/2026) — kiểm thử đặt đơn COD từ đầu đến cuối
+- [ ] Nhập số tài khoản ngân hàng thật cho VietQR — *chỉ khi bật lại VietQR*, hiện tạm gác. Administration → Extensions → Acme Payment
 - [ ] 🔴 **Quét thử mã QR bằng app ngân hàng thật** trên đơn hàng thật, xác nhận đúng số tiền và nội dung
 - [ ] 🔴 Chốt quy trình đối soát: ai kiểm tra sao kê, bao lâu một lần, đổi trạng thái đơn thế nào
 - [ ] Cân nhắc ngưỡng miễn phí ship 500.000 ₫ có phù hợp biên lợi nhuận không

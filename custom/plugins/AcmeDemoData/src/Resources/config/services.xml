@@ -14,6 +14,8 @@
             <argument type="service" id="sales_channel.repository"/>
             <argument type="service" id="language.repository"/>
             <argument type="service" id="Shopware\Core\Content\Media\File\FileSaver"/>
+            <argument type="service" id="product_manufacturer.repository"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\DefinitionInstanceRegistry"/>
         </service>
 
         <service id="Acme\DemoData\Command\SeedDemoCommand">

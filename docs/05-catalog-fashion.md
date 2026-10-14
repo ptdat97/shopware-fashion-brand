@@ -147,7 +147,7 @@ Tránh lồng quá 3 cấp — khách sẽ lạc.
 
 ## Xóa demo data
 
-Trước khi nhập hàng thật phải xoá sạch 12 sản phẩm demo `ANV-*` do plugin `AcmeDemoData` sinh ra.
+Trước khi nhập hàng thật phải xoá sạch 12 sản phẩm demo (`ANV-*`, `MAY-*`, `LLN-*`) và hai brand giả định do plugin `AcmeDemoData` sinh ra — xem [runbook/05-demo-data.md](runbook/05-demo-data.md).
 
 > `SwagPlatformDemoData` đã được gỡ từ Phase 0, không còn liên quan.
 

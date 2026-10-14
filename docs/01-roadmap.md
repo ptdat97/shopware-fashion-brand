@@ -55,6 +55,8 @@ Dữ liệu demo: [runbook/05-demo-data.md](runbook/05-demo-data.md)
 
 **Kiểm chứng bằng đơn hàng thật:** đặt đơn qua Store API với VietQR → trạng thái giao dịch `open` (chờ đối soát), tồn kho biến thể trừ đúng, mã QR trên trang cảm ơn **giải mã ra đúng payload** (ngân hàng, số tài khoản, số tiền, nội dung `ANV10001`).
 
+> 🧭 **14/10/2026: COD là phương thức ưu tiên, VietQR tạm gác.** Plugin VietQR vẫn giữ nguyên nhưng không còn là hạng mục chặn go-live; hai cảnh báo dưới chỉ áp dụng khi bật lại VietQR.
+>
 > ⚠️ **Cần nhập thông tin tài khoản ngân hàng thật** tại Administration → Extensions → Acme Payment (VietQR) trước khi mở bán. Chưa nhập thì trang cảm ơn hiện cảnh báo thay vì mã QR sai.
 >
 > ⚠️ **Đối soát vẫn thủ công.** Đơn VietQR không tự chuyển sang "đã thanh toán" — nhân viên phải kiểm tra sao kê rồi đổi trạng thái. Tự động cần webhook ngân hàng, chưa làm.
@@ -191,16 +193,24 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 >
 > Meta title/description dịch theo **ngôn ngữ nội dung** (ô chọn "English" ở đầu trang) — muốn nhập bản tiếng Việt phải đổi ô đó sang Tiếng Việt, giống mọi trường dịch được của core.
 
-### MB2 — Gán brand cho sản phẩm
+### MB2 — Gán brand cho sản phẩm ✅ (14/10/2026)
 
 | Việc | Trạng thái |
 |---|---|
-| Gán manufacturer cho sản phẩm — **native**, form sản phẩm + Import/Export | ⏳ Chỉ dữ liệu |
-| `AcmeDemoData` sinh Anivele + 2 brand demo giả định và chia 12 mẫu | ⏳ |
-| Bật bộ lọc brand (`manufacturer-filter`) ở listing danh mục | ⏳ Cấu hình CMS |
-| SKU mã brand 3 ký tự (`NKE-1001-01`), `ANV-*` = Anivele giữ nguyên | ⏳ Đã chốt quy tắc; cột `acme_brand.code` sẵn sàng (MB1) |
+| Gán manufacturer cho sản phẩm — **native**, form sản phẩm + Import/Export | ✅ Không cần code |
+| `AcmeDemoData` sinh 3 brand: Anivele (`ANV`) + Mây Atelier (`MAY`), Linh Lan (`LLN`) giả định — 4 mẫu mỗi brand | ✅ Có `AcmeBrand` thì ghi kèm mã brand + bật trang brand; không có vẫn chạy |
+| Bộ lọc brand ở listing danh mục | ✅ **Đã bật sẵn** — layout listing không cấu hình `filters` thì core bật mọi bộ lọc (`ProductListingCmsElementResolver::restrictFilters`). Chỉ cần sản phẩm có brand |
+| Nhãn bộ lọc "Nhà sản xuất" → **"Thương hiệu"** | ✅ Snippet `listing.filterManufacturerDisplayName` trong `AcmeBrand` |
+| SKU mã brand 3 ký tự áp dụng cho dữ liệu demo | ✅ `MAY-1005`, biến thể `MAY-1005-01`… |
 
-**Nghiệm thu:** lọc theo brand ở danh mục trả đúng sản phẩm; biến thể kế thừa brand của sản phẩm cha.
+**Nghiệm thu đã chạy:**
+
+- Seed trên dữ liệu cũ (`ANV-*` toàn bộ) → vẫn **76 sản phẩm (12 + 64 biến thể), 47 ảnh, 12 visibility** — đổi mã sản phẩm có sẵn, không tạo bản trùng. Chạy lại lần hai không đổi gì. Đổi brand giữa hai brand không phải Anivele (`MAY-1008` → `LLN-1008`) cũng đúng; 0 biến thể sai tiền tố.
+- Storefront: `?manufacturer=<id>` trả đúng số mẫu từng brand — Đầm: Anivele 3, Linh Lan 3, Mây Atelier 1; Áo: Linh Lan 1, Mây Atelier 1. Chụp ảnh desktop + mobile, bộ lọc "Thương hiệu" chỉ liệt kê brand có hàng trong danh mục.
+- Store API: lọc `manufacturerId` của Mây Atelier → 32 sản phẩm = 4 cha + 28 biến thể — **biến thể kế thừa brand** của cha. `extensions.acmeBrand` có trong aggregation listing (dùng được cho MB3).
+- Unit test `DemoProductCatalog` (6 test): tiền tố SKU = mã brand, mã brand đúng định dạng, SKU không trùng, khoá id giữ dãy `ANV-1001…`, danh mục có ≥2 mẫu thì có ≥2 brand. Test cuối bắt được lỗi phân bổ ban đầu (Áo chỉ có 1 brand).
+
+> **Id demo suy ra từ khoá cố định, không từ SKU** (`key` = `ANV-1005`, `number` = `MAY-1005`). Không được đổi khoá — xem [runbook/05-demo-data.md](runbook/05-demo-data.md).
 
 ### MB3 — Storefront thương hiệu
 
@@ -227,7 +237,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 | Việc | Trạng thái |
 |---|---|
-| Một đơn chứa sản phẩm của ≥2 brand: thanh toán COD/VietQR, trừ tồn kho đúng | ⏳ |
+| Một đơn chứa sản phẩm của ≥2 brand: thanh toán **COD**, trừ tồn kho đúng | ⏳ |
 | Khuyến mãi theo brand bằng `LineItemOfManufacturerRule` | ⏳ |
 | Brand có trong payload `order_line_item` để báo cáo | ⏳ |
 
