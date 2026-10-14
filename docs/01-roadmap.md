@@ -185,7 +185,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 | Mã brand 3 ký tự (`code`) — duy nhất, đúng định dạng `[A-Z0-9]{3}` | ✅ Kiểm ở tầng ghi DAL, trùng mã trả 400 `ACME_BRAND__DUPLICATE_CODE` |
 | Administration: thẻ "Thương hiệu" trong trang nhà sản xuất (hiển thị, nổi bật, mã, thứ tự, banner, layout, SEO meta) | ✅ JS viết tay, có snippet vi-VN / en-GB |
 | ACL theo quyền `product_manufacturer` | ✅ Mapping JS cho role mới + `Migration1791823565AddBrandPrivileges` cho role đã có |
-| Đổi nhãn menu "Các nhà sản xuất" → "Thương hiệu" | ⏳ Chưa làm — chỉ là snippet, làm cùng MB3 |
+| Đổi nhãn menu "Các nhà sản xuất" → "Thương hiệu" | ✅ 14/10/2026 — xem MB3 |
 
 **Nghiệm thu đã chạy:**
 
@@ -227,8 +227,8 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 | Sitemap cho brand | ✅ |
 | Brand ngừng hoạt động → 404, rời `/brands` và sitemap; **sản phẩm vẫn bán** | ✅ |
 | Logo/tên brand ở trang sản phẩm dẫn về trang brand | ✅ Ghi đè link của phần tử CMS `manufacturer-logo` (core dẫn ra website ngoài) |
-| Đổi nhãn menu Admin "Các nhà sản xuất" → "Thương hiệu" | ⏳ Chưa làm — cần user Admin để kiểm bằng ảnh |
-| Menu chính tô "Trang chủ" khi đang ở trang brand | ⏳ Lỗi nhỏ — trang brand dùng category gốc làm ngữ cảnh điều hướng |
+| Đổi nhãn Admin "Các nhà sản xuất" → "Thương hiệu" | ✅ 14/10/2026 — file snippet Admin native (`Resources/app/administration/src/snippet/*.json`): menu, danh sách, nút, thẻ chi tiết, ô tìm kiếm, điều kiện Rule Builder "Sản phẩm thuộc thương hiệu". Chụp ảnh Admin kiểm chứng |
+| Menu chính tô "Trang chủ" khi đang ở trang brand | ✅ 14/10/2026 — template meta của trang brand gọi `parent()` rồi xoá trạng thái active; chụp ảnh kiểm chứng |
 
 **Nghiệm thu đã chạy:**
 
@@ -250,7 +250,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 | Bộ sưu tập = category + product stream của core | ✅ Không code — demo có "Hàng mới về" (tạo trong 30 ngày, `since P30D`) và "Thu Đông 2026" (theo tag) |
 | SEO URL `/collections/{tên}` | ✅ Kinh doanh chốt dạng `/collections/…` (14/10/2026). `AcmeCatalog` thêm ô **"Là bộ sưu tập"** trên danh mục + template SEO navigation có điều kiện; danh mục thường giữ `Dam/`, `Ao/` |
 | Bộ sưu tập theo brand | ✅ Native: bộ lọc "Thương hiệu" trong trang bộ sưu tập (`/collections/thu-dong-2026?manufacturer=…`). Muốn khối riêng trên trang brand: thêm CMS *product slider* nguồn product stream "brand + tag" vào layout landing page của brand — chưa dựng mẫu |
-| Bộ sưu tập "Sale" | ⏳ Cần giá niêm yết (`listPrice`) — dữ liệu demo chưa có |
+| Bộ sưu tập "Sale" | ✅ 14/10/2026 — product stream native "Giá rẻ nhất → Phần trăm > 0"; demo gán giá niêm yết cho 3 mẫu (3 brand). `/collections/sale` → 3 mẫu, huy hiệu % và giá gạch native |
 
 **Nghiệm thu đã chạy:**
 

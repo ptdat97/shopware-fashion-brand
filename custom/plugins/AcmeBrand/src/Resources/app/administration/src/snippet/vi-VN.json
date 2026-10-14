@@ -1,0 +1,69 @@
+{
+    "acme-brand": {
+        "card": {
+            "title": "Thương hiệu",
+            "subtitle": "Trang thương hiệu trên storefront: /brands/…"
+        },
+        "field": {
+            "active": "Hiển thị trang thương hiệu",
+            "featured": "Thương hiệu nổi bật",
+            "code": "Mã thương hiệu",
+            "position": "Thứ tự hiển thị",
+            "banner": "Banner",
+            "cmsPage": "Layout trang thương hiệu"
+        },
+        "placeholder": {
+            "code": "VD: NKE"
+        },
+        "help": {
+            "active": "Tắt chỉ ẩn trang thương hiệu. Sản phẩm của thương hiệu vẫn hiển thị và vẫn bán.",
+            "code": "3 ký tự in hoa, dùng làm tiền tố mã SKU (NKE-1001-01). Duy nhất toàn hệ thống.",
+            "position": "Số nhỏ đứng trước trong danh sách /brands.",
+            "cmsPage": "Layout kiểu Landing page, hiện phía trên danh sách sản phẩm. Bỏ trống nếu không cần."
+        },
+        "error": {
+            "code": "Mã thương hiệu phải gồm đúng 3 chữ in hoa hoặc chữ số."
+        }
+    },
+    "entityCategories": {
+        "product": {
+            "entities": {
+                "product_manufacturer": "Thương hiệu"
+            }
+        }
+    },
+    "global": {
+        "entities": {
+            "product_manufacturer": "Thương hiệu | Các thương hiệu"
+        },
+        "sw-condition": {
+            "condition": {
+                "lineItemOfManufacturerRule": "Sản phẩm thuộc thương hiệu"
+            }
+        }
+    },
+    "sw-manufacturer": {
+        "general": {
+            "mainMenuItemGeneral": "Thương hiệu",
+            "mainMenuItemList": "Thương hiệu",
+            "placeholderSearchBar": "Tìm thương hiệu..."
+        },
+        "list": {
+            "buttonAddManufacturer": "Thêm thương hiệu",
+            "columnName": "Thương hiệu",
+            "textManufacturerOverview": "Thương hiệu",
+            "textTotalManufacturer": "Không có thương hiệu | Một thương hiệu | {count} thương hiệu"
+        },
+        "detail": {
+            "cardTitleManufacturerInfo": "Thông tin thương hiệu",
+            "textHeadline": "Thương hiệu mới"
+        }
+    },
+    "sw-settings-custom-field": {
+        "customField": {
+            "entity": {
+                "manufacturer": "Thương hiệu"
+            }
+        }
+    }
+}

@@ -96,4 +96,19 @@ class DemoProductCatalogTest extends TestCase
             }
         }
     }
+
+    public function testSaleProductsAreCheaperThanListPriceAndSpanBrands(): void
+    {
+        $brands = [];
+        foreach (DemoProductCatalog::definitions() as $definition) {
+            if (!isset($definition['listPrice'])) {
+                continue;
+            }
+
+            static::assertGreaterThan($definition['price'], $definition['listPrice'], $definition['name'] . ': giá niêm yết phải cao hơn giá bán');
+            $brands[$definition['brand']] = true;
+        }
+
+        static::assertGreaterThanOrEqual(2, \count($brands), 'Bộ sưu tập Sale cần ≥2 brand');
+    }
 }

@@ -313,6 +313,7 @@ class DemoDataImporter
             }
 
             $gross = $definition['price'];
+            $listGross = $definition['listPrice'] ?? null;
 
             $row = [
                 'id' => $productId,
@@ -329,6 +330,13 @@ class DemoDataImporter
                     'gross' => $gross,
                     'net' => round($gross / (1 + self::VAT_RATE / 100)),
                     'linked' => true,
+                    // Giá niêm yết native → storefront tự gạch giá cũ, stream "Sale" lọc theo % giảm
+                    'listPrice' => $listGross === null ? null : [
+                        'currencyId' => Defaults::CURRENCY,
+                        'gross' => $listGross,
+                        'net' => round($listGross / (1 + self::VAT_RATE / 100)),
+                        'linked' => true,
+                    ],
                 ]],
                 'active' => true,
                 'media' => $mediaPayload,

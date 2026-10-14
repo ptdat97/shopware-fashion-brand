@@ -63,6 +63,7 @@ Hai danh mục con dưới "Bộ sưu tập", bật cờ `acme_collection` → U
 |---|---|---|
 | Hàng mới về | `createdAt` trong 30 ngày (`since P30D`) | Cả 12 mẫu khi dữ liệu còn mới; tự rút dần theo thời gian |
 | Thu Đông 2026 | tag `Thu Đông 2026` | 5 mẫu, đủ 3 brand |
+| Sale | giảm so với giá niêm yết (`cheapestPrice.percentage > 0`) | 3 mẫu có `listPrice`, đủ 3 brand |
 
 ### Khoá id ≠ mã SKU
 
@@ -187,6 +188,8 @@ Hai file phải khớp nhau:
 
 Khoá trong `entryPoints` phải đúng **technical name** của bundle — `AcmeDemoData` → `acme_demo_data` → `acme-demo-data` (xem `ViteFileAccessorDecorator::getTechnicalBundleName`). Sai khoá thì không có lỗi nào hiện ra, nút chỉ đơn giản là không xuất hiện.
 
+> **Nhãn (snippet) của Administration không đặt trong JS** mà trong `src/Resources/app/administration/src/snippet/<locale>.json` — Administration đọc file này phía server, không cần build. Mẫu: `AcmeBrand`.
+>
 > 🔴 **Không tạo `src/Resources/app/administration/src/main.js`.** Có file đó thì lần chạy `bin/build-administration.sh` đầu tiên sẽ ghi đè cả thư mục `public/administration/`, xoá mất file viết tay.
 
 Sau mỗi lần sửa JS:

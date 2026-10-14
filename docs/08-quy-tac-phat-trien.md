@@ -268,6 +268,7 @@ Những gì **giữ lại có lý do**: bảng `acme_brand` (mã `UNIQUE`, khoá
 | `AcmePayment` | `VietQrPaymentHandler` — `pay()` trả null, giao dịch giữ "open" | Giống hệt `DefaultPayment`/`PrePayment` của core | VietQR dùng handler **`PrePayment`** ("Chuyển khoản trước"); bỏ class. Phần riêng của VietQR chỉ còn mã QR trên trang cảm ơn | Đặt đơn VietQR thật qua Store API → giao dịch `open`; huỷ + xoá đơn thử |
 | `AcmeTheme` | `SizeChartSubscriber` truy vấn lại danh mục của sản phẩm + struct `SizeChartData` | Trang chi tiết đã nạp **danh mục chính** `page.product.seoCategory` (đủ custom field; chọn được trong Admin) | Template đọc thẳng `seoCategory`; bỏ subscriber, struct, một truy vấn DB mỗi trang | HTML bảng size của 12 trang sản phẩm **giống hệt** trước khi sửa; chụp ảnh popup |
 | `AcmeDemoData` | Hàm `slugify()` tự viết | Thư viện `Cocur\Slugify` mà core dùng | Dùng Cocur, cấu hình chữ thường | So 67/67 tên file khớp tuyệt đối; seed lại không sinh thêm media nào |
+| `AcmeBrand` | Nhãn Admin khai báo bằng `Locale.extend` trong JS | Administration nạp file snippet `Resources/app/administration/src/snippet/<locale>.json` của plugin **phía server** (`SnippetFinder`), không cần build | Chuyển hết nhãn sang file JSON; nhờ vậy đổi được cả nhãn core "Các nhà sản xuất" → "Thương hiệu" (`Locale.extend` bị gói ngôn ngữ đè) | API `/api/_admin/snippets` trả nhãn mới; chụp ảnh Admin |
 
 Giữ nguyên sau khi kiểm:
 

@@ -1,0 +1,69 @@
+{
+    "acme-brand": {
+        "card": {
+            "title": "Brand",
+            "subtitle": "Brand page on the storefront: /brands/…"
+        },
+        "field": {
+            "active": "Show brand page",
+            "featured": "Featured brand",
+            "code": "Brand code",
+            "position": "Position",
+            "banner": "Banner",
+            "cmsPage": "Brand page layout"
+        },
+        "placeholder": {
+            "code": "e.g. NKE"
+        },
+        "help": {
+            "active": "Disabling only hides the brand page. Products of the brand stay visible and purchasable.",
+            "code": "3 uppercase characters, used as SKU prefix (NKE-1001-01). Unique across the shop.",
+            "position": "Lower numbers come first on /brands.",
+            "cmsPage": "Landing page layout, shown above the product list. Leave empty if not needed."
+        },
+        "error": {
+            "code": "Brand code must be exactly 3 uppercase letters or digits."
+        }
+    },
+    "entityCategories": {
+        "product": {
+            "entities": {
+                "product_manufacturer": "Brand"
+            }
+        }
+    },
+    "global": {
+        "entities": {
+            "product_manufacturer": "Brand | Brands"
+        },
+        "sw-condition": {
+            "condition": {
+                "lineItemOfManufacturerRule": "Line item of brand"
+            }
+        }
+    },
+    "sw-manufacturer": {
+        "general": {
+            "mainMenuItemGeneral": "Brands",
+            "mainMenuItemList": "Brands",
+            "placeholderSearchBar": "Search brands..."
+        },
+        "list": {
+            "buttonAddManufacturer": "Add brand",
+            "columnName": "Brand",
+            "textManufacturerOverview": "Brands",
+            "textTotalManufacturer": "No brands | One brand | {count} brands"
+        },
+        "detail": {
+            "cardTitleManufacturerInfo": "Brand information",
+            "textHeadline": "New brand"
+        }
+    },
+    "sw-settings-custom-field": {
+        "customField": {
+            "entity": {
+                "manufacturer": "Brand"
+            }
+        }
+    }
+}

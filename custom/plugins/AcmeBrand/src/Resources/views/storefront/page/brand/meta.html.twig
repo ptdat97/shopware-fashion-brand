@@ -1,11 +1,32 @@
 {% sw_extends '@Storefront/storefront/layout/meta.html.twig' %}
 
 {#
+    Meta dùng chung cho /brands và /brands/{slug}.
+#}
+
+{#
     Canonical luôn là URL gốc của brand: các biến thể ?order=…, ?p=2, ?properties=…
     cùng một nội dung, không để công cụ tìm kiếm đánh chỉ mục trùng.
 #}
 {% block layout_head_canonical %}
-    <link rel="canonical" href="{{ seoUrl('frontend.acme.brand.page', { manufacturerId: page.manufacturer.id }) }}">
+    {% if page.manufacturer is defined %}
+        <link rel="canonical" href="{{ seoUrl('frontend.acme.brand.page', { manufacturerId: page.manufacturer.id }) }}">
+    {% else %}
+        <link rel="canonical" href="{{ url('frontend.acme.brand.list') }}">
+    {% endif %}
 {% endblock %}
 
-{% block layout_head_meta_tags_image_meta %}{% if page.brand.bannerMedia %}{{ page.brand.bannerMedia.url }}{% elseif page.manufacturer.media %}{{ page.manufacturer.media.url }}{% else %}{{ parent() }}{% endif %}{% endblock %}
+{% block layout_head_meta_tags_image_meta %}{% if page.brand is defined and page.brand.bannerMedia %}{{ page.brand.bannerMedia.url }}{% elseif page.manufacturer is defined and page.manufacturer.media %}{{ page.manufacturer.media.url }}{% else %}{{ parent() }}{% endif %}{% endblock %}
+
+{#
+    Trang brand không thuộc danh mục nào trong menu. Core lấy mục "đang active" từ
+    `shopware.navigation.id` — mặc định là danh mục gốc, nên menu tô "Trang chủ".
+    Giữ nguyên block của core (parent), chỉ xoá trạng thái active sau đó.
+#}
+{% block layout_head_javascript_router %}
+    {{ parent() }}
+    <script>
+        window.activeNavigationId = '';
+        window.activeNavigationPathIdList = [];
+    </script>
+{% endblock %}

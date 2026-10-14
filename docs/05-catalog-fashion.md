@@ -158,6 +158,7 @@ Tạo bộ sưu tập mới:
 3. Lưu → URL /collections/xuan-he-2027 tự sinh
 ```
 
+- **Sale** không cần tag: Nhóm sản phẩm động với điều kiện *Giá rẻ nhất → Phần trăm* lớn hơn 0 tự gom mọi sản phẩm có giá niêm yết cao hơn giá bán. Nhập giá niêm yết ở tab *Giá* của sản phẩm — storefront tự gạch giá cũ và gắn huy hiệu %.
 - Không bật ô ở bước 2 thì URL theo cây danh mục (`/Bo-suu-tap/Xuan-He-2027/`) — vẫn chạy, chỉ khác dạng URL.
 - Tên bộ sưu tập là slug: đổi tên → URL mới, URL cũ tự chuyển hướng 301.
 - Bộ lọc "Thương hiệu" có sẵn trong trang bộ sưu tập — một bộ sưu tập dùng chung cho mọi brand, không tạo bản riêng theo brand.

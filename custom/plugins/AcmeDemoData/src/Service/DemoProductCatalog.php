@@ -23,6 +23,7 @@ final class DemoProductCatalog
      *     number: string,
      *     brand: string,
      *     tags?: list<string>,
+     *     listPrice?: int,
      *     name: string,
      *     category: string,
      *     price: int,
@@ -105,6 +106,7 @@ final class DemoProductCatalog
                 'name' => 'Đầm trắng sát nách cúc bọc',
                 'category' => 'Đầm',
                 'price' => 1_290_000,
+                'listPrice' => 1_490_000,
                 'stock' => 31,
                 'colors' => ['Trắng'],
                 'material' => 'Tweed',
@@ -118,6 +120,7 @@ final class DemoProductCatalog
                 'tags' => [self::TAG_AUTUMN_WINTER],
                 'category' => 'Đầm',
                 'price' => 1_490_000,
+                'listPrice' => 1_690_000,
                 'stock' => 19,
                 'colors' => ['Đen'],
                 'material' => 'Tuyết mưa',
@@ -166,6 +169,7 @@ final class DemoProductCatalog
                 'name' => 'Chân váy dài xếp ly tông be',
                 'category' => 'Chân váy',
                 'price' => 790_000,
+                'listPrice' => 990_000,
                 'stock' => 58,
                 'colors' => ['Be', 'Kem'],
                 'material' => 'Đũi lụa',
@@ -247,6 +251,11 @@ final class DemoProductCatalog
             ],
             self::TAG_AUTUMN_WINTER => [
                 ['type' => 'equals', 'field' => 'tags.name', 'value' => self::TAG_AUTUMN_WINTER],
+            ],
+            // Giảm giá so với giá niêm yết (listPrice) — điều kiện có sẵn trong Admin:
+            // "Giá rẻ nhất → Phần trăm" lớn hơn 0
+            'Sale' => [
+                ['type' => 'range', 'field' => 'cheapestPrice.percentage', 'parameters' => ['gt' => 0]],
             ],
         ];
     }

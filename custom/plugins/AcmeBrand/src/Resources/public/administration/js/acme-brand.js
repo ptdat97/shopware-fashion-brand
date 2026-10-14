@@ -8,6 +8,11 @@
  *
  * Sau khi sửa file này phải chạy: bin/console assets:install
  *
+ * Nhãn (vi-VN, en-GB) KHÔNG khai báo ở đây: nằm trong
+ * `Resources/app/administration/src/snippet/*.json` — Administration nạp file này phía
+ * server (SnippetFinder), gộp sau gói ngôn ngữ nên đổi được cả nhãn của core
+ * ("Các nhà sản xuất" → "Thương hiệu"). Locale.extend trong JS thì bị gói ngôn ngữ đè.
+ *
  * Dữ liệu brand nằm ở `manufacturer.extensions.acmeBrand` (quan hệ 1–1, autoload).
  * Meta SEO KHÔNG nằm ở đây: đó là custom field dịch được của nhà sản xuất, hiện trong
  * thẻ custom field có sẵn của core ngay bên dưới — không vẽ lại ô nhập.
@@ -16,7 +21,7 @@
  * entity mới không đổi gì.
  */
 
-const { Component, Locale, Data } = Shopware;
+const { Component, Data } = Shopware;
 const { Criteria } = Data;
 
 const BRAND_CODE_PATTERN = /^[A-Z0-9]{3}$/;
@@ -238,64 +243,6 @@ Component.override('sw-manufacturer-detail', {
 
         onBannerSelectionChange([media]) {
             this.brand.bannerMediaId = media.id;
-        },
-    },
-});
-
-Locale.extend('vi-VN', {
-    'acme-brand': {
-        card: {
-            title: 'Thương hiệu',
-            subtitle: 'Trang thương hiệu trên storefront: /brands/…',
-        },
-        field: {
-            active: 'Hiển thị trang thương hiệu',
-            featured: 'Thương hiệu nổi bật',
-            code: 'Mã thương hiệu',
-            position: 'Thứ tự hiển thị',
-            banner: 'Banner',
-            cmsPage: 'Layout trang thương hiệu',
-        },
-        placeholder: {
-            code: 'VD: NKE',
-        },
-        help: {
-            active: 'Tắt chỉ ẩn trang thương hiệu. Sản phẩm của thương hiệu vẫn hiển thị và vẫn bán.',
-            code: '3 ký tự in hoa, dùng làm tiền tố mã SKU (NKE-1001-01). Duy nhất toàn hệ thống.',
-            position: 'Số nhỏ đứng trước trong danh sách /brands.',
-            cmsPage: 'Layout kiểu Landing page, hiện phía trên danh sách sản phẩm. Bỏ trống nếu không cần.',
-        },
-        error: {
-            code: 'Mã thương hiệu phải gồm đúng 3 chữ in hoa hoặc chữ số.',
-        },
-    },
-});
-
-Locale.extend('en-GB', {
-    'acme-brand': {
-        card: {
-            title: 'Brand',
-            subtitle: 'Brand page on the storefront: /brands/…',
-        },
-        field: {
-            active: 'Show brand page',
-            featured: 'Featured brand',
-            code: 'Brand code',
-            position: 'Position',
-            banner: 'Banner',
-            cmsPage: 'Brand page layout',
-        },
-        placeholder: {
-            code: 'e.g. NKE',
-        },
-        help: {
-            active: 'Disabling only hides the brand page. Products of the brand stay visible and purchasable.',
-            code: '3 uppercase characters, used as SKU prefix (NKE-1001-01). Unique across the shop.',
-            position: 'Lower numbers come first on /brands.',
-            cmsPage: 'Landing page layout, shown above the product list. Leave empty if not needed.',
-        },
-        error: {
-            code: 'Brand code must be exactly 3 uppercase letters or digits.',
         },
     },
 });
