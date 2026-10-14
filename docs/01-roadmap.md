@@ -248,6 +248,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 | Việc | Trạng thái |
 |---|---|
 | Bộ sưu tập = category + product stream của core | ✅ Không code — demo có "Hàng mới về" (tạo trong 30 ngày, `since P30D`) và "Thu Đông 2026" (theo tag) |
+| Trang tổng `/collections/` thay cho `/bo-suu-tap/` | ✅ 14/10/2026 — ô *"Là trang tổng bộ sưu tập"* (`acme_collection_root`) + một nhánh trong template SEO (`AcmeCatalog` 1.3.0). `/bo-suu-tap/` → **301** về `/collections/`; menu, breadcrumb, sitemap đều dùng `/collections/`. 3 integration test |
 | SEO URL `/collections/{tên}` | ✅ Kinh doanh chốt dạng `/collections/…` (14/10/2026). `AcmeCatalog` thêm ô **"Là bộ sưu tập"** trên danh mục + template SEO navigation có điều kiện; danh mục thường giữ `Dam/`, `Ao/` |
 | Bộ sưu tập theo brand | ✅ Native: bộ lọc "Thương hiệu" trong trang bộ sưu tập (`/collections/thu-dong-2026?manufacturer=…`). Muốn khối riêng trên trang brand: thêm CMS *product slider* nguồn product stream "brand + tag" vào layout landing page của brand — chưa dựng mẫu |
 | Bộ sưu tập "Sale" | ✅ 14/10/2026 — product stream native "Giá rẻ nhất → Phần trăm > 0"; demo gán giá niêm yết cho 3 mẫu (3 brand). `/collections/sale` → 3 mẫu, huy hiệu % và giá gạch native |

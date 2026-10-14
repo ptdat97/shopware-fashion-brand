@@ -549,6 +549,12 @@ class DemoDataImporter
             ];
         }
 
+        // Danh mục cha là trang tổng bộ sưu tập → URL /collections/ (AcmeCatalog ≥ 1.3.0)
+        $categories[] = [
+            'id' => $parentId,
+            'translations' => $this->translate($context, ['customFields' => ['acme_collection_root' => true]]),
+        ];
+
         $this->productStreamRepository->upsert($streams, $context);
         $this->categoryRepository->upsert($categories, $context);
     }

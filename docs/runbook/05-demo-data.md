@@ -57,7 +57,7 @@ Brand là **nhà sản xuất** của core (id `acme-demo-manufacturer-<mã>`). 
 
 ### Bộ sưu tập demo
 
-Hai danh mục con dưới "Bộ sưu tập", bật cờ `acme_collection` → URL `/collections/…`:
+Danh mục "Bộ sưu tập" bật cờ `acme_collection_root` → URL `/collections/`. Các danh mục con bật cờ `acme_collection` → URL `/collections/…`:
 
 | Bộ sưu tập | Product stream | Kết quả |
 |---|---|---|
