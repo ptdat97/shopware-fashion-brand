@@ -98,7 +98,8 @@ Quyết định và các phương án bị loại: [decisions/ADR-003-mo-hinh-th
 ```
 product_manufacturer (core)            acme_brand (plugin)                 acme_brand_translation (plugin)
 ├─ id  ────────────────────────────┐   ├─ product_manufacturer_id  PK/FK ┐ ├─ acme_brand_id      FK
-├─ name          (dịch)            └──►├─ active          bool          │ ├─ language_id        FK
+├─ name          (dịch)            └──►├─ code            char(3) uniq  │ ├─ language_id        FK
+│                                      ├─ active          bool          │
 ├─ description   (dịch, HTML)          ├─ banner_media_id  FK media       │ ├─ meta_title
 ├─ link                                ├─ cms_page_id      FK cms_page    │ ├─ meta_description
 ├─ media_id      (logo)                ├─ position         int            │ └─ keywords

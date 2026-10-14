@@ -75,5 +75,8 @@
             ],
             "docker": false
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
     }
 }

@@ -23,3 +23,7 @@
 
 # Chứa access key + secret của integration MCP dạng plaintext — xem docs/11-mcp-va-ai-tooling.md
 /.mcp.json
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###

@@ -10,7 +10,7 @@ Khảo sát ngày 26/07/2026. Tất cả số liệu dưới đây lấy trực 
 
 | Thành phần | Phiên bản | Ghi chú |
 |---|---|---|
-| Shopware | 6.7.12.2 | env `prod`, debug off |
+| Shopware | 6.7.15.1 | env `prod`, debug off — nâng từ 6.7.12.2 qua `composer update` |
 | PHP | 8.4.22 | |
 | MySQL | 8.0.33 | ✅ Nằm trong ma trận hỗ trợ |
 | APP_URL | http://shopware.test | chưa có HTTPS thật |
@@ -120,6 +120,7 @@ Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên ti
 | AcmePayment | 1.0.0 | Yes | Plugin tự viết — VietQR + phí vận chuyển |
 | AcmeTheme | 1.0.0 | Yes | Plugin tự viết — giao diện thương hiệu |
 | AcmeDemoData | 1.0.0 | Yes | Plugin tự viết — dữ liệu demo |
+| AcmeBrand | 1.0.0 | Yes | Plugin tự viết — thương hiệu (Phase MB1) |
 | SwagLanguagePack | dev-master | Yes | Plugin bên thứ ba duy nhất còn lại |
 
 Thư viện ngoài: `endroid/qr-code` (sinh ảnh QR) — cài ở cấp dự án vì Shopware không nạp `vendor/` của plugin, xem [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md).

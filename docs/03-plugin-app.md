@@ -37,11 +37,11 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 
 ---
 
-### Dự kiến — Phase MB (đa thương hiệu)
+### Phase MB (đa thương hiệu)
 
 | Plugin | Mục đích | Trạng thái |
 |---|---|---|
-| `AcmeBrand` | Mở rộng `product_manufacturer` (active, banner, layout, SEO meta) + trang `/brands`, `/brands/{slug}`, SEO URL, sitemap | ⏳ Chờ duyệt [ADR-003](decisions/ADR-003-mo-hinh-thuong-hieu.md) |
+| `AcmeBrand` | Mở rộng `product_manufacturer` (mã brand, active, banner, layout, SEO meta) + trang `/brands`, `/brands/{slug}`, SEO URL, sitemap | ✅ Dữ liệu + Administration (MB1) · ⏳ Storefront (MB3) — [ADR-003](decisions/ADR-003-mo-hinh-thuong-hieu.md) |
 
 Không cần plugin bên thứ ba cho đa thương hiệu — brand, bộ lọc brand, rule khuyến mãi theo brand đều có sẵn trong core. Xem [12-da-thuong-hieu.md](12-da-thuong-hieu.md).
 

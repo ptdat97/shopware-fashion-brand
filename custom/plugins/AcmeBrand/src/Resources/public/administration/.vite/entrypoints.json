@@ -1,0 +1,23 @@
+{
+  "base": "/bundles/acmebrand/administration/",
+  "entryPoints": {
+    "acme-brand": {
+      "css": [],
+      "dynamic": [],
+      "js": [
+        "/bundles/acmebrand/administration/js/acme-brand.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}

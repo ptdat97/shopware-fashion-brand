@@ -66,7 +66,9 @@ Cây "Thương hiệu" → mỗi brand một category.
 - **Tên, mô tả, logo** giữ ở manufacturer.
 - **Brand chưa có bản ghi `acme_brand`** được coi là *không hoạt động* — brand chỉ lên storefront khi được bật chủ động.
 - **`active` chỉ điều khiển storefront của brand** (chốt 12/10/2026): brand tắt → `/brands/{slug}` 404, rời `/brands` và sitemap. Sản phẩm của brand **vẫn hiển thị và vẫn bán** — plugin không lọc sản phẩm theo trạng thái brand ở listing, tìm kiếm hay cart. Muốn ngừng bán thì tắt sản phẩm bằng cơ chế native.
-- **Admin:** thêm phần "Thương hiệu" vào trang chi tiết nhà sản xuất có sẵn (override component `sw-manufacturer-detail`), không làm module riêng. Đổi nhãn "Nhà sản xuất" → "Thương hiệu" bằng snippet.
+- **Mã brand** (`code`, chốt 12/10/2026): cột riêng trong `acme_brand`, `UNIQUE`, định dạng `[A-Z0-9]{3}` kiểm ở tầng ghi DAL (`BrandCodeValidator`) — áp dụng cho Administration, Admin API, Sync API, Import/Export. Trùng mã do ràng buộc DB bắt, dịch thành lỗi 400 (`BrandUniqueExceptionHandler`), không SELECT trước khi ghi.
+- **Extension autoload** (MB1): trang chi tiết nhà sản xuất của core tải bằng `repository.get(id)` không kèm criteria; không autoload thì phải override cả hàm tải dữ liệu. Bảng 1–1 nhỏ nên chi phí join chấp nhận được.
+- **Admin:** thêm phần "Thương hiệu" vào trang chi tiết nhà sản xuất có sẵn (override component `sw-manufacturer-detail`), không làm module riêng. Đổi nhãn "Nhà sản xuất" → "Thương hiệu" bằng snippet — ⏳ chưa làm.
 - **ACL:** quyền đọc/ghi `acme_brand` gắn theo quyền `product_manufacturer` hiện có.
 
 ## Cần kiểm chứng trước khi chốt

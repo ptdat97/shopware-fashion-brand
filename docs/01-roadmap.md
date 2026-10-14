@@ -170,16 +170,26 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 > Dựng lại DB mới kiểm bằng số liệu DB và HTTP status — **chưa chụp ảnh storefront**. Chụp lại trước khi bắt đầu MB3 để có ảnh nền so sánh.
 
-### MB1 — Dữ liệu thương hiệu (plugin `AcmeBrand`)
+### MB1 — Dữ liệu thương hiệu (plugin `AcmeBrand`) ✅ (14/10/2026)
 
 | Việc | Trạng thái |
 |---|---|
-| Migration bảng `acme_brand` + `acme_brand_translation` | ⏳ |
-| `EntityExtension` trên `product_manufacturer` | ⏳ |
-| Administration: phần "Thương hiệu" trong trang nhà sản xuất (active, banner, layout, thứ tự, nổi bật, SEO meta) | ⏳ |
-| ACL theo quyền `product_manufacturer` | ⏳ |
+| Migration bảng `acme_brand` + `acme_brand_translation` | ✅ `Migration1791823368CreateBrandTables` |
+| `EntityExtension` trên `product_manufacturer` → `manufacturer.extensions.acmeBrand` | ✅ Autoload, xoá manufacturer kéo theo xoá brand |
+| Mã brand 3 ký tự (`code`) — duy nhất, đúng định dạng `[A-Z0-9]{3}` | ✅ Kiểm ở tầng ghi DAL, trùng mã trả 400 `ACME_BRAND__DUPLICATE_CODE` |
+| Administration: thẻ "Thương hiệu" trong trang nhà sản xuất (hiển thị, nổi bật, mã, thứ tự, banner, layout, SEO meta) | ✅ JS viết tay, có snippet vi-VN / en-GB |
+| ACL theo quyền `product_manufacturer` | ✅ Mapping JS cho role mới + `Migration1791823565AddBrandPrivileges` cho role đã có |
+| Đổi nhãn menu "Các nhà sản xuất" → "Thương hiệu" | ⏳ Chưa làm — chỉ là snippet, làm cùng MB3 |
 
-**Nghiệm thu:** integration test ghi/đọc qua DAL (kể cả xoá manufacturer → xoá phần mở rộng); migration chạy hai lần không lỗi; Jest test cho component admin; tạo brand bằng Admin API thành công.
+**Nghiệm thu đã chạy:**
+
+- `vendor/bin/phpunit -c custom/plugins/AcmeBrand` → **16 test / 41 assertion đạt**, không deprecation: ghi/đọc qua DAL, mặc định *không hoạt động*, xoá manufacturer → xoá brand, xoá banner → brand còn, mã sai định dạng bị chặn, trùng mã → lỗi 400, migration chạy lại vô hại, quyền ACL thêm đúng và không nhân đôi.
+- Administration điều khiển bằng Chrome DevTools Protocol, user tạm (đã xoá): bật công tắc + gõ `mbt` + bấm Lưu → DB `code = MBT`, `active = 1`, meta title lưu theo ngôn ngữ nội dung đang chọn. Chụp ảnh giao diện en-GB và vi-VN. Phát hiện và sửa 2 lỗi hiển thị (ô thứ tự trống, gõ chữ thường khi mã không đổi vẫn hiện chữ thường).
+- Xoá nhà sản xuất qua Admin API → 0 dòng `acme_brand` / `acme_brand_translation` còn lại.
+
+> **Không có Jest** (quyết định 14/10/2026): Administration không có `node_modules`, `npm install` ~1 GB và mất mỗi lần `composer update`. Component admin được kiểm bằng thao tác thật qua CDP + ảnh chụp thay cho Jest.
+>
+> Meta title/description dịch theo **ngôn ngữ nội dung** (ô chọn "English" ở đầu trang) — muốn nhập bản tiếng Việt phải đổi ô đó sang Tiếng Việt, giống mọi trường dịch được của core.
 
 ### MB2 — Gán brand cho sản phẩm
 
@@ -188,7 +198,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 | Gán manufacturer cho sản phẩm — **native**, form sản phẩm + Import/Export | ⏳ Chỉ dữ liệu |
 | `AcmeDemoData` sinh Anivele + 2 brand demo giả định và chia 12 mẫu | ⏳ |
 | Bật bộ lọc brand (`manufacturer-filter`) ở listing danh mục | ⏳ Cấu hình CMS |
-| SKU mã brand 3 ký tự (`NKE-1001-01`), `ANV-*` = Anivele giữ nguyên | ⏳ Đã chốt quy tắc, chưa áp dụng |
+| SKU mã brand 3 ký tự (`NKE-1001-01`), `ANV-*` = Anivele giữ nguyên | ⏳ Đã chốt quy tắc; cột `acme_brand.code` sẵn sàng (MB1) |
 
 **Nghiệm thu:** lọc theo brand ở danh mục trả đúng sản phẩm; biến thể kế thừa brand của sản phẩm cha.
 

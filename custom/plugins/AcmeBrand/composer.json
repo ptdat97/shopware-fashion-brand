@@ -1,0 +1,33 @@
+{
+    "name": "acme/brand",
+    "description": "Thương hiệu cho nền tảng đa thương hiệu: mở rộng nhà sản xuất với trạng thái, mã brand, banner, layout, SEO",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "version": "1.0.0",
+    "require": {
+        "shopware/core": "~6.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Acme\\Brand\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Acme\\Brand\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Acme\\Brand\\AcmeBrand",
+        "label": {
+            "vi-VN": "Thương hiệu",
+            "en-GB": "Acme Brand",
+            "de-DE": "Acme Brand"
+        },
+        "description": {
+            "vi-VN": "Mở rộng nhà sản xuất thành thương hiệu: trạng thái, mã brand, banner, layout landing, SEO.",
+            "en-GB": "Turns manufacturers into brands: status, brand code, banner, landing layout, SEO meta.",
+            "de-DE": "Turns manufacturers into brands: status, brand code, banner, landing layout, SEO meta."
+        }
+    }
+}

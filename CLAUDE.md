@@ -29,7 +29,7 @@ Tài liệu, commit message và comment trong code viết bằng **tiếng Việ
 ```
 APP_URL   http://shopware-fashion-brand.test
 Database  mysql://root@127.0.0.1:3306/shopware
-Shopware  6.7.12.2 · PHP 8.4 · MySQL 8.0.33
+Shopware  6.7.15.1 · PHP 8.4 · MySQL 8.0.33
 ```
 
 Storefront `anivele` chạy `vi-VN`, tiền tệ VND — đây là storefront **duy nhất**, dùng chung cho mọi thương hiệu. Channel `Headless` giữ `en-US` — đúng như mong muốn.
@@ -64,4 +64,6 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 - **Phase MB** (đa thương hiệu) 🔄 — MB0 ✅: ADR-003 đã duyệt, DB local dựng lại, kinh doanh đã chốt — Anivele là *một* brand, brand tắt chỉ ẩn trang brand (sản phẩm vẫn bán), SKU mã brand 3 ký tự (`ANV-1001-01`), dev dùng brand demo giả định. Tên nền tảng chưa chốt
 
-Tiếp theo: **MB1 — plugin `AcmeBrand`** (bảng mở rộng `product_manufacturer`, Administration, ACL). Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+- **MB1** ✅ — plugin `AcmeBrand`: bảng mở rộng `product_manufacturer`, mã brand, thẻ "Thương hiệu" trong Administration, ACL. Test: `vendor/bin/phpunit -c custom/plugins/AcmeBrand` (DB riêng `shopware_test`)
+
+Tiếp theo: **MB2 — gán brand cho sản phẩm** (brand demo Anivele + 2 brand giả, bộ lọc brand ở listing, SKU mã brand), rồi **MB3** bắt đầu bằng spike listing ngoài category. Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).

@@ -176,6 +176,31 @@ php bin/console database:migrate --all TenPlugin
 
 ---
 
+## Viết & chạy test
+
+PHPUnit cài ở cấp dự án làm `require-dev` (thư viện bên thứ ba — hợp lệ theo Quy tắc 2). Mỗi plugin tự có cấu hình test riêng; mẫu đầy đủ: `custom/plugins/AcmeBrand/`.
+
+```bash
+php bin/console make:plugin:tests TenPlugin     # sinh phpunit.xml + tests/TestBootstrap.php
+vendor/bin/phpunit -c custom/plugins/TenPlugin  # chạy từ thư mục gốc dự án
+```
+
+Sau khi sinh khung phải sửa ba chỗ trong `phpunit.xml` — xem bản của `AcmeBrand`:
+
+| Chỗ | Vì sao |
+|---|---|
+| Thêm `<env name="DATABASE_URL" value="mysql://root@127.0.0.1:3306/shopware"/>` | Ở `APP_ENV=test` Symfony **không đọc `.env.local`**, nên rơi về `.env` với `localhost` → lỗi `SQLSTATE[HY000] [2002]`. `TestBootstrapper` tự thêm hậu tố `_test` → DB riêng `shopware_test`, **không đụng DB dev** |
+| Thay `<coverage>` bằng `<source>` | Scaffold sinh theo schema PHPUnit 9.3, dự án dùng PHPUnit 13 |
+| Bỏ `addActivePlugins('TenPlugin')` trong `TestBootstrap.php` | Trùng với `addCallingPlugin()` |
+
+Lần chạy đầu tự `system:install` vào `shopware_test` và cài plugin đang test (chỉ plugin đó — test độc lập với các plugin khác). Integration test dùng `IntegrationTestBehaviour`: mỗi test chạy trong transaction và rollback.
+
+> **Không có Jest cho Administration.** `vendor/shopware/administration` không có `node_modules` (~1 GB, mất mỗi lần `composer update`). Component admin viết tay kiểm bằng thao tác thật qua Chrome DevTools Protocol + ảnh chụp — xem nghiệm thu MB1 trong [../01-roadmap.md](../01-roadmap.md).
+
+> 🔴 **Đừng để Symfony Flex giữ cấu hình test của nó.** `composer require --dev phpunit/phpunit` chạy recipe sinh `phpunit.dist.xml`, `tests/bootstrap.php`, `.env.test`, `bin/phpunit` ở thư mục gốc với `KERNEL_CLASS='App\Kernel'` — sai với Shopware. Đã xoá; chỉ giữ phần thêm vào `.gitignore`.
+
+---
+
 ## Lệnh sinh khung có sẵn
 
 Không cần viết tay từ đầu:
