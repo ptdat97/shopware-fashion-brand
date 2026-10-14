@@ -1,0 +1,44 @@
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{# @var page \Acme\Brand\Storefront\Page\Brand\BrandListPage #}
+{% block base_main_inner %}
+    <div class="container-main">
+        <div class="container acme-brand-list">
+            {% block acme_brand_list_header %}
+                <h1 class="acme-brand-list-title">{{ 'acme-brand.list.title'|trans }}</h1>
+            {% endblock %}
+
+            {% block acme_brand_list_items %}
+                {% if page.manufacturers.count > 0 %}
+                    <ul class="acme-brand-list-grid">
+                        {% for manufacturer in page.manufacturers %}
+                            {% block acme_brand_list_item %}
+                                <li class="acme-brand-list-item">
+                                    <a class="acme-brand-list-link"
+                                       href="{{ seoUrl('frontend.acme.brand.page', { manufacturerId: manufacturer.id }) }}">
+                                        {% if manufacturer.media %}
+                                            <img class="acme-brand-list-logo"
+                                                 src="{{ manufacturer.media.url }}"
+                                                 alt="{{ manufacturer.translated.name }}"
+                                                 loading="lazy">
+                                        {% else %}
+                                            <span class="acme-brand-list-wordmark">{{ manufacturer.translated.name }}</span>
+                                        {% endif %}
+
+                                        {% if manufacturer.translated.description %}
+                                            <span class="acme-brand-list-description">
+                                                {{ manufacturer.translated.description|striptags|u.truncate(90, '…') }}
+                                            </span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endblock %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="acme-brand-list-empty">{{ 'acme-brand.list.empty'|trans }}</p>
+                {% endif %}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

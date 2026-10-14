@@ -169,7 +169,9 @@ Chi tiết từng giai đoạn và tiêu chí nghiệm thu: [01-roadmap.md](01-r
 | **MB5** | Nghiệm thu commerce hợp nhất: đơn nhiều brand, khuyến mãi theo brand | Test |
 | **MB6** | Sẵn sàng mở rộng: ERP/PIM, đa kho | Thiết kế |
 
-> 🔴 **Rủi ro kỹ thuật cần spike trước MB3:** `AbstractProductListingRoute::load()` bắt buộc `$categoryId`. Trang brand không phải category nên phải chứng minh được cách lấy listing có **phân trang + sắp xếp + bộ lọc native** mà vẫn lọc theo manufacturer (qua `ProductListingCriteriaEvent` hay gọi listing với category gốc + filter). Làm PoC nhỏ, ghi kết quả vào ADR-003 trước khi viết route.
+> ✅ **Đã giải quyết ở MB3** — dùng category gốc điều hướng + bộ lọc manufacturer, xem ADR-003 mục *Kết quả spike #1*.
+>
+> ~~Rủi ro kỹ thuật cần spike trước MB3:~~ `AbstractProductListingRoute::load()` bắt buộc `$categoryId`. Trang brand không phải category nên phải chứng minh được cách lấy listing có **phân trang + sắp xếp + bộ lọc native** mà vẫn lọc theo manufacturer (qua `ProductListingCriteriaEvent` hay gọi listing với category gốc + filter). Làm PoC nhỏ, ghi kết quả vào ADR-003 trước khi viết route.
 
 ---
 

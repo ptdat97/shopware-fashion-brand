@@ -192,7 +192,10 @@ Component.override('sw-manufacturer-detail', {
 
         cmsPageCriteria() {
             const criteria = new Criteria(1, 25);
-            criteria.addFilter(Criteria.equalsAny('type', ['product_list', 'landingpage']));
+            // Chỉ layout kiểu landing page: trang brand tự gắn danh sách sản phẩm của brand
+            // phía dưới. Layout kiểu listing có khối product-listing riêng — trên trang brand
+            // khối đó sẽ không biết lọc theo brand nào.
+            criteria.addFilter(Criteria.equals('type', 'landingpage'));
 
             return criteria;
         },
@@ -290,7 +293,7 @@ Locale.extend('vi-VN', {
             active: 'Tắt chỉ ẩn trang thương hiệu. Sản phẩm của thương hiệu vẫn hiển thị và vẫn bán.',
             code: '3 ký tự in hoa, dùng làm tiền tố mã SKU (NKE-1001-01). Duy nhất toàn hệ thống.',
             position: 'Số nhỏ đứng trước trong danh sách /brands.',
-            cmsPage: 'Bỏ trống để dùng layout mặc định.',
+            cmsPage: 'Layout kiểu Landing page, hiện phía trên danh sách sản phẩm. Bỏ trống nếu không cần.',
         },
         error: {
             code: 'Mã thương hiệu phải gồm đúng 3 chữ in hoa hoặc chữ số.',
@@ -322,7 +325,7 @@ Locale.extend('en-GB', {
             active: 'Disabling only hides the brand page. Products of the brand stay visible and purchasable.',
             code: '3 uppercase characters, used as SKU prefix (NKE-1001-01). Unique across the shop.',
             position: 'Lower numbers come first on /brands.',
-            cmsPage: 'Leave empty to use the default layout.',
+            cmsPage: 'Landing page layout, shown above the product list. Leave empty if not needed.',
         },
         error: {
             code: 'Brand code must be exactly 3 uppercase letters or digits.',

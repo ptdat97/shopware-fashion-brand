@@ -1,5 +1,17 @@
 {
     "listing": {
         "filterManufacturerDisplayName": "Brand"
+    },
+    "acme-brand": {
+        "list": {
+            "title": "Brands",
+            "metaTitle": "Brands",
+            "metaDescription": "All fashion brands available in our store.",
+            "empty": "No brands yet."
+        },
+        "page": {
+            "productsTitle": "Products by %brand%",
+            "breadcrumb": "Breadcrumb"
+        }
     }
 }

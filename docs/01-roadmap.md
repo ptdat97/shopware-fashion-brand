@@ -212,18 +212,32 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 > **Id demo suy ra từ khoá cố định, không từ SKU** (`key` = `ANV-1005`, `number` = `MAY-1005`). Không được đổi khoá — xem [runbook/05-demo-data.md](runbook/05-demo-data.md).
 
-### MB3 — Storefront thương hiệu
+### MB3 — Storefront thương hiệu ✅ (14/10/2026)
 
 | Việc | Trạng thái |
 |---|---|
-| **Spike:** listing có phân trang/sắp xếp/bộ lọc trên trang không phải category | ⏳ **Làm đầu tiên** — rủi ro kỹ thuật chính |
-| Trang `/brands` — danh sách brand đang hoạt động | ⏳ |
-| Trang `/brands/{slug}` — banner, mô tả, CMS layout, sản phẩm của brand | ⏳ |
-| SEO URL route + sitemap cho brand | ⏳ |
-| Brand ngừng hoạt động → 404, rời `/brands` và sitemap; **sản phẩm vẫn bán** | ⏳ |
-| Logo brand ở trang sản phẩm, link về trang brand | ⏳ CMS element `manufacturer-logo` có sẵn |
+| **Spike:** listing có phân trang/sắp xếp/bộ lọc trên trang không phải category | ✅ Đạt — `ProductListingRoute` trên **category gốc điều hướng** + bộ lọc cứng `manufacturerId`. Ghi trong [ADR-003](decisions/ADR-003-mo-hinh-thuong-hieu.md) |
+| Trang `/brands` — danh sách brand đang hoạt động (nổi bật → thứ tự → tên) | ✅ |
+| Trang `/brands/{slug}` — banner, logo, mô tả, layout CMS (kiểu landing page), sản phẩm của brand | ✅ Bộ lọc thuộc tính/giá + sắp xếp + phân trang của core, lọc/sắp xếp AJAX |
+| SEO URL `brands/{tên}` (template sửa được ở Settings → SEO) + canonical + meta | ✅ Đổi tên → slug mới, URL cũ 301 (native) |
+| Sitemap cho brand | ✅ |
+| Brand ngừng hoạt động → 404, rời `/brands` và sitemap; **sản phẩm vẫn bán** | ✅ |
+| Logo/tên brand ở trang sản phẩm dẫn về trang brand | ✅ Ghi đè link của phần tử CMS `manufacturer-logo` (core dẫn ra website ngoài) |
+| Đổi nhãn menu Admin "Các nhà sản xuất" → "Thương hiệu" | ⏳ Chưa làm — cần user Admin để kiểm bằng ảnh |
+| Menu chính tô "Trang chủ" khi đang ở trang brand | ⏳ Lỗi nhỏ — trang brand dùng category gốc làm ngữ cảnh điều hướng |
 
-**Nghiệm thu:** test cho route + SEO URL; **chụp ảnh storefront** desktop & mobile; sitemap có URL brand.
+**Nghiệm thu đã chạy:**
+
+- **Spike** qua Store API trên category gốc + `manufacturerId` của Mây Atelier: phân trang (2/trang → trang 1, 2), sắp xếp giá, lọc màu Nâu → 1, Kem → 2. Mọi sản phẩm cha đều nằm trong cây điều hướng.
+- **Test:** 7 integration test mới (`BrandPageLoaderTest`) — chỉ sản phẩm của brand, ẩn bộ lọc brand, phân trang, brand tắt/không có phần mở rộng → 404, thứ tự `/brands`, SEO URL theo tên + đổi tên. Tổng **23 test đạt**, chạy 3 lần thứ tự ngẫu nhiên.
+- **HTTP:** `/brands`, `/brands/may-atelier`, `?order=`, `?p=2`, route AJAX → 200; slug lạ, id lạ → 404. Canonical của mọi biến thể URL trỏ về `/brands/may-atelier`. Meta title/description/keywords lấy từ brand.
+- **Thao tác thật qua Admin API:** sửa meta title → trang đổi ngay (cache tag của core tự xoá cache); tắt brand → 404 + rời `/brands`, sản phẩm vẫn ở danh mục; bật lại → 200; đổi tên → `brands/linh-lan-studio`, URL cũ 301. Đã khôi phục dữ liệu.
+- **Trình duyệt thật (CDP):** tick màu "Kem" trên trang brand → 4 → 2 mẫu, gọi đúng `/widgets/brand/…/listing`, URL cập nhật, không lỗi JS. Chụp ảnh `/brands`, trang brand (desktop + mobile), trang sản phẩm. Ảnh phát hiện và đã sửa 3 lỗi: lưới `/brands` dính lề trái, tên brand bị lặp ở trang sản phẩm, link brand thành `https://http://…` + mở tab mới.
+- `sitemap:generate` → có đủ 3 URL `/brands/…`.
+
+> 🔴 **`cache:clear` KHÔNG xoá HTTP cache** ở Shopware 6.7. Sửa template/code mà storefront vẫn hiện bản cũ → `bin/console cache:clear:http`. Đã mất công hai lần trong MB3 vì bẫy này.
+>
+> Sau khi cài/cập nhật `AcmeBrand` hoặc sửa template SEO: `bin/console acme:brand:seo-urls` — `dal:refresh:index` của core không phủ route brand.
 
 ### MB4 — Bộ sưu tập
 

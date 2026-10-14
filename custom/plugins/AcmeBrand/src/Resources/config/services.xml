@@ -23,5 +23,43 @@
         <service id="Acme\Brand\Validation\BrandUniqueExceptionHandler">
             <tag name="shopware.dal.exception_handler"/>
         </service>
+
+        <!-- MB3: storefront thương hiệu -->
+        <service id="Acme\Brand\Seo\BrandPageSeoUrlRoute">
+            <argument type="service" id="Shopware\Core\Content\Product\Aggregate\ProductManufacturer\ProductManufacturerDefinition"/>
+            <tag name="shopware.seo_url.route"/>
+        </service>
+
+        <service id="Acme\Brand\Seo\BrandSeoUrlUpdater">
+            <argument type="service" id="Shopware\Core\Content\Seo\SeoUrlUpdater"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="Acme\Brand\Command\RefreshBrandSeoUrlsCommand">
+            <argument type="service" id="Acme\Brand\Seo\BrandSeoUrlUpdater"/>
+            <tag name="console.command"/>
+        </service>
+
+        <service id="Acme\Brand\Sitemap\BrandUrlProvider">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <tag name="shopware.sitemap_url_provider"/>
+        </service>
+
+        <service id="Acme\Brand\Storefront\Page\Brand\BrandPageLoader">
+            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
+            <argument type="service" id="product_manufacturer.repository"/>
+            <argument type="service" id="Shopware\Core\Content\Product\SalesChannel\Listing\ProductListingRoute"/>
+            <argument type="service" id="Shopware\Core\Content\Cms\SalesChannel\SalesChannelCmsPageLoader"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="translator"/>
+        </service>
+
+        <service id="Acme\Brand\Storefront\Controller\BrandController" public="true">
+            <argument type="service" id="Acme\Brand\Storefront\Page\Brand\BrandPageLoader"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
     </services>
 </container>

@@ -1,0 +1,11 @@
+{% sw_extends '@Storefront/storefront/layout/meta.html.twig' %}
+
+{#
+    Canonical luôn là URL gốc của brand: các biến thể ?order=…, ?p=2, ?properties=…
+    cùng một nội dung, không để công cụ tìm kiếm đánh chỉ mục trùng.
+#}
+{% block layout_head_canonical %}
+    <link rel="canonical" href="{{ seoUrl('frontend.acme.brand.page', { manufacturerId: page.manufacturer.id }) }}">
+{% endblock %}
+
+{% block layout_head_meta_tags_image_meta %}{% if page.brand.bannerMedia %}{{ page.brand.bannerMedia.url }}{% elseif page.manufacturer.media %}{{ page.manufacturer.media.url }}{% else %}{{ parent() }}{% endif %}{% endblock %}

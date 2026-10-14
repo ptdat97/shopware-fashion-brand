@@ -75,11 +75,22 @@ Cây "Thương hiệu" → mỗi brand một category.
 
 | # | Điểm | Cách kiểm |
 |---|---|---|
-| 1 | Listing có phân trang/sắp xếp/bộ lọc native trên trang **không phải category** (`AbstractProductListingRoute::load()` bắt buộc `$categoryId`) | PoC trong MB3 |
+| 1 | Listing có phân trang/sắp xếp/bộ lọc native trên trang **không phải category** (`AbstractProductListingRoute::load()` bắt buộc `$categoryId`) | ✅ **Đạt** (spike MB3, 14/10/2026) — xem bên dưới |
 | 2 | Override `sw-manufacturer-detail` an toàn qua bản vá 6.7.x | Đọc component gốc, viết Jest test |
 | 3 | SEO URL template cho category tạo được `/collections/new-arrivals` | Cấu hình thử trong MB4 |
 
 Kết quả ghi bổ sung vào ADR này. Nếu PoC #1 thất bại, phải mở lại ADR trước khi viết route.
+
+### Kết quả spike #1
+
+Gọi `ProductListingRoute` (bản đã decorate bởi `ResolveCriteriaProductListingRoute`) với **category gốc điều hướng của sales channel** và thêm bộ lọc cứng `manufacturerId`:
+
+- Phân trang, sắp xếp, bộ lọc thuộc tính/giá, `ProductListingCriteriaEvent` — đều là của core, đã kiểm.
+- Sản phẩm cha gán vào danh mục con đều nằm dưới category gốc qua `categoriesRo`.
+- **Giới hạn:** sản phẩm không nằm trong cây danh mục của sales channel sẽ không hiện ở trang brand. Hiện 0 sản phẩm như vậy — giữ quy tắc "sản phẩm đang bán phải thuộc ít nhất một danh mục".
+- Bộ lọc "Thương hiệu" được tắt trên trang của chính brand (`manufacturer-filter = false`).
+
+Đã loại hướng gọi thẳng `ProductListingLoader` + processor: đó là service `@internal`, dễ vỡ qua bản vá.
 
 ## Hệ quả
 

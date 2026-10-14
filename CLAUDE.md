@@ -68,4 +68,8 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 - **MB2** ✅ — 3 brand demo (`ANV` Anivele, `MAY`/`LLN` giả định), SKU mang mã brand, bộ lọc "Thương hiệu" ở listing (native, chỉ đổi nhãn). Id demo suy ra từ khoá `ANV-10xx` cố định, **không** từ SKU — xem [docs/runbook/05-demo-data.md](docs/runbook/05-demo-data.md)
 
-Tiếp theo: **MB3 — storefront thương hiệu**, bắt đầu bằng spike listing có phân trang/sắp xếp/bộ lọc trên trang không phải category. Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+- **MB3** ✅ — `/brands`, `/brands/{slug}` (listing core trên category gốc + lọc manufacturer, lọc/sắp xếp AJAX), SEO URL + canonical + sitemap, brand tắt → 404, link brand ở trang sản phẩm. 23 test đạt
+
+> 🔴 **`cache:clear` không xoá HTTP cache.** Đổi template/code → thêm `bin/console cache:clear:http`. Đổi template SEO brand → `bin/console acme:brand:seo-urls`.
+
+Tiếp theo: **MB4 — bộ sưu tập** `/collections/{slug}` (category + product stream, chủ yếu cấu hình). Báo cáo khảo sát trước, code sau. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
