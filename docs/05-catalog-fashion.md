@@ -99,7 +99,7 @@ Sản phẩm lấy bảng của **danh mục chính** — chính danh mục core
 
 > 🔴 **Số đo hiện tại là SỐ THAM KHẢO** theo thang phổ biến của thị trường VN, không phải số đo thật của Anivele. Phải đo trên sản phẩm thật rồi thay lại trước go-live.
 
-Kỹ thuật: custom field `acme_size_chart_table` / `acme_size_chart_note` trên entity `category`, xem `custom/plugins/AcmeTheme/src/Migration/Migration1786195057SizeChartCustomField.php`.
+Kỹ thuật: custom field `acme_size_chart_table` / `acme_size_chart_note` trên entity `category`, xem `custom/plugins/AcmeCatalog/src/Migration/Migration1791973309SizeChartCustomField.php` (định nghĩa — catalog); nút và popup ở `AcmeTheme` (hiển thị).
 
 ---
 

@@ -115,12 +115,13 @@ Từ **250 quốc gia active → chỉ còn Việt Nam**. Đã bổ sung tên ti
 
 | Plugin | Version | Active | Ghi chú |
 |---|---|---|---|
-| AcmeVietnam | 1.0.0 | Yes | Plugin tự viết — nền tảng thị trường VN |
-| AcmeCatalog | 1.0.0 | Yes | Plugin tự viết — biến thể Màu × Size |
-| AcmePayment | 1.0.0 | Yes | Plugin tự viết — VietQR + phí vận chuyển |
+| AcmeVietnam | 1.1.0 | Yes | Plugin tự viết — nền tảng thị trường VN, Việt hoá dữ liệu core |
+| AcmeCatalog | 1.4.0 | Yes | Plugin tự viết — biến thể, bảng size, bộ sưu tập, SEO URL |
+| AcmePayment | 1.1.0 | Yes | Plugin tự viết — thanh toán (VietQR) |
+| AcmeShipping | 1.0.0 | Yes | Plugin tự viết — phí vận chuyển theo khu vực |
 | AcmeTheme | 1.0.0 | Yes | Plugin tự viết — giao diện thương hiệu |
 | AcmeDemoData | 1.0.0 | Yes | Plugin tự viết — dữ liệu demo |
-| AcmeBrand | 1.0.0 | Yes | Plugin tự viết — thương hiệu (Phase MB1) |
+| AcmeBrand | 1.2.0 | Yes | Plugin tự viết — thương hiệu (Phase MB) |
 | SwagLanguagePack | dev-master | Yes | Plugin bên thứ ba duy nhất còn lại |
 
 Thư viện ngoài: `endroid/qr-code` (sinh ảnh QR) — cài ở cấp dự án vì Shopware không nạp `vendor/` của plugin, xem [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md).

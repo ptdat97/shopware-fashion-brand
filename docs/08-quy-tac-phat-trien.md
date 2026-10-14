@@ -299,6 +299,64 @@ grep -n "custom-field-set-renderer" vendor/shopware/administration/Resources/app
 
 ---
 
+## Quy tắc số 5 — Mỗi plugin một nghiệp vụ, độc lập với plugin khác
+
+**Mỗi plugin trong `custom/plugins/` sở hữu đúng một mảng nghiệp vụ. Bật, tắt hay gỡ một plugin không được làm hỏng nghiệp vụ chung (xem hàng, giỏ hàng, đặt hàng, thanh toán COD) và không làm hỏng plugin khác — chỉ mất đúng chức năng của chính nó.**
+
+### Bản đồ trách nhiệm
+
+| Plugin | Nghiệp vụ | Tắt thì mất gì | Ghi chú |
+|---|---|---|---|
+| `AcmeVietnam` | Thị trường VN: VND, VAT, quốc gia, 34 tỉnh/thành, vi-VN, **Việt hoá dữ liệu core** (danh mục gốc, nhãn sắp xếp) | Không gì — cấu hình đã ghi vào entity core, cố ý không hoàn tác | |
+| `AcmeCatalog` | Cấu trúc catalog: thuộc tính, sinh biến thể, **canonical biến thể**, **custom field bảng size**, bộ sưu tập, template SEO URL | Lệnh `acme:catalog:variants` | Dữ liệu và template SEO là của core → vẫn chạy |
+| `AcmePayment` | Thanh toán: dọn phương thức, VietQR (QR + CSS của khối QR) | Phương thức VietQR (tự tắt khi plugin tắt) | COD, chuyển khoản là của core |
+| `AcmeShipping` | Vận chuyển nội địa: phí theo khu vực; sau này GHN/GHTK | Không gì — bảng phí là cấu hình core | Tách khỏi `AcmePayment` ngày 14/10/2026 |
+| `AcmeBrand` | Thương hiệu: phần mở rộng nhà sản xuất, `/brands`, SEO URL, sitemap, link brand ở trang sản phẩm | Trang `/brands` (404), thẻ "Thương hiệu" trong Admin | Nhà sản xuất, bộ lọc thương hiệu là của core → vẫn chạy |
+| `AcmeTheme` | **Chỉ hiển thị**: theme, SCSS, override Twig (gồm nút bảng size), ảnh hover, bật wishlist | Giao diện thương hiệu, nút bảng size | Core **chặn** tắt khi theme đang gán — đổi sang theme khác trước |
+| `AcmeDemoData` | Dữ liệu demo | Nút nhập demo | Gỡ trước go-live |
+
+### Điều kiện bắt buộc
+
+1. **Không phụ thuộc class/service của plugin khác.** Không `use Acme\Khác\…`, không inject service của plugin khác. Kiểm: `grep -rn "use Acme" custom/plugins/AcmeX/src` — mọi dòng phải là namespace của chính AcmeX.
+2. **Phụ thuộc dữ liệu phải "có thì dùng, không có thì bỏ qua".** Đọc custom field / bảng / tỉnh do plugin khác tạo → thiếu thì không hiện, không lỗi. Ví dụ: theme đọc `acme_size_chart_*` (của `AcmeCatalog`), thiếu thì không có nút; `AcmeDemoData` kiểm entity `acme_brand` có tồn tại trước khi ghi; `AcmeShipping` thiếu tỉnh thì rule nội thành rỗng và đồng bộ lại khi bật plugin.
+3. **Markup của plugin nào thì CSS của plugin đó.** Theme không định dạng hộ khối của plugin khác (CSS VietQR đã chuyển từ `AcmeTheme` về `AcmePayment`). Plugin ngoài theme chỉ dùng biến Bootstrap.
+4. **Logic đặt theo nghiệp vụ, không theo người viết hay theo phase.** Việt hoá dữ liệu là thị trường (`AcmeVietnam`), số đo là catalog (`AcmeCatalog`), vận chuyển không phải thanh toán. Không đặt quy tắc catalog vào plugin demo.
+5. **Tắt / gỡ không hoàn tác cấu hình kinh doanh** đang nằm trên entity core (tiền tệ, thuế, phí ship…): hoàn tác sẽ làm sai đơn hàng. Ghi rõ trong docblock class plugin.
+6. **Chuyển logic giữa plugin bằng migration mới, idempotent** ở plugin đích; xoá file ở plugin nguồn. Không sửa migration đã chạy. Bản mới phải an toàn khi chạy trên môi trường đã có bản cũ — không ghi đè dữ liệu người vận hành đã sửa.
+
+### Cách kiểm — chạy trên máy dev, sau mỗi lần thêm/chuyển logic giữa plugin
+
+Với mỗi plugin `Acme*`: tắt → xoá cache → kiểm → bật lại.
+
+```bash
+php bin/console plugin:deactivate AcmeX
+php bin/console cache:clear && php bin/console cache:clear:http
+# Trang: /, /dam/, một trang sản phẩm, /collections/sale, /brands, /brands/<slug> — phải 200
+#        (riêng /brands* được phép 404 khi tắt AcmeBrand)
+# Giỏ: Store API thêm 1 sản phẩm → không lỗi, có phí ship, COD còn trong danh sách thanh toán
+php bin/console plugin:activate AcmeX
+```
+
+`AcmeTheme`: `bin/console theme:change Storefront -s <salesChannelId>` trước khi tắt, `theme:change AcmeTheme` sau khi bật lại.
+
+### Kết quả kiểm 14/10/2026
+
+| Tắt | Trang chính | Giỏ + COD | Khác biệt duy nhất |
+|---|---|---|---|
+| `AcmeVietnam` | ✅ | ✅ | — |
+| `AcmeCatalog` | ✅ | ✅ | — |
+| `AcmePayment` | ✅ | ✅ | VietQR không còn trong danh sách thanh toán |
+| `AcmeShipping` | ✅ | ✅ | — |
+| `AcmeBrand` | ✅ | ✅ | `/brands`, `/brands/…` → 404 |
+| `AcmeDemoData` | ✅ | ✅ | — |
+| `AcmeTheme` (sau khi đổi sang theme Storefront) | ✅ | ✅ | Nút bảng size biến mất; link thương hiệu (`AcmeBrand`) vẫn còn |
+
+Chuyển logic đã làm cùng đợt: phí vận chuyển `AcmePayment` → `AcmeShipping` (bảng giá đang có giữ nguyên, cùng id); Việt hoá dữ liệu core `AcmeTheme` → `AcmeVietnam`; custom field bảng size `AcmeTheme` → `AcmeCatalog`; canonical biến thể `AcmeDemoData` → `AcmeCatalog`; CSS VietQR `AcmeTheme` → `AcmePayment`.
+
+> Phát hiện chưa xử lý: `AcmeDemoData` ghi custom field `acme_material`, `acme_model_size` vào sản phẩm nhưng **không plugin nào định nghĩa hay hiển thị** hai trường này — dữ liệu không ai dùng.
+
+---
+
 ## Vì sao quy tắc này quan trọng
 
 ### 1. Mọi thay đổi trong `vendor/` sẽ bị xoá sạch
@@ -456,14 +514,16 @@ Tuyệt đối không sửa tay trực tiếp rồi để đó.
 | ❌ Không copy | Nguyên file template rồi sửa vài dòng |
 | ❌ Không `composer require` | Plugin tự viết trong `custom/plugins/` |
 | ❌ **Không bịa API** | Tên class từ trí nhớ/blog/AI mà chưa `grep` xác nhận |
+| ❌ **Không để plugin phụ thuộc nhau** | Mỗi plugin một nghiệp vụ; tắt một plugin chỉ mất chức năng của chính nó (Quy tắc số 5) |
 | ❌ **Không tạo lại thứ core có** | Bảng/entity/ô nhập/lệnh riêng cho việc core đã làm được — dùng trường sẵn có → cấu hình native → custom field → điểm mở rộng, bảng riêng là cuối cùng |
 
-**Bốn câu hỏi tự kiểm tra trước mỗi thay đổi:**
+**Năm câu hỏi tự kiểm tra trước mỗi thay đổi:**
 
 1. *"Sau khi chạy `composer update`, thay đổi này còn không?"* — Nếu **không** → đang sửa nhầm chỗ, phải làm qua plugin/theme.
 2. *"Thay đổi này có buộc phải sửa file dùng chung (`composer.json`, `composer.lock`) không?"* — Nếu **có** mà chỉ để cài plugin tự viết → thừa, bỏ đi.
 3. *"Mọi class và method mình đang dùng, đã mở `vendor/` xác nhận có thật trong 6.7 chưa?"* — Nếu **chưa** → dừng lại, `grep` trước khi viết tiếp.
 4. *"Shopware đã có trường, cấu hình, custom field hay điểm mở rộng làm được việc này chưa?"* — Nếu **có** → dùng nó, không tạo bản song song (Quy tắc số 4).
+5. *"Logic này thuộc nghiệp vụ của plugin nào? Tắt plugin đó thì nghiệp vụ chung còn chạy không?"* — Đặt đúng plugin, và chỉ phụ thuộc dữ liệu kiểu "có thì dùng" (Quy tắc số 5).
 
 ---
 

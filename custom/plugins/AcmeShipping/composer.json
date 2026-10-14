@@ -1,0 +1,33 @@
+{
+    "name": "acme/shipping",
+    "description": "Vận chuyển nội địa Việt Nam: bảng phí theo khu vực (giai đoạn 1), chỗ đặt tích hợp GHN/GHTK về sau",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "version": "1.0.0",
+    "require": {
+        "shopware/core": "~6.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Acme\\Shipping\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Acme\\Shipping\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Acme\\Shipping\\AcmeShipping",
+        "label": {
+            "vi-VN": "Vận chuyển nội địa",
+            "en-GB": "Acme Shipping",
+            "de-DE": "Acme Shipping"
+        },
+        "description": {
+            "vi-VN": "Phí vận chuyển theo khu vực: nội thành Hà Nội/TP.HCM, các tỉnh, miễn phí theo giá trị đơn.",
+            "en-GB": "Zone-based shipping fees for Vietnam: Hanoi/HCMC inner city, provinces, free shipping threshold.",
+            "de-DE": "Zone-based shipping fees for Vietnam: Hanoi/HCMC inner city, provinces, free shipping threshold."
+        }
+    }
+}

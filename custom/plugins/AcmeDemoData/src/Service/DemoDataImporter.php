@@ -378,7 +378,6 @@ class DemoDataImporter
         }
 
         $this->renumberVariants($context, array_column($payload, 'productNumber', 'id'));
-        $this->ensureVariantCanonical($context, array_column($payload, 'id'));
 
         return count($payload);
     }
@@ -409,44 +408,6 @@ class DemoDataImporter
 
             $suffix = substr($current, (int) strrpos($current, '-') + 1);
             $updates[] = ['id' => $variant->getId(), 'productNumber' => $parentNumber . '-' . $suffix];
-        }
-
-        if ($updates !== []) {
-            $this->productRepository->update($updates, $context);
-        }
-    }
-
-    /**
-     * SEO: mọi biến thể của một mẫu cùng canonical về biến thể đầu (mã nhỏ nhất) —
-     * trường native `canonicalProductId` trên sản phẩm cha, biến thể kế thừa. Nhờ vậy
-     * sitemap của core chỉ còn một URL cho mỗi mẫu. Chỉ đặt khi đang trống: người vận
-     * hành có thể đã chọn canonical khác trong Administration.
-     *
-     * @param list<string> $parentIds
-     */
-    private function ensureVariantCanonical(Context $context, array $parentIds): void
-    {
-        if ($parentIds === []) {
-            return;
-        }
-
-        $criteria = new Criteria();
-        $criteria->addFilter(new EqualsAnyFilter('parentId', $parentIds));
-
-        $firstVariant = [];
-        foreach ($this->productRepository->search($criteria, $context)->getEntities() as $variant) {
-            $parentId = (string) $variant->getParentId();
-            $current = $firstVariant[$parentId] ?? null;
-            if ($current === null || strcmp($variant->getProductNumber(), $current[1]) < 0) {
-                $firstVariant[$parentId] = [$variant->getId(), $variant->getProductNumber()];
-            }
-        }
-
-        $updates = [];
-        foreach ($this->productRepository->search(new Criteria(array_keys($firstVariant)), $context)->getEntities() as $parent) {
-            if ($parent->getCanonicalProductId() === null) {
-                $updates[] = ['id' => $parent->getId(), 'canonicalProductId' => $firstVariant[$parent->getId()][0]];
-            }
         }
 
         if ($updates !== []) {

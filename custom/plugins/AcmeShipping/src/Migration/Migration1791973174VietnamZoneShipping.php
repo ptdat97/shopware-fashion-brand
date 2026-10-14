@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Acme\Payment\Migration;
+namespace Acme\Shipping\Migration;
 
-use Doctrine\DBAL\ArrayParameterType;
+use Acme\Shipping\Rule\InnerCityStateSync;
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Migration\MigrationStep;
@@ -10,6 +10,14 @@ use Shopware\Core\Framework\Uuid\Uuid;
 
 /**
  * Bảng phí vận chuyển phẳng theo khu vực.
+ *
+ * Chuyển từ AcmePayment (Migration1786162034VietnameseShipping) sang plugin vận chuyển
+ * riêng ngày 14/10/2026 — vận chuyển không phải nghiệp vụ thanh toán. Cùng kết quả,
+ * nhưng an toàn khi chạy trên môi trường đã có bản cũ:
+ *   - rule đã có (tìm theo tên) thì dùng lại, không tạo trùng;
+ *   - bảng giá chỉ ghi khi phương thức CHƯA có giá gắn rule của plugin — không ghi đè
+ *     giá người vận hành đã sửa trong Administration;
+ *   - danh sách tỉnh nội thành đồng bộ lại với DB (InnerCityStateSync).
  *
  * Giai đoạn 1 theo docs/03-plugin-app.md: dùng Rule Builder có sẵn, chưa nối
  * API GHN/GHTK. Đủ để mở bán, không cần code tích hợp.
@@ -21,17 +29,15 @@ use Shopware\Core\Framework\Uuid\Uuid;
  *
  * @internal
  */
-class Migration1786162034VietnameseShipping extends MigrationStep
+class Migration1791973174VietnamZoneShipping extends MigrationStep
 {
-    private const INNER_CITY_STATES = ['VN-HN', 'VN-HCM'];
-
     private const FEE_INNER_CITY = 25000;
     private const FEE_PROVINCE = 35000;
     private const FREE_SHIPPING_THRESHOLD = 500000;
 
     public function getCreationTimestamp(): int
     {
-        return 1786162034;
+        return 1791973174;
     }
 
     public function update(Connection $connection): void
@@ -46,7 +52,12 @@ class Migration1786162034VietnameseShipping extends MigrationStep
         $innerCityRuleId = $this->ensureInnerCityRule($connection);
         $freeShippingRuleId = $this->ensureFreeShippingRule($connection);
 
-        $this->applyPrices($connection, $standardId, $innerCityRuleId, $freeShippingRuleId);
+        InnerCityStateSync::sync($connection);
+
+        if (!$this->hasPricesForRules($connection, $standardId, [$innerCityRuleId, $freeShippingRuleId])) {
+            $this->applyPrices($connection, $standardId, $innerCityRuleId, $freeShippingRuleId);
+        }
+
         $this->attachToStorefront($connection, $standardId);
     }
 
@@ -91,7 +102,7 @@ class Migration1786162034VietnameseShipping extends MigrationStep
     {
         $existing = $connection->fetchOne(
             'SELECT `id` FROM `rule` WHERE `name` = :name LIMIT 1',
-            ['name' => 'Giao nội thành HN/HCM']
+            ['name' => InnerCityStateSync::RULE_NAME]
         );
 
         if ($existing !== false) {
@@ -102,24 +113,17 @@ class Migration1786162034VietnameseShipping extends MigrationStep
 
         $connection->insert('rule', [
             'id' => $ruleId,
-            'name' => 'Giao nội thành HN/HCM',
+            'name' => InnerCityStateSync::RULE_NAME,
             'priority' => 100,
             'created_at' => $this->now(),
         ]);
 
-        $stateIds = $connection->fetchFirstColumn(
-            'SELECT LOWER(HEX(cs.`id`)) FROM `country_state` cs
-             JOIN `country` c ON c.`id` = cs.`country_id`
-             WHERE c.`iso` = :iso AND cs.`short_code` IN (:codes)',
-            ['iso' => 'VN', 'codes' => self::INNER_CITY_STATES],
-            ['codes' => ArrayParameterType::STRING]
-        );
-
+        // Danh sách tỉnh điền bởi InnerCityStateSync::sync() ngay sau đó
         $this->insertConditionTree(
             $connection,
             $ruleId,
             'customerShippingState',
-            ['operator' => '=', 'stateIds' => $stateIds]
+            ['operator' => '=', 'stateIds' => []]
         );
 
         return $ruleId;
@@ -264,6 +268,24 @@ class Migration1786162034VietnameseShipping extends MigrationStep
             'UPDATE `shipping_method` SET `active` = 1, `updated_at` = :now WHERE `id` = :id',
             ['now' => $this->now(), 'id' => $shippingMethodId]
         );
+    }
+
+    /**
+     * @param list<string> $ruleIds
+     */
+    private function hasPricesForRules(Connection $connection, string $shippingMethodId, array $ruleIds): bool
+    {
+        foreach ($ruleIds as $ruleId) {
+            $found = $connection->fetchOne(
+                'SELECT 1 FROM `shipping_method_price` WHERE `shipping_method_id` = :sm AND `rule_id` = :rule LIMIT 1',
+                ['sm' => $shippingMethodId, 'rule' => $ruleId]
+            );
+            if ($found !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function findShippingMethod(Connection $connection, string $technicalName): ?string

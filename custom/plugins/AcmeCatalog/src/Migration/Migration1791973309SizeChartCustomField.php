@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace AcmeTheme\Migration;
+namespace Acme\Catalog\Migration;
 
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Migration\MigrationStep;
@@ -8,6 +8,10 @@ use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\CustomField\CustomFieldTypes;
 
 /**
+ * Chuyển từ AcmeTheme ngày 14/10/2026 (Migration1786195057SizeChartCustomField): số đo
+ * là DỮ LIỆU catalog, theme chỉ hiển thị. Tắt theme không được làm mất trường nhập
+ * số đo trong Administration. Mọi bước chỉ ghi khi chưa có → chạy lại vô hại.
+ *
  * Bảng size gắn theo DANH MỤC, sửa được trong Administration.
  *
  * Gắn theo danh mục thay vì từng sản phẩm vì đầm và chân váy không cùng thang
@@ -19,7 +23,7 @@ use Shopware\Core\System\CustomField\CustomFieldTypes;
  *
  * @internal
  */
-class Migration1786195057SizeChartCustomField extends MigrationStep
+class Migration1791973309SizeChartCustomField extends MigrationStep
 {
     private const SET_NAME = 'acme_size_chart';
     private const FIELD_TABLE = 'acme_size_chart_table';
@@ -27,7 +31,7 @@ class Migration1786195057SizeChartCustomField extends MigrationStep
 
     public function getCreationTimestamp(): int
     {
-        return 1786195057;
+        return 1791973309;
     }
 
     public function update(Connection $connection): void
@@ -137,7 +141,7 @@ class Migration1786195057SizeChartCustomField extends MigrationStep
     /**
      * Điền số đo THAM KHẢO theo thang size phổ biến của thị trường VN.
      *
-     * ⚠️ Đây KHÔNG phải số đo thật của Acme. Người bán phải đo trên sản
+     * ⚠️ Đây KHÔNG phải số đo thật của thương hiệu nào. Người bán phải đo trên sản
      * phẩm thật rồi thay lại trước khi go-live — số đo sai là nguyên nhân
      * đổi trả hàng đầu với thời trang online.
      */

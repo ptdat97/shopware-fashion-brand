@@ -1,30 +1,26 @@
 <?php declare(strict_types=1);
 
-namespace AcmeTheme\Migration;
+namespace Acme\Vietnam\Migration;
 
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Migration\MigrationStep;
 
 /**
- * Việt hoá hai chỗ còn sót trên trang danh mục.
+ * Việt hoá dữ liệu mặc định của core mà gói ngôn ngữ vi-VN không phủ:
+ *   - tên danh mục gốc "Home" → "Trang chủ"
+ *   - nhãn ô sắp xếp (bảng product_sorting chỉ có bản en-US)
  *
- * Cùng loại lỗi với Migration1786164190VietnameseStorefrontLabels và cũng chỉ
- * lộ ra khi CHỤP ẢNH storefront: nhãn nằm trong DATABASE chứ không trong code
- * nên grep template không bao giờ thấy.
+ * Chuyển từ AcmeTheme ngày 14/10/2026 (gộp Migration1786164190VietnameseStorefrontLabels
+ * và Migration1788690517VietnameseListingLabels): đây là bản địa hoá thị trường, không
+ * phải giao diện — tắt theme thì nhãn vẫn phải là tiếng Việt.
  *
- *   1. Tiêu đề trang chủ hiện "Home" — bản dịch vi-VN của danh mục gốc là NULL
- *      nên storefront rơi về ngôn ngữ hệ thống (en-US). Migration trước đã xử
- *      lý việc này nhưng database sau đó được dựng lại, mà migration đã chạy
- *      thì không chạy lại. Viết lại thành bước mới thay vì sửa bước cũ.
- *
- *   2. Ô sắp xếp hiện "Name A-Z", "Price ascending" — bảng product_sorting chỉ
- *      có bản dịch en-US. Gói ngôn ngữ vi-VN không kèm dữ liệu này vì nó là
- *      dữ liệu cửa hàng, không phải snippet.
+ * Chỉ ghi khi đang trống / còn nguyên giá trị mặc định → chạy lại trên môi trường đã có
+ * bản cũ không ghi đè chữ người vận hành đã sửa.
  *
  * @internal
  */
-class Migration1788690517VietnameseListingLabels extends MigrationStep
+class Migration1791973286VietnameseCoreLabels extends MigrationStep
 {
     /** Nhãn sắp xếp, khoá là url_key trong bảng product_sorting */
     private const SORTING_LABELS = [
@@ -38,7 +34,7 @@ class Migration1788690517VietnameseListingLabels extends MigrationStep
 
     public function getCreationTimestamp(): int
     {
-        return 1788690517;
+        return 1791973286;
     }
 
     public function update(Connection $connection): void

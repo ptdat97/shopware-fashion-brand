@@ -2,7 +2,7 @@
 
 Một website, một catalog, một checkout cho **nhiều thương hiệu** thời trang tại thị trường Việt Nam; mỗi thương hiệu có logo, banner, landing page, SEO riêng (`/brands/{slug}`, `/collections/{slug}`). Toàn bộ tài liệu kỹ thuật nằm ở [docs/](docs/); kiến trúc đa thương hiệu ở [docs/12-da-thuong-hieu.md](docs/12-da-thuong-hieu.md).
 
-## Sáu quy tắc cứng
+## Bảy quy tắc cứng
 
 **1. Không sửa `vendor/`.** Mọi tuỳ biến viết qua Plugin, App hoặc Theme trong `custom/`. `composer update` ghi đè sạch `vendor/`, git không track thư mục này.
 
@@ -19,6 +19,8 @@ php bin/check-plugin-api.php     # bắt lỗi class không tồn tại
 **5. Brand là `product_manufacturer` — mở rộng, không xây lại.** Không tạo entity brand song song, không dùng category/tag để đánh dấu brand, không tạo sales channel/theme/domain theo brand, không chèn logic brand vào cart/checkout/payment (chính sách theo brand dùng Rule Builder). Phần core thiếu đặt trong plugin `AcmeBrand`: bảng `acme_brand` chỉ cho thứ cần ràng buộc DB (mã UNIQUE, banner/layout khoá ngoại, active/featured/position); meta SEO là custom field của nhà sản xuất. Xem [docs/decisions/ADR-003-mo-hinh-thuong-hieu.md](docs/decisions/ADR-003-mo-hinh-thuong-hieu.md).
 
 **6. Không tạo lại thứ Shopware đã có.** Trước khi thêm bảng/entity/trường/ô nhập Admin/subscriber/lệnh: tìm theo thứ tự trường sẵn có → cấu hình native (Rule Builder, CMS, product stream, snippet) → custom field → điểm mở rộng (EntityIndexer, SeoUrlRoute, decorator) → bảng riêng là cuối cùng, phải ghi lý do. Xem [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) Quy tắc số 4.
+
+**7. Mỗi plugin một nghiệp vụ, độc lập.** Không `use`/inject class của plugin khác; phụ thuộc dữ liệu kiểu "có thì dùng, không có thì bỏ qua"; markup plugin nào thì CSS plugin đó. Tắt một plugin chỉ mất chức năng của chính nó — xem hàng, giỏ hàng, COD vẫn chạy. Bản đồ trách nhiệm 7 plugin và cách kiểm tắt/bật: [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) Quy tắc số 5.
 
 Chi tiết và lý do: [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) · [docs/09-nguyen-tac-ky-thuat.md](docs/09-nguyen-tac-ky-thuat.md)
 
@@ -53,7 +55,7 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 - **Phase 0** (nền tảng thị trường VN) ✅ — plugin `AcmeVietnam`
 - **Phase 2** (biến thể Màu × Size) ✅ — plugin `AcmeCatalog`, 12 mẫu → 64 biến thể
-- **Phase 1** (thanh toán & vận chuyển) ✅ giai đoạn 1 — plugin `AcmePayment`: COD, chuyển khoản, VietQR + phí ship theo khu vực
+- **Phase 1** (thanh toán & vận chuyển) ✅ giai đoạn 1 — `AcmePayment`: COD, chuyển khoản, VietQR · `AcmeShipping`: phí ship theo khu vực (tách khỏi `AcmePayment` 14/10/2026)
 - **Phase 3** (theme thương hiệu) ✅ giai đoạn 1 — plugin `AcmeTheme`: bảng màu nâu/be/kem, swatch tròn, mobile-first
 
 > 🧭 **COD là phương thức thanh toán ưu tiên** (14/10/2026). VietQR tạm gác — chưa có số tài khoản thật, không chặn go-live; chỉ cấu hình khi bật lại.

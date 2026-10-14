@@ -242,7 +242,9 @@ php -l custom/plugins/TenPlugin/src/**/*.php
 php bin/check-plugin-api.php custom/plugins/TenPlugin
 ```
 
-Cả 5 phải sạch. Mục 2 chỉ được có thay đổi khi cài plugin **bên thứ ba**.
+Cả 5 phải sạch.
+
+**Thêm hoặc chuyển logic giữa các plugin** → chạy thêm phép thử tắt/bật từng plugin của [../08-quy-tac-phat-trien.md](../08-quy-tac-phat-trien.md) Quy tắc số 5: tắt plugin nào thì chỉ được mất chức năng của plugin đó. Mục 2 chỉ được có thay đổi khi cài plugin **bên thứ ba**.
 
 Mục 5 báo tên nào thì tên đó **không tồn tại trong `vendor/`** — đang bịa API, quay lại bước 0. Script dùng chính autoloader của Shopware nên kết quả đáng tin, không phải đoán theo đường dẫn:
 

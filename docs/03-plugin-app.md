@@ -20,13 +20,17 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 
 | Plugin | Version | Trạng thái | `managed_by_composer` | Việc cần làm |
 |---|---|---|---|---|
-| AcmeVietnam | 1.0.0 | Active | 0 | Plugin tự viết — nền tảng thị trường VN (Phase 0) |
-| AcmeCatalog | 1.0.0 | Active | 0 | Plugin tự viết — cấu trúc biến thể Màu × Size (Phase 2) |
-| AcmePayment | 1.0.0 | Active | 0 | Plugin tự viết — VietQR + phí vận chuyển (Phase 1) |
-| AcmeTheme | 1.0.0 | Active | 0 | Plugin tự viết — giao diện thương hiệu (Phase 3) |
+| AcmeVietnam | 1.1.0 | Active | 0 | Plugin tự viết — nền tảng thị trường VN (Phase 0) |
+| AcmeCatalog | 1.4.0 | Active | 0 | Plugin tự viết — cấu trúc catalog: biến thể, bảng size, bộ sưu tập, SEO URL |
+| AcmePayment | 1.1.0 | Active | 0 | Plugin tự viết — thanh toán: VietQR (Phase 1) |
+| AcmeShipping | 1.0.0 | Active | 0 | Plugin tự viết — vận chuyển nội địa: phí theo khu vực; sau này GHN/GHTK |
+| AcmeBrand | 1.2.0 | Active | 0 | Plugin tự viết — thương hiệu (Phase MB) |
+| AcmeTheme | 1.0.0 | Active | 0 | Plugin tự viết — chỉ hiển thị: theme, template (Phase 3) |
 | AcmeDemoData | 1.0.0 | Active | 0 | Plugin tự viết — **gỡ trước khi go-live**, thay bằng hàng thật |
 | SwagLanguagePack | dev-master | Active | 1 | Theo dõi bản release ổn định hỗ trợ 6.7 để chuyển sang |
 
+> Mỗi plugin một nghiệp vụ và độc lập nhau — bản đồ trách nhiệm: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 5.
+>
 > `SwagPlatformDemoData` **không còn tồn tại** — đã gỡ ở Phase 0 và thay bằng `AcmeDemoData`. Xem [runbook/05-demo-data.md](runbook/05-demo-data.md).
 >
 > `SwagPayPal` **đã gỡ hẳn** (08/08/2026). Thư mục plugin bị xoá khỏi git nhưng `composer.json` vẫn require → autoloader trỏ vào file không tồn tại và **làm hỏng toàn bộ `bin/console`**. Đã `composer remove swag/paypal` và dọn thư mục thừa. Nếu sau này cần bán quốc tế thì cài lại từ đầu.
