@@ -26,6 +26,8 @@ grep -rl "class TenClass\|interface TenInterface" vendor/shopware/
 
 Mẫu tốt nhất luôn là class core đã implement sẵn — ví dụ `PrePayment.php` (chuyển khoản), `CashPayment.php` (COD).
 
+> **Cùng bước này: kiểm Shopware đã có thứ mình định viết chưa** — trường sẵn có, cấu hình native, custom field, điểm mở rộng (`EntityIndexer`, `SeoUrlRouteInterface`…). Bảng/entity/lệnh riêng là lựa chọn cuối. Xem [../08-quy-tac-phat-trien.md](../08-quy-tac-phat-trien.md) Quy tắc số 4 — có ví dụ thật từ đợt rà soát `AcmeBrand`.
+
 ---
 
 ## 1. Tạo cấu trúc thư mục

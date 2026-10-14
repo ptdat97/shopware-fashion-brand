@@ -232,6 +232,52 @@ Có thể Shopware **thật sự không có** thứ đó — như trường hợ
 
 ---
 
+## Quy tắc số 4 — Không tạo lại thứ Shopware đã có
+
+**Trước khi tạo bảng, entity, trường, ô nhập Admin, subscriber hay lệnh console mới: tìm xem Shopware đã có cơ chế làm đúng việc đó chưa. Có thì dùng, không có mới viết — và viết phần nhỏ nhất còn thiếu.**
+
+Quy tắc số 3 chống *bịa API*. Quy tắc này chống điều ngược lại: *API có thật nhưng không dùng*, tự làm một bản song song. Bản song song tốn công viết, tốn công bảo trì, và các tính năng core (bộ lọc, Import/Export, Rule Builder, Admin, cache, quyền) **không biết tới nó**.
+
+### Thứ tự tìm — dừng ở bước đầu tiên đáp ứng được
+
+| # | Tìm ở đâu | Ví dụ trong dự án |
+|---|---|---|
+| 1 | **Trường / entity sẵn có** của core | Brand = `product_manufacturer` (tên, mô tả, logo, website) |
+| 2 | **Cấu hình / dữ liệu native** (Rule Builder, CMS, product stream, SEO template, snippet) | Bộ sưu tập = category + product stream; khuyến mãi theo brand = `LineItemOfManufacturerRule`; nhãn "Thương hiệu" = snippet |
+| 3 | **Custom field** trên entity core — tự dịch, tự hiện trong Admin, quyền theo entity | Meta SEO brand = custom field dịch được của nhà sản xuất; ô "Là bộ sưu tập" trên danh mục |
+| 4 | **Điểm mở rộng chính thức** (EntityExtension, EntityIndexer, SeoUrlRoute, UrlProvider, Twig block, decorator) | SEO URL brand qua `EntityIndexer` (như `LandingPageIndexer` của core); listing brand qua `ProductListingRoute` |
+| 5 | **Bảng / entity riêng** — chỉ khi 1–4 không làm được, và ghi lý do | `acme_brand`: mã brand cần `UNIQUE`, banner/layout cần khoá ngoại thật |
+
+Bước 5 phải ghi **vì sao bước 3 không đủ** (cần ràng buộc DB, khoá ngoại, index…) vào ADR hoặc docblock của class.
+
+### Ví dụ thật — rà soát `AcmeBrand` (14/10/2026)
+
+Bản đầu của plugin đã dùng nhà sản xuất làm brand, nhưng vẫn còn hai chỗ tự làm lại thứ core có sẵn:
+
+| Đã tự làm | Shopware có sẵn | Sau rà soát |
+|---|---|---|
+| Bảng dịch `acme_brand_translation` + 3 class entity + 3 ô nhập JS + quyền ACL riêng cho meta SEO | `customFields` của nhà sản xuất **dịch được**, trang nhà sản xuất **tự hiện** thẻ custom field, quyền theo `product_manufacturer` | Chuyển sang custom field `acme_brand_meta_*`; bỏ bảng, 3 class, 3 ô nhập, quyền riêng |
+| Subscriber tự bắt sự kiện ghi + lệnh `acme:brand:seo-urls` để sinh SEO URL | `EntityIndexer` — chạy khi ghi dữ liệu và trong `dal:refresh:index` | `BrandIndexer`; bỏ subscriber và lệnh riêng |
+
+Những gì **giữ lại có lý do**: bảng `acme_brand` (mã `UNIQUE`, khoá ngoại banner/layout), trang storefront `/brands` (core không có trang nhà sản xuất), route SEO và sitemap (điểm mở rộng chính thức, không phải bản sao).
+
+### Tự kiểm trước khi tạo mới
+
+```bash
+# Entity core có trường này chưa?
+grep -n "Field('" vendor/shopware/core/Content/<Khu vực>/<Entity>Definition.php
+
+# Có cơ chế native cùng mục đích chưa? (indexer, SEO route, rule, CMS element…)
+grep -rln "extends EntityIndexer\|implements SeoUrlRouteInterface" vendor/shopware/core vendor/shopware/storefront
+ls vendor/shopware/core/Checkout/Cart/Rule/          # điều kiện Rule Builder có sẵn
+ls vendor/shopware/core/Content/Product/Cms/         # CMS element sản phẩm có sẵn
+
+# Trang Admin của entity đó đã có thẻ custom field chưa?
+grep -n "custom-field-set-renderer" vendor/shopware/administration/Resources/app/administration/src/module/<module>/page/*/*.twig
+```
+
+---
+
 ## Vì sao quy tắc này quan trọng
 
 ### 1. Mọi thay đổi trong `vendor/` sẽ bị xoá sạch
@@ -389,12 +435,14 @@ Tuyệt đối không sửa tay trực tiếp rồi để đó.
 | ❌ Không copy | Nguyên file template rồi sửa vài dòng |
 | ❌ Không `composer require` | Plugin tự viết trong `custom/plugins/` |
 | ❌ **Không bịa API** | Tên class từ trí nhớ/blog/AI mà chưa `grep` xác nhận |
+| ❌ **Không tạo lại thứ core có** | Bảng/entity/ô nhập/lệnh riêng cho việc core đã làm được — dùng trường sẵn có → cấu hình native → custom field → điểm mở rộng, bảng riêng là cuối cùng |
 
-**Ba câu hỏi tự kiểm tra trước mỗi thay đổi:**
+**Bốn câu hỏi tự kiểm tra trước mỗi thay đổi:**
 
 1. *"Sau khi chạy `composer update`, thay đổi này còn không?"* — Nếu **không** → đang sửa nhầm chỗ, phải làm qua plugin/theme.
 2. *"Thay đổi này có buộc phải sửa file dùng chung (`composer.json`, `composer.lock`) không?"* — Nếu **có** mà chỉ để cài plugin tự viết → thừa, bỏ đi.
 3. *"Mọi class và method mình đang dùng, đã mở `vendor/` xác nhận có thật trong 6.7 chưa?"* — Nếu **chưa** → dừng lại, `grep` trước khi viết tiếp.
+4. *"Shopware đã có trường, cấu hình, custom field hay điểm mở rộng làm được việc này chưa?"* — Nếu **có** → dùng nó, không tạo bản song song (Quy tắc số 4).
 
 ---
 

@@ -2,7 +2,6 @@
 
 namespace Acme\Brand\Core\Content\Brand;
 
-use Acme\Brand\Core\Content\Brand\Aggregate\BrandTranslation\BrandTranslationCollection;
 use Shopware\Core\Content\Cms\CmsPageEntity;
 use Shopware\Core\Content\Media\MediaEntity;
 use Shopware\Core\Content\Product\Aggregate\ProductManufacturer\ProductManufacturerEntity;
@@ -31,19 +30,12 @@ class BrandEntity extends Entity
 
     protected ?string $cmsPageVersionId = null;
 
-    protected ?string $metaTitle = null;
-
-    protected ?string $metaDescription = null;
-
-    protected ?string $keywords = null;
-
     protected ?ProductManufacturerEntity $productManufacturer = null;
 
     protected ?MediaEntity $bannerMedia = null;
 
     protected ?CmsPageEntity $cmsPage = null;
 
-    protected ?BrandTranslationCollection $translations = null;
 
     public function getProductManufacturerId(): string
     {
@@ -135,36 +127,6 @@ class BrandEntity extends Entity
         $this->cmsPageVersionId = $cmsPageVersionId;
     }
 
-    public function getMetaTitle(): ?string
-    {
-        return $this->metaTitle;
-    }
-
-    public function setMetaTitle(?string $metaTitle): void
-    {
-        $this->metaTitle = $metaTitle;
-    }
-
-    public function getMetaDescription(): ?string
-    {
-        return $this->metaDescription;
-    }
-
-    public function setMetaDescription(?string $metaDescription): void
-    {
-        $this->metaDescription = $metaDescription;
-    }
-
-    public function getKeywords(): ?string
-    {
-        return $this->keywords;
-    }
-
-    public function setKeywords(?string $keywords): void
-    {
-        $this->keywords = $keywords;
-    }
-
     public function getProductManufacturer(): ?ProductManufacturerEntity
     {
         return $this->productManufacturer;
@@ -193,15 +155,5 @@ class BrandEntity extends Entity
     public function setCmsPage(?CmsPageEntity $cmsPage): void
     {
         $this->cmsPage = $cmsPage;
-    }
-
-    public function getTranslations(): ?BrandTranslationCollection
-    {
-        return $this->translations;
-    }
-
-    public function setTranslations(BrandTranslationCollection $translations): void
-    {
-        $this->translations = $translations;
     }
 }

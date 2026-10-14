@@ -2,6 +2,7 @@
 
 namespace Acme\Brand\Tests\Integration\Storefront;
 
+use Acme\Brand\BrandCustomFields;
 use Acme\Brand\BrandException;
 use Acme\Brand\Seo\BrandPageSeoUrlRoute;
 use Acme\Brand\Storefront\Page\Brand\BrandPageLoader;
@@ -121,6 +122,22 @@ class BrandPageLoaderTest extends TestCase
         ], $this->context->getContext());
 
         static::assertSame('brands/alpha-studio', $this->canonicalSeoPath($this->ids->get('alpha')));
+    }
+
+    public function testPageMetaComesFromManufacturerCustomFieldsWithFallbacks(): void
+    {
+        static::getContainer()->get('product_manufacturer.repository')->update([[
+            'id' => $this->ids->get('alpha'),
+            'description' => '<p>Mô tả Alpha</p>',
+            'customFields' => [BrandCustomFields::META_TITLE => 'Alpha chính hãng'],
+        ]], Context::createDefaultContext());
+
+        $meta = $this->loader->load($this->ids->get('alpha'), new Request(), $this->context)->getMetaInformation();
+
+        static::assertNotNull($meta);
+        static::assertSame('Alpha chính hãng', $meta->getMetaTitle());
+        static::assertSame('Mô tả Alpha', $meta->getMetaDescription(), 'Thiếu meta description thì lấy từ mô tả nhà sản xuất');
+        static::assertSame('Brand Alpha', $meta->getMetaKeywords(), 'Thiếu keywords thì lấy tên');
     }
 
     private function canonicalSeoPath(string $manufacturerId): ?string

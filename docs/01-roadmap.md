@@ -156,6 +156,8 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 ## Phase MB — Đa thương hiệu 🔄 **ĐANG TRIỂN KHAI** (từ 12/10/2026)
 
+> **Rà soát 14/10/2026 — tận dụng thứ Shopware đã có** (AcmeBrand 1.2.0): meta SEO chuyển sang custom field dịch được của nhà sản xuất (bỏ bảng dịch riêng, 3 class, 3 ô nhập JS); SEO URL brand chuyển sang `EntityIndexer` (bỏ subscriber + lệnh `acme:brand:seo-urls`). 31 test đạt; Admin chụp ảnh kiểm chứng thẻ custom field native. Chi tiết: [ADR-003](decisions/ADR-003-mo-hinh-thuong-hieu.md) mục *Rà soát*, quy tắc mới: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 4.
+
 **Mục tiêu:** nhiều thương hiệu bán chung một website, một catalog, một giỏ hàng; mỗi brand có trang riêng tại `/brands/{slug}`.
 
 **Kiến trúc:** brand = `product_manufacturer` của core + plugin `AcmeBrand` lưu phần core không có (active, banner, layout, SEO meta). Một sales channel. Bộ sưu tập = category + product stream. Chi tiết: [12-da-thuong-hieu.md](12-da-thuong-hieu.md).
@@ -176,7 +178,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 | Việc | Trạng thái |
 |---|---|
-| Migration bảng `acme_brand` + `acme_brand_translation` | ✅ `Migration1791823368CreateBrandTables` |
+| Migration bảng `acme_brand` | ✅ `Migration1791823368CreateBrandTables` (bảng dịch đi kèm đã bỏ ở rà soát 14/10 — meta SEO thành custom field của nhà sản xuất) |
 | `EntityExtension` trên `product_manufacturer` → `manufacturer.extensions.acmeBrand` | ✅ Autoload, xoá manufacturer kéo theo xoá brand |
 | Mã brand 3 ký tự (`code`) — duy nhất, đúng định dạng `[A-Z0-9]{3}` | ✅ Kiểm ở tầng ghi DAL, trùng mã trả 400 `ACME_BRAND__DUPLICATE_CODE` |
 | Administration: thẻ "Thương hiệu" trong trang nhà sản xuất (hiển thị, nổi bật, mã, thứ tự, banner, layout, SEO meta) | ✅ JS viết tay, có snippet vi-VN / en-GB |
@@ -187,7 +189,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 - `vendor/bin/phpunit -c custom/plugins/AcmeBrand` → **16 test / 41 assertion đạt**, không deprecation: ghi/đọc qua DAL, mặc định *không hoạt động*, xoá manufacturer → xoá brand, xoá banner → brand còn, mã sai định dạng bị chặn, trùng mã → lỗi 400, migration chạy lại vô hại, quyền ACL thêm đúng và không nhân đôi.
 - Administration điều khiển bằng Chrome DevTools Protocol, user tạm (đã xoá): bật công tắc + gõ `mbt` + bấm Lưu → DB `code = MBT`, `active = 1`, meta title lưu theo ngôn ngữ nội dung đang chọn. Chụp ảnh giao diện en-GB và vi-VN. Phát hiện và sửa 2 lỗi hiển thị (ô thứ tự trống, gõ chữ thường khi mã không đổi vẫn hiện chữ thường).
-- Xoá nhà sản xuất qua Admin API → 0 dòng `acme_brand` / `acme_brand_translation` còn lại.
+- Xoá nhà sản xuất qua Admin API → 0 dòng `acme_brand` còn lại.
 
 > **Không có Jest** (quyết định 14/10/2026): Administration không có `node_modules`, `npm install` ~1 GB và mất mỗi lần `composer update`. Component admin được kiểm bằng thao tác thật qua CDP + ảnh chụp thay cho Jest.
 >
@@ -237,7 +239,7 @@ Chi tiết: [02-theme.md](02-theme.md), thao tác tại [runbook/02-tao-theme.md
 
 > 🔴 **`cache:clear` KHÔNG xoá HTTP cache** ở Shopware 6.7. Sửa template/code mà storefront vẫn hiện bản cũ → `bin/console cache:clear:http`. Đã mất công hai lần trong MB3 vì bẫy này.
 >
-> Sau khi cài/cập nhật `AcmeBrand` hoặc sửa template SEO: `bin/console acme:brand:seo-urls` — `dal:refresh:index` của core không phủ route brand.
+> Sau khi cài/cập nhật `AcmeBrand` hoặc sửa template SEO: `bin/console dal:refresh:index --only=acme_brand.indexer` (từ 1.2.0 SEO URL brand đi qua cơ chế indexing của core).
 
 ### MB4 — Bộ sưu tập ✅ (14/10/2026)
 

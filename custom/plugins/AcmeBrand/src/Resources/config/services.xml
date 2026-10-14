@@ -8,10 +8,6 @@
             <tag name="shopware.entity.definition" entity="acme_brand"/>
         </service>
 
-        <service id="Acme\Brand\Core\Content\Brand\Aggregate\BrandTranslation\BrandTranslationDefinition">
-            <tag name="shopware.entity.definition" entity="acme_brand_translation"/>
-        </service>
-
         <service id="Acme\Brand\Extension\ProductManufacturerBrandExtension">
             <tag name="shopware.entity.extension"/>
         </service>
@@ -30,15 +26,13 @@
             <tag name="shopware.seo_url.route"/>
         </service>
 
-        <service id="Acme\Brand\Seo\BrandSeoUrlUpdater">
-            <argument type="service" id="Shopware\Core\Content\Seo\SeoUrlUpdater"/>
+        <!-- SEO URL qua cơ chế indexing của core (như LandingPageIndexer) — dal:refresh:index phủ luôn -->
+        <service id="Acme\Brand\Core\Content\Brand\DataAbstractionLayer\BrandIndexer">
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Dbal\Common\IteratorFactory"/>
+            <argument type="service" id="Acme\Brand\Core\Content\Brand\BrandDefinition"/>
             <argument type="service" id="Doctrine\DBAL\Connection"/>
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
-        <service id="Acme\Brand\Command\RefreshBrandSeoUrlsCommand">
-            <argument type="service" id="Acme\Brand\Seo\BrandSeoUrlUpdater"/>
-            <tag name="console.command"/>
+            <argument type="service" id="Shopware\Core\Content\Seo\SeoUrlUpdater"/>
+            <tag name="shopware.entity_indexer"/>
         </service>
 
         <service id="Acme\Brand\Sitemap\BrandUrlProvider">

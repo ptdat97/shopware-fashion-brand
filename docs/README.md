@@ -73,6 +73,8 @@ Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một websit
 >
 > **4. Brand là `product_manufacturer`, mọi brand chung một sales channel.** Không tạo entity brand song song, không tạo sales channel/theme theo brand, không chèn logic brand vào cart/checkout — xem [12-da-thuong-hieu.md](12-da-thuong-hieu.md) mục 6.
 >
+> **5. Không tạo lại thứ Shopware đã có.** Trường sẵn có → cấu hình native → custom field → điểm mở rộng; bảng/entity riêng là lựa chọn cuối, phải ghi lý do — [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 4.
+>
 > Chi tiết và cách làm đúng cho từng nhu cầu: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md)
 
 ## Quy ước của bộ tài liệu

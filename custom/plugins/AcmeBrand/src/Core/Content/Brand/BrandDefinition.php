@@ -2,7 +2,6 @@
 
 namespace Acme\Brand\Core\Content\Brand;
 
-use Acme\Brand\Core\Content\Brand\Aggregate\BrandTranslation\BrandTranslationDefinition;
 use Shopware\Core\Content\Cms\CmsPageDefinition;
 use Shopware\Core\Content\Media\MediaDefinition;
 use Shopware\Core\Content\Product\Aggregate\ProductManufacturer\ProductManufacturerDefinition;
@@ -18,12 +17,19 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField
 use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ReferenceVersionField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslatedField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslationsAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 
 /**
- * Phần mở rộng 1–1 của `product_manufacturer`: những thuộc tính thương hiệu core không có.
+ * Phần mở rộng 1–1 của `product_manufacturer`: CHỈ những thuộc tính core không có VÀ
+ * không đặt được vào custom field của nhà sản xuất:
+ *
+ * - `code`              cần ràng buộc UNIQUE ở DB (tiền tố SKU)
+ * - `banner_media_id`,  cần khoá ngoại thật — xoá media/layout thì tự gỡ liên kết,
+ *   `cms_page_id`       custom field chỉ giữ id chết
+ * - `active`, `featured`, `position` — đi cùng bảng này để dữ liệu brand không nằm rải rác
+ *
+ * Tên, mô tả, logo, website: nhà sản xuất của core. Meta SEO: custom field dịch được của
+ * nhà sản xuất (`acme_brand_meta_*`). Slug: seo_url. Xem ADR-003.
  */
 class BrandDefinition extends EntityDefinition
 {
@@ -70,14 +76,9 @@ class BrandDefinition extends EntityDefinition
             (new FkField('cms_page_id', 'cmsPageId', CmsPageDefinition::class))->addFlags(new ApiAware()),
             (new ReferenceVersionField(CmsPageDefinition::class))->addFlags(new ApiAware()),
 
-            (new TranslatedField('metaTitle'))->addFlags(new ApiAware()),
-            (new TranslatedField('metaDescription'))->addFlags(new ApiAware()),
-            (new TranslatedField('keywords'))->addFlags(new ApiAware()),
-
             new OneToOneAssociationField('productManufacturer', 'product_manufacturer_id', 'id', ProductManufacturerDefinition::class, false),
             (new ManyToOneAssociationField('bannerMedia', 'banner_media_id', MediaDefinition::class, 'id', false))->addFlags(new ApiAware()),
             (new ManyToOneAssociationField('cmsPage', 'cms_page_id', CmsPageDefinition::class, 'id', false))->addFlags(new ApiAware()),
-            (new TranslationsAssociationField(BrandTranslationDefinition::class, 'acme_brand_id'))->addFlags(new ApiAware()),
         ]);
     }
 }

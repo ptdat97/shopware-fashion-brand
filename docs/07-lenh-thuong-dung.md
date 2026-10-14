@@ -39,7 +39,7 @@ php bin/console dal:refresh:index
 
 ```bash
 # 🟢 Sinh lại URL /brands/... — sau khi cài/cập nhật AcmeBrand hoặc sửa template SEO
-php bin/console acme:brand:seo-urls
+php bin/console dal:refresh:index --only=acme_brand.indexer
 ```
 
 ---

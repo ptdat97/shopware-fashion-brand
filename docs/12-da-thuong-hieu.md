@@ -96,17 +96,21 @@ Quyết định và các phương án bị loại: [decisions/ADR-003-mo-hinh-th
 ### 5.1 Brand = `product_manufacturer` + phần mở rộng
 
 ```
-product_manufacturer (core)            acme_brand (plugin)                 acme_brand_translation (plugin)
-├─ id  ────────────────────────────┐   ├─ product_manufacturer_id  PK/FK ┐ ├─ acme_brand_id      FK
-├─ name          (dịch)            └──►├─ code            char(3) uniq  │ ├─ language_id        FK
-│                                      ├─ active          bool          │
-├─ description   (dịch, HTML)          ├─ banner_media_id  FK media       │ ├─ meta_title
-├─ link                                ├─ cms_page_id      FK cms_page    │ ├─ meta_description
-├─ media_id      (logo)                ├─ position         int            │ └─ keywords
-└─ customFields                        ├─ featured         bool           │
-                                       └─ created_at / updated_at         │
-product.manufacturer_id ───► brand     seo_url  (route brand) ◄───────────┘  ← slug
+product_manufacturer (core)                          acme_brand (plugin) — chỉ thứ core không có
+├─ id  ──────────────────────────────────────────┐   ├─ product_manufacturer_id  PK/FK
+├─ name          (dịch)                          └──►├─ code            char(3) UNIQUE   ← tiền tố SKU
+├─ description   (dịch, HTML)                        ├─ active          bool
+├─ link                                              ├─ featured        bool
+├─ media_id      (logo)                              ├─ position        int
+└─ customFields  (dịch)                              ├─ banner_media_id FK media     (SET NULL)
+     ├─ acme_brand_meta_title        ← meta SEO      └─ cms_page_id     FK cms_page  (SET NULL)
+     ├─ acme_brand_meta_description     (custom field
+     └─ acme_brand_keywords              native)
+
+product.manufacturer_id ───► brand          seo_url (route frontend.acme.brand.page) ← slug
 ```
+
+> Từ 14/10/2026 (AcmeBrand 1.2.0) meta SEO là **custom field dịch được của nhà sản xuất** — không còn bảng dịch riêng `acme_brand_translation`. Lý do: Shopware đã có cơ chế dịch và ô nhập cho custom field; tạo bảng dịch riêng là làm lại thứ đã có — [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 4.
 
 - **Không tạo entity brand thứ hai.** Tên, mô tả, logo giữ ở manufacturer — nơi Administration, Import/Export, bộ lọc, tìm kiếm, rule khuyến mãi đều đã dùng.
 - Bảng `acme_brand` quan hệ **1–1**, xoá manufacturer thì xoá theo (`ON DELETE CASCADE`). Gắn vào manufacturer qua `EntityExtension` → đọc được bằng `manufacturer.extensions.acmeBrand` ở mọi API.
@@ -149,7 +153,7 @@ Bổ sung cho [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) và [09-nguye
 1. **Brand là `product_manufacturer`.** Không tạo entity brand song song, không dùng category hay tag để đánh dấu brand.
 2. **Một sales channel cho mọi brand.** Không tạo channel / theme / domain theo brand.
 3. **Commerce không biết brand.** Không chèn logic brand vào cart, checkout, payment handler. Chính sách theo brand (khuyến mãi, phí ship) viết bằng **Rule Builder** (`LineItemOfManufacturerRule`).
-4. **Không trùng lặp dữ liệu.** Tên/mô tả/logo ở manufacturer; slug ở `seo_url`; plugin chỉ lưu thứ core thật sự không có.
+4. **Không trùng lặp dữ liệu, không làm lại thứ core có.** Tên/mô tả/logo ở manufacturer; slug ở `seo_url`; meta SEO là custom field của manufacturer; SEO URL sinh qua `EntityIndexer`. Bảng riêng chỉ cho thứ cần ràng buộc DB (mã UNIQUE, khoá ngoại) — [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 4.
 5. **Bộ sưu tập là category.** Chỉ viết code khi category + product stream không đáp ứng được.
 6. **Không đánh dấu ✅ khi chưa kiểm thử** — automated test + chụp ảnh storefront ([02-theme.md](02-theme.md)).
 

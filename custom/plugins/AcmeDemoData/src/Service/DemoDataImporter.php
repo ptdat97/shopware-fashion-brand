@@ -485,6 +485,8 @@ class DemoDataImporter
                 'translations' => $this->translate($context, [
                     'name' => $brand['name'],
                     'description' => $brand['description'],
+                    // Meta SEO = custom field dịch được của nhà sản xuất (AcmeBrand ≥ 1.2.0)
+                    'customFields' => ['acme_brand_meta_title' => $brand['name'] . ' — thời trang nữ'],
                 ]),
             ];
 
@@ -495,9 +497,6 @@ class DemoDataImporter
                     'active' => true,
                     'featured' => $brand['featured'],
                     'position' => $brand['position'],
-                    'translations' => $this->translate($context, [
-                        'metaTitle' => $brand['name'] . ' — thời trang nữ',
-                    ]),
                 ];
             }
 

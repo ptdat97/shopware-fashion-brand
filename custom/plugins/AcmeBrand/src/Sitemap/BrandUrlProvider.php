@@ -16,7 +16,7 @@ use Shopware\Core\System\SalesChannel\SalesChannelContext;
  * Đưa trang `/brands/{slug}` của brand đang hoạt động vào sitemap.
  *
  * Brand chưa có SEO URL thì bỏ qua thay vì ghi đường dẫn kỹ thuật `/brand/{id}` —
- * chạy `bin/console acme:brand:seo-urls` để sinh.
+ * chạy `bin/console dal:refresh:index --only=acme_brand.indexer` để sinh.
  *
  * @internal
  */

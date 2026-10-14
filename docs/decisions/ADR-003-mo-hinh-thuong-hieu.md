@@ -15,7 +15,7 @@ Core 6.7.12.2 đã có `product_manufacturer` với `name`, `description`, `link
 
 ### A. Manufacturer + bảng mở rộng của plugin (đã chọn)
 
-`product_manufacturer` là brand. Plugin `AcmeBrand` thêm bảng `acme_brand` (1–1, FK cascade) và `acme_brand_translation`, nối bằng `EntityExtension`.
+`product_manufacturer` là brand. Plugin `AcmeBrand` thêm bảng `acme_brand` (1–1, FK cascade), nối bằng `EntityExtension`. Meta SEO dùng custom field dịch được của nhà sản xuất (bản đầu dùng bảng dịch `acme_brand_translation` — đã bỏ ở rà soát 14/10/2026, xem cuối ADR).
 
 | Ưu | Nhược |
 |---|---|
@@ -91,6 +91,28 @@ Gọi `ProductListingRoute` (bản đã decorate bởi `ResolveCriteriaProductLi
 - Bộ lọc "Thương hiệu" được tắt trên trang của chính brand (`manufacturer-filter = false`).
 
 Đã loại hướng gọi thẳng `ProductListingLoader` + processor: đó là service `@internal`, dễ vỡ qua bản vá.
+
+## Rà soát 14/10/2026 — tận dụng thứ Shopware đã có
+
+Rà lại toàn bộ `AcmeBrand` theo [Quy tắc số 4](../08-quy-tac-phat-trien.md). Hai chỗ đang làm lại cơ chế core có sẵn đã được thay (AcmeBrand 1.2.0):
+
+| Phần | Trước | Sau | Vì sao |
+|---|---|---|---|
+| Meta SEO (title, description, keywords) | Bảng dịch `acme_brand_translation`, 3 class entity, 3 ô nhập JS, quyền ACL riêng | Custom field `acme_brand_meta_*` **dịch được** trên nhà sản xuất | Core đã có dịch theo ngôn ngữ + thẻ custom field trong trang nhà sản xuất + quyền theo `product_manufacturer`. Đúng điều phương án B nói: hợp với thuộc tính phụ, không ràng buộc |
+| Sinh SEO URL `/brands/{slug}` | Subscriber `EntityWrittenContainerEvent` + lệnh `acme:brand:seo-urls` | `BrandIndexer extends EntityIndexer` | Cơ chế indexing của core — chạy khi ghi dữ liệu và trong `dal:refresh:index`. Core dùng đúng cách này cho landing page (`LandingPageIndexer`) |
+
+Giữ nguyên có lý do:
+
+| Phần | Vì sao không dùng thứ core có |
+|---|---|
+| `acme_brand.code` | Cần ràng buộc `UNIQUE` ở DB — custom field (JSON) không có |
+| `acme_brand.banner_media_id`, `cms_page_id` | Cần khoá ngoại thật, xoá media/layout tự gỡ liên kết — custom field chỉ giữ id chết |
+| `active`, `featured`, `position` | Đi cùng bảng trên để dữ liệu cấu trúc của brand ở một chỗ |
+| Trang `/brands`, `/brands/{slug}` | Core không có trang nhà sản xuất ở storefront |
+| `BrandPageSeoUrlRoute`, `BrandUrlProvider` | Là **điểm mở rộng** chính thức (`SeoUrlRouteInterface`, `AbstractUrlProvider`), không phải bản sao |
+| Thẻ "Thương hiệu" trong Admin | Entity mở rộng không có form sẵn — chỉ còn các trường cấu trúc ở trên |
+
+Chuyển dữ liệu: `Migration1791962277MoveSeoMetaToManufacturerCustomFields` chép meta cũ sang custom field (không ghi đè giá trị đã nhập), gỡ quyền của bảng cũ; bảng cũ bị xoá ở phần destructive — `bin/console database:migrate-destructive AcmeBrand --all`.
 
 ## Hệ quả
 

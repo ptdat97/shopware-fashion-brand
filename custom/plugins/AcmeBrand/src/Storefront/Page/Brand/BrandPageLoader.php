@@ -2,6 +2,7 @@
 
 namespace Acme\Brand\Storefront\Page\Brand;
 
+use Acme\Brand\BrandCustomFields;
 use Acme\Brand\BrandException;
 use Acme\Brand\Core\Content\Brand\BrandEntity;
 use Acme\Brand\Extension\ProductManufacturerBrandExtension;
@@ -86,7 +87,7 @@ class BrandPageLoader
         $page->setBrand($brand);
         $page->setCmsPage($this->loadCmsPage($brand, $request, $context));
         $page->setListing($this->loadListing($manufacturerId, $request, $context));
-        $page->setMetaInformation($this->buildMeta($page->getMetaInformation(), $manufacturer, $brand));
+        $page->setMetaInformation($this->buildMeta($page->getMetaInformation(), $manufacturer));
 
         $this->eventDispatcher->dispatch(new BrandPageLoadedEvent($page, $context, $request));
 
@@ -137,18 +138,23 @@ class BrandPageLoader
         return $this->cmsPageLoader->load($request, new Criteria([$cmsPageId]), $context)->getEntities()->first();
     }
 
-    private function buildMeta(?MetaInformation $meta, ProductManufacturerEntity $manufacturer, BrandEntity $brand): MetaInformation
+    /**
+     * Meta SEO nằm trong custom field dịch được của nhà sản xuất — cơ chế dịch và ô nhập
+     * trong Administration đều là của core. Thiếu thì lấy từ tên / mô tả.
+     */
+    private function buildMeta(?MetaInformation $meta, ProductManufacturerEntity $manufacturer): MetaInformation
     {
         $meta ??= new MetaInformation();
         $name = (string) $manufacturer->getTranslation('name');
+        $custom = $manufacturer->getTranslation('customFields') ?? [];
 
-        $meta->setMetaTitle((string) ($brand->getTranslation('metaTitle') ?: $name));
+        $meta->setMetaTitle((string) (($custom[BrandCustomFields::META_TITLE] ?? '') ?: $name));
 
-        $description = $brand->getTranslation('metaDescription')
+        $description = ($custom[BrandCustomFields::META_DESCRIPTION] ?? '')
             ?: mb_substr(trim(strip_tags((string) $manufacturer->getTranslation('description'))), 0, self::DESCRIPTION_LENGTH);
         $meta->setMetaDescription((string) $description);
 
-        $meta->setMetaKeywords((string) ($brand->getTranslation('keywords') ?: $name));
+        $meta->setMetaKeywords((string) (($custom[BrandCustomFields::KEYWORDS] ?? '') ?: $name));
 
         return $meta;
     }

@@ -51,8 +51,6 @@ class BrandRepositoryTest extends TestCase
                 'active' => true,
                 'featured' => true,
                 'position' => 5,
-                'metaTitle' => 'Nike chính hãng',
-                'metaDescription' => 'Giày và quần áo Nike',
             ],
         ]], $this->context);
 
@@ -66,8 +64,6 @@ class BrandRepositoryTest extends TestCase
         static::assertTrue($brand->isActive());
         static::assertTrue($brand->isFeatured());
         static::assertSame(5, $brand->getPosition());
-        static::assertSame('Nike chính hãng', $brand->getTranslation('metaTitle'));
-        static::assertSame('Giày và quần áo Nike', $brand->getTranslation('metaDescription'));
     }
 
     public function testNewBrandIsInactiveUntilEnabled(): void
@@ -104,7 +100,7 @@ class BrandRepositoryTest extends TestCase
         $this->manufacturerRepository->create([[
             'id' => $manufacturerId,
             'name' => 'Puma',
-            'acmeBrand' => ['code' => 'PUM', 'metaTitle' => 'Puma'],
+            'acmeBrand' => ['code' => 'PUM'],
         ]], $this->context);
         $brandId = $this->loadBrandOf($manufacturerId)->getId();
 

@@ -2,7 +2,7 @@
 
 Một website, một catalog, một checkout cho **nhiều thương hiệu** thời trang tại thị trường Việt Nam; mỗi thương hiệu có logo, banner, landing page, SEO riêng (`/brands/{slug}`, `/collections/{slug}`). Toàn bộ tài liệu kỹ thuật nằm ở [docs/](docs/); kiến trúc đa thương hiệu ở [docs/12-da-thuong-hieu.md](docs/12-da-thuong-hieu.md).
 
-## Năm quy tắc cứng
+## Sáu quy tắc cứng
 
 **1. Không sửa `vendor/`.** Mọi tuỳ biến viết qua Plugin, App hoặc Theme trong `custom/`. `composer update` ghi đè sạch `vendor/`, git không track thư mục này.
 
@@ -16,7 +16,9 @@ php bin/check-plugin-api.php     # bắt lỗi class không tồn tại
 
 **4. Backup trước mọi thay đổi dữ liệu.** Xem [docs/runbook/00-backup.md](docs/runbook/00-backup.md).
 
-**5. Brand là `product_manufacturer` — mở rộng, không xây lại.** Không tạo entity brand song song, không dùng category/tag để đánh dấu brand, không tạo sales channel/theme/domain theo brand, không chèn logic brand vào cart/checkout/payment (chính sách theo brand dùng Rule Builder). Phần core thiếu (active, banner, layout, SEO meta) đặt trong plugin `AcmeBrand`. Xem [docs/decisions/ADR-003-mo-hinh-thuong-hieu.md](docs/decisions/ADR-003-mo-hinh-thuong-hieu.md).
+**5. Brand là `product_manufacturer` — mở rộng, không xây lại.** Không tạo entity brand song song, không dùng category/tag để đánh dấu brand, không tạo sales channel/theme/domain theo brand, không chèn logic brand vào cart/checkout/payment (chính sách theo brand dùng Rule Builder). Phần core thiếu đặt trong plugin `AcmeBrand`: bảng `acme_brand` chỉ cho thứ cần ràng buộc DB (mã UNIQUE, banner/layout khoá ngoại, active/featured/position); meta SEO là custom field của nhà sản xuất. Xem [docs/decisions/ADR-003-mo-hinh-thuong-hieu.md](docs/decisions/ADR-003-mo-hinh-thuong-hieu.md).
+
+**6. Không tạo lại thứ Shopware đã có.** Trước khi thêm bảng/entity/trường/ô nhập Admin/subscriber/lệnh: tìm theo thứ tự trường sẵn có → cấu hình native (Rule Builder, CMS, product stream, snippet) → custom field → điểm mở rộng (EntityIndexer, SeoUrlRoute, decorator) → bảng riêng là cuối cùng, phải ghi lý do. Xem [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) Quy tắc số 4.
 
 Chi tiết và lý do: [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) · [docs/09-nguyen-tac-ky-thuat.md](docs/09-nguyen-tac-ky-thuat.md)
 
@@ -70,7 +72,7 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 
 - **MB3** ✅ — `/brands`, `/brands/{slug}` (listing core trên category gốc + lọc manufacturer, lọc/sắp xếp AJAX), SEO URL + canonical + sitemap, brand tắt → 404, link brand ở trang sản phẩm. 23 test đạt
 
-> 🔴 **`cache:clear` không xoá HTTP cache.** Đổi template/code → thêm `bin/console cache:clear:http`. Đổi template SEO brand → `bin/console acme:brand:seo-urls`.
+> 🔴 **`cache:clear` không xoá HTTP cache.** Đổi template/code → thêm `bin/console cache:clear:http`. Đổi template SEO brand → `bin/console dal:refresh:index --only=acme_brand.indexer`.
 
 - **MB4** ✅ — bộ sưu tập `/collections/{tên}` = category + product stream của core; `AcmeCatalog` thêm ô "Là bộ sưu tập" + template SEO navigation. Sau khi cập nhật `AcmeCatalog`: `bin/console dal:refresh:index`
 

@@ -9,6 +9,8 @@
  * Sau khi sửa file này phải chạy: bin/console assets:install
  *
  * Dữ liệu brand nằm ở `manufacturer.extensions.acmeBrand` (quan hệ 1–1, autoload).
+ * Meta SEO KHÔNG nằm ở đây: đó là custom field dịch được của nhà sản xuất, hiện trong
+ * thẻ custom field có sẵn của core ngay bên dưới — không vẽ lại ô nhập.
  * Manufacturer chưa có bản ghi brand thì tạo sẵn một bản trong bộ nhớ; nó chỉ được
  * ghi xuống khi người dùng sửa ít nhất một trường — changeset của core bỏ qua
  * entity mới không đổi gì.
@@ -25,20 +27,15 @@ Shopware.Service('privileges').addPrivilegeMappingEntry({
     key: 'product_manufacturer',
     roles: {
         viewer: {
-            privileges: ['acme_brand:read', 'acme_brand_translation:read', 'cms_page:read'],
+            privileges: ['acme_brand:read', 'cms_page:read'],
             dependencies: [],
         },
         editor: {
-            privileges: [
-                'acme_brand:create',
-                'acme_brand:update',
-                'acme_brand_translation:create',
-                'acme_brand_translation:update',
-            ],
+            privileges: ['acme_brand:create', 'acme_brand:update'],
             dependencies: [],
         },
         deleter: {
-            privileges: ['acme_brand:delete', 'acme_brand_translation:delete'],
+            privileges: ['acme_brand:delete'],
             dependencies: [],
         },
     },
@@ -139,30 +136,6 @@ Component.override('sw-manufacturer-detail', {
         :disabled="!canEditBrand || undefined"
     />
 
-    <mt-text-field
-        v-model="brand.metaTitle"
-        name="acme-brand-meta-title"
-        maxlength="255"
-        :label="$t('acme-brand.field.metaTitle')"
-        :placeholder="placeholder(brand, 'metaTitle')"
-        :disabled="!canEditBrand || undefined"
-    />
-
-    <mt-textarea
-        v-model="brand.metaDescription"
-        name="acme-brand-meta-description"
-        :label="$t('acme-brand.field.metaDescription')"
-        :placeholder="placeholder(brand, 'metaDescription')"
-        :disabled="!canEditBrand || undefined"
-    />
-
-    <mt-text-field
-        v-model="brand.keywords"
-        name="acme-brand-keywords"
-        :label="$t('acme-brand.field.keywords')"
-        :placeholder="placeholder(brand, 'keywords')"
-        :disabled="!canEditBrand || undefined"
-    />
 </mt-card>
 {% endblock %}
 `,
@@ -282,9 +255,6 @@ Locale.extend('vi-VN', {
             position: 'Thứ tự hiển thị',
             banner: 'Banner',
             cmsPage: 'Layout trang thương hiệu',
-            metaTitle: 'Meta title',
-            metaDescription: 'Meta description',
-            keywords: 'Từ khoá SEO',
         },
         placeholder: {
             code: 'VD: NKE',
@@ -314,9 +284,6 @@ Locale.extend('en-GB', {
             position: 'Position',
             banner: 'Banner',
             cmsPage: 'Brand page layout',
-            metaTitle: 'Meta title',
-            metaDescription: 'Meta description',
-            keywords: 'SEO keywords',
         },
         placeholder: {
             code: 'e.g. NKE',
