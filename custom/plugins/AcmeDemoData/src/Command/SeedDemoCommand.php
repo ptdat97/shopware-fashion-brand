@@ -2,7 +2,7 @@
 
 namespace Acme\DemoData\Command;
 
-use Acme\DemoData\Service\DemoDataException;
+use Acme\DemoData\DemoDataException;
 use Acme\DemoData\Service\DemoDataImporter;
 use Shopware\Core\Framework\Context;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -14,6 +14,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Bản dòng lệnh của nút "Nhập dữ liệu demo" trong Administration.
  * Cùng chạy qua {@see DemoDataImporter} nên hai đường cho ra kết quả giống nhau.
+ *
+ * @internal
  */
 #[AsCommand(name: 'acme:demo:seed', description: 'Tạo dữ liệu demo thời trang từ ảnh có sẵn')]
 class SeedDemoCommand extends Command

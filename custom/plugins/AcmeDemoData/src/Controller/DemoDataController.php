@@ -2,20 +2,22 @@
 
 namespace Acme\DemoData\Controller;
 
-use Acme\DemoData\Service\DemoDataException;
 use Acme\DemoData\Service\DemoDataImporter;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Routing\ApiRouteScope;
 use Shopware\Core\PlatformRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * API cho nút "Nhập dữ liệu demo" trong Administration.
  *
  * Administration gọi `import` nhiều lần, mỗi lần một đợt nhỏ, cho tới khi `done = true`.
+ * Môi trường chưa sẵn sàng → `DemoDataException` (400, mã `ACME_DEMO_DATA__*`) do core
+ * chuyển thành JSON lỗi chuẩn.
+ *
+ * @internal
  */
 #[Route(defaults: [PlatformRequest::ATTRIBUTE_ROUTE_SCOPE => [ApiRouteScope::ID]])]
 class DemoDataController
@@ -47,11 +49,6 @@ class DemoDataController
         $payload = $request->getContent() === '' ? [] : $request->toArray();
         $offset = (int) ($payload['offset'] ?? 0);
 
-        try {
-            return new JsonResponse($this->importer->import($context, $offset));
-        } catch (DemoDataException $e) {
-            // Môi trường chưa sẵn sàng — lỗi của cấu hình, không phải của server
-            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
-        }
+        return new JsonResponse($this->importer->import($context, $offset));
     }
 }

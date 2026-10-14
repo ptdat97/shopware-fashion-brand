@@ -17,10 +17,21 @@ use Shopware\Core\Framework\Plugin\Util\PluginIdProvider;
 use Shopware\Core\Framework\Uuid\Uuid;
 
 /**
- * Phương thức thanh toán cho thị trường Việt Nam.
+ * Thanh toán cho thị trường Việt Nam: chuyển khoản VietQR.
  *
- * Cách đăng ký payment method theo đúng mẫu của swag/paypal
- * (PaymentMethodInstaller): upsert entity trước, upsert bản dịch sau.
+ * COD và chuyển khoản thường là phương thức của core, không thuộc plugin này. Plugin chỉ
+ * thêm phương thức `acme_vietqr` (handler `PrePayment` của core) và mã QR chuẩn NAPAS trên
+ * trang cảm ơn. Đăng ký payment method theo mẫu của swag/paypal (PaymentMethodInstaller):
+ * upsert entity trước, upsert bản dịch sau.
+ *
+ * Bề mặt công khai:
+ * - Phương thức thanh toán technical name `acme_vietqr`
+ * - Cấu hình `AcmePayment.config.{bankBin,accountNumber,accountHolder,referencePrefix}` (theo sales channel)
+ * - Extension trang `acmeVietQr` trên `CheckoutFinishPage`, block Twig `page_checkout_finish_details`
+ *
+ * Tắt / gỡ (08-quy-tac-phat-trien.md, Quy tắc số 5):
+ * - Tắt: phương thức VietQR bị tắt, khách không chọn được; COD và đơn cũ không ảnh hưởng.
+ * - Gỡ: phương thức chỉ bị tắt, KHÔNG xoá — đơn cũ tham chiếu tới nó (LIFE-04).
  */
 class AcmePayment extends Plugin
 {

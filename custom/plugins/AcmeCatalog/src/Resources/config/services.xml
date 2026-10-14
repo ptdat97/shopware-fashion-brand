@@ -4,9 +4,13 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="Acme\Catalog\Command\GenerateVariantsCommand">
+        <service id="Acme\Catalog\Variant\VariantGenerator">
             <argument type="service" id="product.repository"/>
             <argument type="service" id="property_group.repository"/>
+        </service>
+
+        <service id="Acme\Catalog\Command\GenerateVariantsCommand">
+            <argument type="service" id="Acme\Catalog\Variant\VariantGenerator"/>
             <tag name="console.command"/>
         </service>
     </services>

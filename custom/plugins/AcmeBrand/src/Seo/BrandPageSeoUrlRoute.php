@@ -11,6 +11,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\System\SalesChannel\SalesChannelEntity;
+use Shopware\Storefront\Framework\StorefrontFrameworkException;
 
 /**
  * Slug của thương hiệu chính là bản ghi `seo_url` này — không lưu cột slug riêng (ADR-003).
@@ -48,7 +49,7 @@ class BrandPageSeoUrlRoute implements SeoUrlRouteInterface
     public function getMapping(Entity $manufacturer, ?SalesChannelEntity $salesChannel): SeoUrlMapping
     {
         if (!$manufacturer instanceof ProductManufacturerEntity) {
-            throw new \InvalidArgumentException('Expected ProductManufacturerEntity');
+            throw StorefrontFrameworkException::invalidArgument('SEO URL Mapping expects argument to be a ProductManufacturerEntity');
         }
 
         return new SeoUrlMapping(

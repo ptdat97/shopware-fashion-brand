@@ -1,5 +1,5 @@
 {
-    "acme": {
+    "acme-payment": {
         "vietqr": {
             "title": "Scan to pay by bank transfer",
             "intro": "Open your banking app and scan the QR code below. The account number, amount and reference will be filled in automatically.",

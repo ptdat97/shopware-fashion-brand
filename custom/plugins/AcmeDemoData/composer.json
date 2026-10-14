@@ -3,7 +3,7 @@
     "description": "Dữ liệu demo thời trang cho Acme",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "require": {
         "shopware/core": "~6.7"
     },
@@ -12,11 +12,22 @@
             "Acme\\DemoData\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Acme\\DemoData\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "shopware-plugin-class": "Acme\\DemoData\\AcmeDemoData",
         "label": {
+            "vi-VN": "Acme Dữ liệu demo",
             "en-GB": "Acme Demo Data",
             "de-DE": "Acme Demo Data"
+        },
+        "description": {
+            "vi-VN": "Nhập dữ liệu demo thời trang: 3 thương hiệu, 12 mẫu, ảnh, bộ sưu tập. Chạy lại không nhân bản.",
+            "en-GB": "Fashion demo data: 3 brands, 12 products, media, collections. Safe to re-run.",
+            "de-DE": "Fashion demo data: 3 brands, 12 products, media, collections. Safe to re-run."
         }
     }
 }

@@ -60,7 +60,8 @@ Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một websit
 |---|---|
 | Chọn MySQL 8.0.33 | [decisions/ADR-001-mysql.md](decisions/ADR-001-mysql.md) |
 | Hướng đi cho thanh toán | [decisions/ADR-002-thanh-toan.md](decisions/ADR-002-thanh-toan.md) |
-| Mô hình dữ liệu thương hiệu ⏳ đề xuất | [decisions/ADR-003-mo-hinh-thuong-hieu.md](decisions/ADR-003-mo-hinh-thuong-hieu.md) |
+| Mô hình dữ liệu thương hiệu ✅ đã duyệt | [decisions/ADR-003-mo-hinh-thuong-hieu.md](decisions/ADR-003-mo-hinh-thuong-hieu.md) |
+| Giữ namespace `AcmeTheme\` — ngoại lệ STR-01 ✅ | [decisions/ADR-004-namespace-acme-theme.md](decisions/ADR-004-namespace-acme-theme.md) |
 
 ## Quy tắc quan trọng nhất
 

@@ -2,6 +2,8 @@
 
 namespace Acme\Payment\Service;
 
+use Symfony\Component\String\UnicodeString;
+
 /**
  * Sinh chuỗi payload VietQR theo chuẩn EMVCo / NAPAS.
  *
@@ -63,8 +65,9 @@ final class VietQrPayloadBuilder
      */
     private function sanitizeReference(string $reference): string
     {
-        $ascii = \iconv('UTF-8', 'ASCII//TRANSLIT', $reference);
-        $ascii = $ascii === false ? $reference : $ascii;
+        // Không dùng iconv('ASCII//TRANSLIT'): kết quả tuỳ thư viện iconv của máy chủ —
+        // libiconv trên macOS xoá hẳn "Đơ" thay vì đổi thành "Do".
+        $ascii = (new UnicodeString($reference))->ascii()->toString();
 
         return substr((string) preg_replace('/[^A-Za-z0-9 ]/', '', $ascii), 0, 25);
     }

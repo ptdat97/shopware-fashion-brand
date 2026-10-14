@@ -6,11 +6,15 @@ use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 
 /**
- * Nền tảng thị trường Việt Nam.
+ * Nền tảng thị trường Việt Nam: tiền tệ VND, thuế VAT, quốc gia VN và 34 tỉnh/thành,
+ * quy tắc địa chỉ, ngôn ngữ vi-VN cho storefront, nhãn tiếng Việt cho dữ liệu core.
  *
- * Migration của plugin này thay đổi dữ liệu cấu hình nền (tiền tệ, thuế, quốc gia)
- * mà toàn bộ shop phụ thuộc vào. Gỡ plugin KHÔNG hoàn tác các thay đổi đó:
- * đưa currency về USD khi shop đã có đơn hàng giá VND sẽ làm sai toàn bộ số tiền.
+ * Plugin không có code chạy lúc khách mua hàng — chỉ có migration ghi cấu hình lên entity
+ * của core (LIFE-01). Bề mặt công khai là chính dữ liệu đó: mã ISO `VN`, mã tỉnh
+ * `VN-HN`, `VN-HCM`… mà plugin khác (vd. `AcmeShipping`) đọc theo kiểu có thì dùng.
+ *
+ * Tắt / gỡ KHÔNG hoàn tác cấu hình (LIFE-02): đưa currency về USD khi shop đã có đơn
+ * giá VND sẽ làm sai toàn bộ số tiền. Tắt plugin thì shop vẫn chạy y như lúc bật.
  */
 class AcmeVietnam extends Plugin
 {

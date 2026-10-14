@@ -1,5 +1,5 @@
 {
-    "acme": {
+    "acme-payment": {
         "vietqr": {
             "title": "Quét mã để chuyển khoản",
             "intro": "Mở ứng dụng ngân hàng, quét mã QR bên dưới. Số tài khoản, số tiền và nội dung chuyển khoản sẽ được điền sẵn.",

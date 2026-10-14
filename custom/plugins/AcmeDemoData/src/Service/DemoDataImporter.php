@@ -2,6 +2,7 @@
 
 namespace Acme\DemoData\Service;
 
+use Acme\DemoData\DemoDataException;
 use Cocur\Slugify\SlugifyInterface;
 use Shopware\Core\Content\Media\File\FileSaver;
 use Shopware\Core\Content\Media\File\MediaFile;
@@ -106,14 +107,12 @@ class DemoDataImporter
     {
         $files = $this->mediaFiles();
         if ($files === []) {
-            throw new DemoDataException('Không tìm thấy ảnh nào trong ' . self::MEDIA_DIR);
+            throw DemoDataException::mediaMissing(self::MEDIA_DIR);
         }
 
         $taxId = $this->findTaxId($context);
         if ($taxId === null) {
-            throw new DemoDataException(
-                'Không tìm thấy thuế ' . self::VAT_RATE . '%. Hãy cài plugin AcmeVietnam (Phase 0) trước.'
-            );
+            throw DemoDataException::taxMissing(self::VAT_RATE);
         }
 
         $total = count($files);
@@ -124,7 +123,7 @@ class DemoDataImporter
         if ($offset === 0) {
             $rootId = $this->findRootCategoryId($context);
             if ($rootId === null) {
-                throw new DemoDataException('Không tìm thấy danh mục gốc của shop.');
+                throw DemoDataException::rootCategoryMissing();
             }
 
             $this->ensureCategories($context, $rootId);

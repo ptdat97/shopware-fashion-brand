@@ -29,7 +29,7 @@
                     class="btn btn-link p-0"
                     data-bs-toggle="modal"
                     data-bs-target="#acme-size-chart-modal">
-                {{ 'acme.sizeChart.open'|trans }}
+                {{ 'acme-theme.sizeChart.open'|trans }}
             </button>
         </div>
 
@@ -42,7 +42,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="acme-size-chart-title">
-                            {{ 'acme.sizeChart.title'|trans }}{% if sizeChart.categoryName %} — {{ sizeChart.categoryName }}{% endif %}
+                            {{ 'acme-theme.sizeChart.title'|trans }}{% if sizeChart.categoryName %} — {{ sizeChart.categoryName }}{% endif %}
                         </h5>
                         <button type="button"
                                 class="btn-close"
@@ -52,7 +52,8 @@
 
                     <div class="modal-body">
                         <div class="acme-size-chart-table table-responsive">
-                            {{ sizeChart.table|raw }}
+                            {# HTML do người vận hành nhập ở Administration → lọc thẻ (SEC-03) #}
+                            {{ sizeChart.table|sw_sanitize }}
                         </div>
 
                         {% if sizeChart.note %}
@@ -60,11 +61,11 @@
                         {% endif %}
 
                         <div class="acme-size-chart-howto">
-                            <h6>{{ 'acme.sizeChart.howToTitle'|trans }}</h6>
+                            <h6>{{ 'acme-theme.sizeChart.howToTitle'|trans }}</h6>
                             <ul>
-                                <li>{{ 'acme.sizeChart.howToBust'|trans }}</li>
-                                <li>{{ 'acme.sizeChart.howToWaist'|trans }}</li>
-                                <li>{{ 'acme.sizeChart.howToHip'|trans }}</li>
+                                <li>{{ 'acme-theme.sizeChart.howToBust'|trans }}</li>
+                                <li>{{ 'acme-theme.sizeChart.howToWaist'|trans }}</li>
+                                <li>{{ 'acme-theme.sizeChart.howToHip'|trans }}</li>
                             </ul>
                         </div>
                     </div>

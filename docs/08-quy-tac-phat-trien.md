@@ -232,7 +232,7 @@ KHÔNG TỒN TẠI: Shopware\Core\Checkout\Payment\Cart\PaymentHandler\Synchrono
 
 Giới hạn: chỉ bắt tên **class**. Tên method, tham số, service id vẫn phải đọc trong `vendor/` và được test bắt (xem [13-chuan-phat-trien-plugin.md](13-chuan-phat-trien-plugin.md)).
 
-Chạy trước mỗi commit có đụng code plugin. Kết quả 14/10/2026: 7 plugin Acme, 158 class, 0 class ma.
+Chạy trước mỗi commit có đụng code plugin. Kết quả 14/10/2026 (sau đợt refactor theo [13](13-chuan-phat-trien-plugin.md)): 7 plugin Acme, 165 class, 0 class ma.
 
 ### Khi tìm mãi không thấy
 

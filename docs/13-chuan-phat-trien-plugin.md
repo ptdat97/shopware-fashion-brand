@@ -53,7 +53,7 @@ custom/plugins/AcmeX/
 
 | Mã | Mức | Quy tắc |
 |---|---|---|
-| STR-01 | BẮT BUỘC | Tên plugin `Acme<Nghiệp vụ>`, namespace PHP `Acme\<Nghiệp vụ>\`, gói composer `acme/<nghiệp-vụ>` |
+| STR-01 | BẮT BUỘC | Tên plugin `Acme<Nghiệp vụ>`, namespace PHP `Acme\<Nghiệp vụ>\`, gói composer `acme/<nghiệp-vụ>`. Ngoại lệ duy nhất: `AcmeTheme\` — [ADR-004](decisions/ADR-004-namespace-acme-theme.md) |
 | STR-02 | BẮT BUỘC | Mọi định danh kỹ thuật mang tiền tố của dự án để không đụng core/plugin khác: bảng & entity `acme_*`, custom field `acme_*`, cấu hình `AcmeX.config.*`, route `frontend.acme.*` / `api.action.acme_*`, khoá snippet `acme-<plugin>.*`, class CSS `.acme-*` |
 | STR-03 | BẮT BUỘC | `composer.json` đủ: `name`, `type: shopware-platform-plugin`, `version` (semver), `require.shopware/core: ~6.7`, `autoload.psr-4`, `autoload-dev` (tests), `extra.shopware-plugin-class`, `extra.label` + `extra.description` cho `vi-VN` và `en-GB` |
 | STR-04 | BẮT BUỘC | **Không** `composer require` plugin tự viết — [08 · Quy tắc 2](08-quy-tac-phat-trien.md) |
@@ -202,17 +202,26 @@ Một thay đổi plugin chỉ được coi là xong khi:
 
 ---
 
-## 16. Hiện trạng tuân thủ (14/10/2026)
+## 16. Hiện trạng tuân thủ (14/10/2026, sau đợt refactor)
 
-| Plugin | Test tự động | Ghi chú tuân thủ |
+| Plugin | Version | Test tự động | Ghi chú tuân thủ |
+|---|---|---|---|
+| `AcmeBrand` | 1.2.1 | 31 integration + unit | Đạt. Route SEO dùng `StorefrontFrameworkException` như route SEO của core (DATA-07) |
+| `AcmeCatalog` | 1.4.1 | 15 integration | Đạt. Logic sinh biến thể tách khỏi lệnh sang service `VariantGenerator` (ARCH-07), lỗi miền `CatalogException` (DATA-07), bỏ association nạp thừa (PERF-01) |
+| `AcmeShipping` | 1.0.0 | 3 integration | Đạt; test chạy một mình (TEST-03) |
+| `AcmeVietnam` | 1.1.1 | 5 integration | Đạt. Test gọi migration trong transaction, **không** cài plugin vào DB test dùng chung (đổi tiền tệ, tắt quốc gia sẽ làm hỏng test plugin khác) |
+| `AcmePayment` | 1.1.1 | 5 unit | Đạt. Payload VietQR so với chuỗi sinh bằng cài đặt CRC độc lập. Test bắt được lỗi thật: `iconv` trên macOS xoá "Đơ" khỏi nội dung chuyển khoản → đổi sang `UnicodeString::ascii()` |
+| `AcmeTheme` | 1.0.1 | 2 unit + ảnh chụp | Đạt; namespace là ngoại lệ có ADR (STR-01 · [ADR-004](decisions/ADR-004-namespace-acme-theme.md)). Bảng size lọc qua `sw_sanitize` (SEC-03) |
+| `AcmeDemoData` | 1.0.1 | 12 unit | Lỗi miền `DemoDataException` kế thừa `HttpException`, mã `ACME_DEMO_DATA__*` (DATA-07). Còn: importer chưa có integration test; ghi custom field `acme_material`, `acme_model_size` không ai định nghĩa — chờ quyết định |
+
+Đợt refactor 14/10 còn sửa trên mọi plugin: `composer.json` đủ trường (STR-03: `require shopware/core ~6.7`, nhãn và mô tả `vi-VN`, `autoload-dev`), docblock class plugin ghi bề mặt công khai và hành vi tắt/gỡ (STR-06), `@internal` cho controller/command (STR-07), khoá snippet `acme-theme.*`, `acme-payment.*` (STR-02).
+
+**Biết nhưng không sửa** (đã có lý do):
+
+| Chỗ | Quy tắc | Lý do giữ |
 |---|---|---|
-| `AcmeBrand` | 31 test | Đạt các nhóm DATA, MIG, SF, ADM |
-| `AcmeCatalog` | 10 test | Lệnh sinh biến thể chưa có test (ARCH-07, TEST-02) |
-| `AcmeShipping` | 3 test | Đạt; test chạy một mình (TEST-03) |
-| `AcmeDemoData` | 12 test (unit) | Importer chưa có integration test; ghi custom field `acme_material`, `acme_model_size` không ai định nghĩa |
-| `AcmePayment` | **0** | 🔴 Thiếu test: `VietQrPayloadBuilder` (CRC, định dạng NAPAS) là logic thuần — dễ unit test nhất |
-| `AcmeVietnam` | **0** | 🔴 Thiếu test migration (MIG-08) |
-| `AcmeTheme` | **0** | Chỉ hiển thị — kiểm bằng ảnh chụp (TEST-04); `ListingMediaSubscriber` chưa có test |
+| `AcmeTheme\Migration\Migration1786166716EnableWishlist` ghi đè giá trị wishlist đã có | MIG-03 | Migration đã chạy — MIG-04 cấm sửa. Hiện giá trị là `true`, đúng ý kinh doanh |
+| `Migration1786157044VietnamMarketBaseline` ném `\RuntimeException` khi thiếu quốc gia VN | DATA-07 | Migration đã chạy (MIG-04); lỗi chỉ xảy ra khi DB core hỏng, không phải lỗi nghiệp vụ |
 
 **Nợ kỹ thuật cấp dự án:**
 
@@ -220,5 +229,5 @@ Một thay đổi plugin chỉ được coi là xong khi:
 |---|---|---|
 | Phân tích tĩnh (PHPStan) cho `custom/plugins/` | Bắt lỗi kiểu, gọi method không tồn tại trước khi chạy — core Shopware chạy PHPStan mức cao | Chưa cài (`vendor/bin` không có) |
 | Chuẩn định dạng code (PHP-CS-Fixer / ECS) | Thống nhất định dạng, giảm nhiễu khi review | Chưa cài |
-| Kiểm tra class ma tự động | Bắt class không tồn tại | ✅ Lệnh trực tiếp ở [08](08-quy-tac-phat-trien.md#kiểm-tra-tự-động) — 158 class, 0 ma (14/10) · chưa chạy trong CI |
+| Kiểm tra class ma tự động | Bắt class không tồn tại | ✅ Lệnh trực tiếp ở [08](08-quy-tac-phat-trien.md#kiểm-tra-tự-động) — 165 class, 0 ma (14/10) · chưa chạy trong CI |
 | CI chạy test mọi plugin | Test hiện chỉ chạy tay | Chưa có |

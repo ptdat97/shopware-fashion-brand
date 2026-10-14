@@ -3,16 +3,19 @@
     "description": "Thanh toán cho thị trường VN: VietQR (chuyển khoản QR chuẩn NAPAS)",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "require": {
+        "shopware/core": "~6.7",
         "endroid/qr-code": "^6.0"
-    },
-    "conflict": {
-        "shopware/core": "<6.7"
     },
     "autoload": {
         "psr-4": {
             "Acme\\Payment\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Acme\\Payment\\Tests\\": "tests/"
         }
     },
     "config": {
@@ -21,10 +24,12 @@
     "extra": {
         "shopware-plugin-class": "Acme\\Payment\\AcmePayment",
         "label": {
+            "vi-VN": "Acme Thanh toán (VietQR)",
             "en-GB": "Acme Payment (VietQR)",
             "de-DE": "Acme Payment (VietQR)"
         },
         "description": {
+            "vi-VN": "Thanh toán thị trường Việt Nam: chuyển khoản VietQR với mã QR chuẩn NAPAS trên trang cảm ơn.",
             "en-GB": "Vietnamese payment methods: VietQR bank transfer with NAPAS-standard QR code.",
             "de-DE": "Vietnamese payment methods: VietQR bank transfer with NAPAS-standard QR code."
         }
