@@ -1,0 +1,17 @@
+# Workspace JS của monorepo. backend/ là Shopware (Composer) — không thuộc workspace này.
+packages:
+  - frontend
+  # - packages/*   # layer Nuxt dùng chung (theme thương hiệu, ...) khi cần
+
+# Chuyển từ package.json của vue-starter-template (pnpm chỉ đọc các khoá này ở gốc workspace)
+allowBuilds:
+  "@parcel/watcher": true
+  "esbuild": true
+  "oxfmt": true
+  "oxlint": true
+  "sharp": true
+  "vue-demi": true
+
+overrides:
+  glob: ^13
+  eslint-visitor-keys: ^4

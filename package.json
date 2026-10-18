@@ -1,0 +1,16 @@
+{
+  "name": "shopware-fashion-brand",
+  "private": true,
+  "description": "Monorepo: backend/ (Shopware 6.7, API) + frontend/ (Nuxt 4, Shopware Frontends)",
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "node": ">=22.22.3"
+  },
+  "scripts": {
+    "dev": "pnpm --filter frontend dev",
+    "build": "pnpm --filter frontend build",
+    "lint": "pnpm --filter frontend lint",
+    "typecheck": "pnpm --filter frontend typecheck",
+    "generate-types": "pnpm --filter frontend generate-types"
+  }
+}

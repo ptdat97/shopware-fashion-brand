@@ -184,7 +184,7 @@ PHPUnit cài ở cấp dự án làm `require-dev` (thư viện bên thứ ba �
 
 ```bash
 php bin/console make:plugin:tests TenPlugin     # sinh phpunit.xml + tests/TestBootstrap.php
-vendor/bin/phpunit -c custom/plugins/TenPlugin  # chạy từ thư mục gốc dự án
+vendor/bin/phpunit -c custom/plugins/TenPlugin  # chạy từ thư mục backend/
 ```
 
 Sau khi sinh khung phải sửa ba chỗ trong `phpunit.xml` — xem bản của `AcmeBrand`:

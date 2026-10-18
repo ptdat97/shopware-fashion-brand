@@ -2,9 +2,23 @@
 
 Một website, một catalog, một checkout cho **nhiều thương hiệu** thời trang tại thị trường Việt Nam; mỗi thương hiệu có logo, banner, landing page, SEO riêng (`/brands/{slug}`, `/collections/{slug}`). Toàn bộ tài liệu kỹ thuật nằm ở [docs/](docs/); kiến trúc đa thương hiệu ở [docs/12-da-thuong-hieu.md](docs/12-da-thuong-hieu.md).
 
+**Mục tiêu từ 18/10/2026: headless.** Shopware chỉ làm backend (Admin + Store API + plugin nghiệp vụ), giao diện khách hàng là Nuxt 4 trên Shopware Frontends. Quyết định: [ADR-005](docs/decisions/ADR-005-headless-monorepo.md) · hướng dẫn & công nghệ: [docs/15-headless.md](docs/15-headless.md).
+
+## Cấu trúc monorepo
+
+```
+backend/    Shopware 6.7 (Composer) — mọi lệnh bin/console, composer, phpunit chạy TRONG thư mục này
+frontend/   Nuxt 4 + Shopware Frontends (Vue Starter Template) — pnpm
+docs/       tài liệu chung
+```
+
+Lệnh JS chạy ở gốc repo: `pnpm install`, `pnpm dev` (http://localhost:3000), `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm generate-types`. Node theo `.nvmrc` (22.x — template yêu cầu `>=22.22.3`).
+
+Nghiệp vụ mới viết thành **route Store API trong plugin**, frontend chỉ vẽ UI; không đặt logic nghiệp vụ trong Nuxt. Tuỳ biến UI qua override component / Nuxt layer, không patch `node_modules/@shopware/*`. Storefront Twig `anivele` vẫn chạy song song tới khi frontend đủ chức năng (H1–H8 trong docs/15).
+
 ## Bảy quy tắc cứng
 
-**1. Không sửa `vendor/`.** Mọi tuỳ biến viết qua Plugin, App hoặc Theme trong `custom/`. `composer update` ghi đè sạch `vendor/`, git không track thư mục này.
+**1. Không sửa `backend/vendor/` (và `node_modules/`).** Mọi tuỳ biến backend viết qua Plugin, App hoặc Theme trong `backend/custom/`. `composer update` ghi đè sạch `vendor/`, git không track thư mục này.
 
 **2. Không `composer require` plugin tự viết.** Shopware tự quét `custom/plugins/`. Thêm vào `composer.json` sẽ đặt `managed_by_composer = 1` và **khoá nút Xoá plugin trong Administration**. Chỉ dùng `composer require` cho plugin bên thứ ba hoặc nâng version core.
 
@@ -31,12 +45,14 @@ Tài liệu, commit message và comment trong code viết bằng **tiếng Việ
 ## Môi trường
 
 ```
-APP_URL   http://shopware-fashion-brand.test
+APP_URL   http://shopware-fashion-brand.test   (Herd symlink → backend/)
+Store API http://shopware-fashion-brand.test/store-api/
+Frontend  http://localhost:3000                (pnpm dev)
 Database  mysql://root@127.0.0.1:3306/shopware
-Shopware  6.7.15.1 · PHP 8.4 · MySQL 8.0.33
+Shopware  6.7.15.1 · PHP 8.4 · MySQL 8.0.33 · Node 22 · pnpm 12
 ```
 
-Storefront `anivele` chạy `vi-VN`, tiền tệ VND — đây là storefront **duy nhất**, dùng chung cho mọi thương hiệu. Channel `Headless` giữ `en-US` — đúng như mong muốn.
+Sales channel `anivele` chạy `vi-VN`, tiền tệ VND — channel **duy nhất** cho mọi thương hiệu; frontend Nuxt dùng access key của channel này (ADR-005). Channel `Headless` (type API) giữ `en-US`, chưa dùng.
 
 ## Cấu hình dữ liệu phải viết thành migration
 
@@ -47,8 +63,9 @@ Cách làm: [docs/runbook/06-tao-plugin.md](docs/runbook/06-tao-plugin.md)
 ## Kiểm tra trước khi commit
 
 ```bash
-git status --short vendor/                          # phải rỗng
-git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plugin bên thứ ba
+git status --short backend/vendor/                                  # phải rỗng
+git --no-pager diff backend/composer.json backend/composer.lock     # chỉ đổi khi cài plugin bên thứ ba
+pnpm lint && pnpm typecheck                                         # khi sửa frontend/
 ```
 
 ## Tiến độ
@@ -64,17 +81,17 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 >
 > ⚠️ **Dữ liệu demo không tự nhập khi cài plugin.** Bấm nút tại Administration → Extensions → Acme Demo Data → Configure, hoặc chạy `php bin/console acme:demo:seed`. Chạy lại không nhân bản dữ liệu. Xem [docs/runbook/05-demo-data.md](docs/runbook/05-demo-data.md).
 
-**Sửa giao diện thì phải chụp ảnh storefront kiểm chứng**, không tin `curl`/`grep` — xem [docs/02-theme.md](docs/02-theme.md).
+**Sửa giao diện thì phải chụp ảnh kiểm chứng** (storefront Twig hoặc frontend Nuxt), không tin `curl`/`grep` — xem [docs/02-theme.md](docs/02-theme.md).
 
 - **Phase MB** (đa thương hiệu) 🔄 — MB0 ✅: ADR-003 đã duyệt, DB local dựng lại, kinh doanh đã chốt — Anivele là *một* brand, brand tắt chỉ ẩn trang brand (sản phẩm vẫn bán), SKU mã brand 3 ký tự (`ANV-1001-01`), dev dùng brand demo giả định. Tên nền tảng chưa chốt
 
-- **MB1** ✅ — plugin `AcmeBrand`: bảng mở rộng `product_manufacturer`, mã brand, thẻ "Thương hiệu" trong Administration, ACL. Test: `vendor/bin/phpunit -c custom/plugins/AcmeBrand` (DB riêng `shopware_test`)
+- **MB1** ✅ — plugin `AcmeBrand`: bảng mở rộng `product_manufacturer`, mã brand, thẻ "Thương hiệu" trong Administration, ACL. Test: `cd backend && vendor/bin/phpunit -c custom/plugins/AcmeBrand` (DB riêng `shopware_test`)
 
 - **MB2** ✅ — 3 brand demo (`ANV` Anivele, `MAY`/`LLN` giả định), SKU mang mã brand, bộ lọc "Thương hiệu" ở listing (native, chỉ đổi nhãn). Id demo suy ra từ khoá `ANV-10xx` cố định, **không** từ SKU — xem [docs/runbook/05-demo-data.md](docs/runbook/05-demo-data.md)
 
 - **MB3** ✅ — `/brands`, `/brands/{slug}` (listing core trên category gốc + lọc manufacturer, lọc/sắp xếp AJAX), SEO URL + canonical + sitemap, brand tắt → 404, link brand ở trang sản phẩm. 23 test đạt
 
-> 🔴 **`cache:clear` không xoá HTTP cache.** Đổi template/code → thêm `bin/console cache:clear:http`. Đổi template SEO brand → `bin/console dal:refresh:index --only=acme_brand.indexer`.
+> 🔴 **`cache:clear` không xoá HTTP cache** (lệnh chạy trong `backend/`). Đổi template/code → thêm `bin/console cache:clear:http`. Đổi template SEO brand → `bin/console dal:refresh:index --only=acme_brand.indexer`.
 
 - **MB4** ✅ — bộ sưu tập `/collections/{tên}` = category + product stream của core; `AcmeCatalog` thêm ô "Là bộ sưu tập" + template SEO navigation. Sau khi cập nhật `AcmeCatalog`: `bin/console dal:refresh:index`
 
@@ -82,4 +99,6 @@ git --no-pager diff composer.json composer.lock     # chỉ đổi khi cài plug
 - **Dọn MB** ✅ (14/10) — nhãn Admin "Thương hiệu" qua file snippet native, menu không tô "Trang chủ" ở trang brand, bộ sưu tập `/collections/sale` (stream % giảm giá native)
 - **MB5** ✅ — đơn COD thật 2 brand (VAT, phí ship, tồn kho, huỷ hoàn kho đúng), khuyến mãi theo brand bằng Rule Builder, `manufacturerId` trong payload dòng đơn. Không code — chỉ test. Mọi brand dùng chung **một kho** → một kiện/đơn, một bảng phí ship
 
-Tiếp theo: **MB6 — sẵn sàng mở rộng** (ERP/PIM qua Admin API/App, đa kho, bảng size theo brand × danh mục) — phần lớn là thiết kế, chờ nhu cầu thật. Báo cáo khảo sát ✅ [docs/14-mb6-khao-sat.md](docs/14-mb6-khao-sat.md) (14/10), chờ quyết định ở mục 5. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+- **Phase H — headless** 🔄 (18/10) — monorepo `backend/` + `frontend/` ✅, frontend Nuxt 4 scaffold + `pnpm build` đạt ✅. Còn H1–H8 (vi-VN, theme, trang brand qua Store API, swatch, trang cảm ơn, SEO) — [docs/15-headless.md](docs/15-headless.md) mục 4
+
+Tiếp theo: **Phase H** (H1 → H8). Song song: **MB6 — sẵn sàng mở rộng** (ERP/PIM qua Admin API/App, đa kho, bảng size theo brand × danh mục) — phần lớn là thiết kế, chờ nhu cầu thật. Báo cáo khảo sát ✅ [docs/14-mb6-khao-sat.md](docs/14-mb6-khao-sat.md) (14/10), chờ quyết định ở mục 5. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).

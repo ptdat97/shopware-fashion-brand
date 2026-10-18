@@ -1,29 +1,9 @@
-/.idea
-/vendor/
-
-###> shopware/core ###
-.env.local
-.env.local.php
-.env.*.local
-/public/bundles/*
-/public/media/*
-/public/theme/*
-/public/thumbnail/*
-/public/sitemap/*
-/files/*
-!/files/.htaccess
-/var/*
-!/var/.htaccess
-/auth.json
-/install.lock
-/public/asset-manifest.json
-###< shopware/core ###
+# Gốc monorepo — mỗi app có .gitignore riêng: backend/.gitignore (Shopware), frontend/.gitignore (Nuxt)
 .DS_Store
+/.idea
 !/.claude
+node_modules/
 
 # Chứa access key + secret của integration MCP dạng plaintext — xem docs/11-mcp-va-ai-tooling.md
 /.mcp.json
-###> phpunit/phpunit ###
-/phpunit.xml
-/.phpunit.cache/
-###< phpunit/phpunit ###
+/backend/.mcp.json

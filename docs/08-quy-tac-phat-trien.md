@@ -211,7 +211,7 @@ Class đánh dấu `@experimental` có thể đổi API ở minor tiếp theo �
 
 ### Kiểm tra tự động
 
-Chạy trực tiếp từ thư mục gốc dự án (không lưu thành script trong repo):
+Chạy trực tiếp từ thư mục `backend/` (không lưu thành script trong repo):
 
 ```bash
 rc=0; for p in custom/plugins/Acme*; do

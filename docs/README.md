@@ -1,8 +1,10 @@
 # Tài liệu kỹ thuật — Nền tảng thời trang đa thương hiệu trên Shopware 6.7
 
-Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một website** cho thị trường Việt Nam: một catalog, một giỏ hàng, một checkout; mỗi thương hiệu có trang riêng. Toàn bộ số liệu trong bộ tài liệu này lấy trực tiếp từ hệ thống đang chạy tại `/Users/dat/Ecommerce/shopware-fashion-brand`.
+Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một website** cho thị trường Việt Nam: một catalog, một giỏ hàng, một checkout; mỗi thương hiệu có trang riêng. Toàn bộ số liệu trong bộ tài liệu này lấy trực tiếp từ hệ thống đang chạy tại `/Users/dat/Ecommerce/shopware-fashion-brand/backend`.
 
-> 🧭 **Định hướng hiện tại:** [12-da-thuong-hieu.md](12-da-thuong-hieu.md) — khảo sát, khoảng trống và kiến trúc đa thương hiệu.
+> 🧭 **Định hướng hiện tại:** headless — [15-headless.md](15-headless.md) (frontend Nuxt, công nghệ, việc cần chuyển), quyết định [ADR-005](decisions/ADR-005-headless-monorepo.md). Kiến trúc đa thương hiệu không đổi: [12-da-thuong-hieu.md](12-da-thuong-hieu.md).
+>
+> Repo là monorepo: Shopware ở `backend/`, Nuxt ở `frontend/`. Mọi lệnh `bin/console`/`composer`/`vendor/bin/*` trong tài liệu chạy trong `backend/`.
 
 ## Đọc trước khi code
 
@@ -22,6 +24,7 @@ Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một websit
 | Còn bao nhiêu việc tới go-live | [01-roadmap.md](01-roadmap.md) |
 | **Kiến trúc đa thương hiệu** | **[12-da-thuong-hieu.md](12-da-thuong-hieu.md)** |
 | MB6 — khảo sát ERP/PIM, đa kho, bảng size theo brand | [14-mb6-khao-sat.md](14-mb6-khao-sat.md) |
+| **Headless — chạy frontend, công nghệ, việc cần chuyển** | **[15-headless.md](15-headless.md)** |
 
 ## Theo chủ đề
 

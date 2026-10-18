@@ -1,0 +1,54 @@
+<script lang="ts" setup>
+import type { MaybeRef } from "vue";
+
+defineOptions({ inheritAttrs: false });
+
+const { errorMessage } = defineProps<{
+  placeholder?: string;
+  label?: string;
+  id: string;
+  options: {
+    label: string;
+    value: string;
+  }[];
+  errorMessage?: MaybeRef<string>;
+  loading?: boolean;
+  autocomplete?: string;
+  variant?: "default" | "control";
+}>();
+
+const model = defineModel<string>({
+  required: true,
+});
+
+const errorText = computed(() => unref(errorMessage));
+
+const { wrapperAttrs, controlAttrs } = useControlAttrs();
+</script>
+<template>
+  <div v-bind="wrapperAttrs">
+    <label
+      class="text-surface-on-surface text-sm mb-1 block"
+      v-if="label"
+      :for="id"
+    >
+      {{ label }}
+    </label>
+
+    <FormBaseDropdown
+      class="text-sm w-full"
+      v-model="model"
+      :placeholder="placeholder"
+      :id="id"
+      :options="options"
+      :invalid="!!errorText"
+      :loading
+      :autocomplete
+      :variant="variant"
+      v-bind="controlAttrs"
+    />
+    <span v-if="errorText" class="text-states-error text-xs block mt-1">{{
+      errorText
+    }}</span>
+  </div>
+</template>

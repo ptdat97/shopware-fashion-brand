@@ -2,10 +2,10 @@
 
 Toàn bộ lệnh trong tài liệu này **đã được kiểm chứng tồn tại** trên hệ thống (Shopware 6.7.12.2, 184 lệnh khả dụng). Mô tả lấy trực tiếp từ `bin/console list`.
 
-Mọi lệnh chạy từ thư mục gốc dự án:
+Mọi lệnh chạy từ thư mục `backend/` của monorepo:
 
 ```bash
-cd /Users/dat/Ecommerce/shopware
+cd /Users/dat/Ecommerce/shopware-fashion-brand/backend
 ```
 
 ## Quy ước ký hiệu

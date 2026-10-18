@@ -4,6 +4,8 @@ Lộ trình được sắp theo **thứ tự phụ thuộc kỹ thuật**, khôn
 
 > 🧭 **Định hướng từ 12/10/2026: nền tảng bán lẻ thời trang đa thương hiệu.** Một website, một catalog, một checkout cho nhiều brand — mỗi brand có logo, banner, landing page, SEO riêng. Phase 0–3 là nền móng dùng lại nguyên vẹn; phần mới nằm ở **Phase MB** bên dưới. Khảo sát và kiến trúc: [12-da-thuong-hieu.md](12-da-thuong-hieu.md), quyết định: [decisions/ADR-003-mo-hinh-thuong-hieu.md](decisions/ADR-003-mo-hinh-thuong-hieu.md).
 
+> 🧭 **Từ 18/10/2026: headless.** Shopware thành backend, giao diện là Nuxt 4 ở `frontend/` — [ADR-005](decisions/ADR-005-headless-monorepo.md). Phase H (H1–H8) liệt kê ở [15-headless.md](15-headless.md) mục 4; các Phase/MB đã xong giữ nguyên giá trị phía backend.
+
 ## Nguyên tắc sắp xếp
 
 Ba ràng buộc quyết định thứ tự:

@@ -1,0 +1,162 @@
+<script setup lang="ts">
+import { getPrefix } from "#imports";
+import type { Schemas } from "#shopware";
+
+useHead({
+  title: "Shopware Starter Demo store",
+  meta: [{ name: "description", content: "Shopware Starter Demo store" }],
+  htmlAttrs: {
+    lang: "en",
+  },
+  link: [
+    {
+      rel: "preconnect",
+      // Update this to your CDN domain in production
+      href: "https://cdn.shopware.store",
+    },
+  ],
+});
+
+const { apiClient } = useShopwareContext();
+const sessionContextData = ref<Schemas["SalesChannelContext"]>();
+
+const { refreshCart } = useCart();
+const { getWishlistProducts } = useWishlist();
+
+const { pushSuccess } = useNotifications();
+const { login } = useUser();
+const { handleApiError } = useApiErrorsResolver("login_modal");
+
+const { controller: loginModalController, handleSuccess: onLoginSuccess } =
+  provideLoginModal();
+
+async function handleModalLogin(formData: {
+  username: string;
+  password: string;
+}) {
+  try {
+    await login(formData);
+    pushSuccess(t("account.messages.loggedInSuccess"));
+    onLoginSuccess();
+    loginModalController.close();
+  } catch (error) {
+    handleApiError(error);
+  }
+}
+
+const {
+  getAvailableLanguages,
+  getLanguageCodeFromId,
+  getLanguageIdFromCode,
+  changeLanguage,
+  languages: storeLanguages,
+} = useInternationalization();
+
+const [contextResponse, languagesResponse] = await Promise.all([
+  apiClient.invoke("readContext get /context"),
+  useAsyncData("languages", async () => {
+    return await getAvailableLanguages();
+  }),
+]);
+const languages = unref(languagesResponse.data);
+
+sessionContextData.value = contextResponse.data;
+
+useSessionContext(sessionContextData.value);
+
+const {
+  t,
+  locale,
+  availableLocales,
+  defaultLocale,
+  localeProperties,
+  messages,
+} = useI18n();
+const router = useRouter();
+
+const { languageIdChain, currentLocaleCode, refreshSessionContext } =
+  useSessionContext();
+
+let languageToChangeId: string | null = null;
+
+if (languages && router.currentRoute.value.name) {
+  storeLanguages.value = languages.elements;
+  // Prefix from url
+  const prefix = getPrefix(
+    availableLocales,
+    router.currentRoute.value.name as string,
+    defaultLocale,
+  );
+
+  provide(
+    "cmsTranslations",
+    messages.value[(prefix as keyof typeof messages.value) || defaultLocale] ??
+      {},
+  );
+
+  // Language set on the backend side
+  if (localeProperties.value.localeId) {
+    if (languageIdChain.value !== localeProperties.value.localeId) {
+      languageToChangeId = localeProperties.value.localeId as string;
+    }
+  } else {
+    const sessionLanguage =
+      currentLocaleCode.value ?? getLanguageCodeFromId(languageIdChain.value);
+
+    // If languages are not the same, set one from prefix
+    if (sessionLanguage !== prefix) {
+      languageToChangeId = getLanguageIdFromCode(
+        prefix ? prefix : defaultLocale,
+      );
+    }
+  }
+
+  if (languageToChangeId) {
+    apiClient.defaultHeaders.apply({
+      "sw-language-id": languageToChangeId,
+    });
+    await changeLanguage(languageToChangeId);
+    await refreshSessionContext();
+  }
+
+  locale.value = (
+    prefix ? prefix : defaultLocale
+  ) as keyof typeof messages.value;
+  // Set prefix from CMS components
+  provide("urlPrefix", prefix);
+}
+
+const WISHLIST_ID_HYDRATION_LIMIT = 100;
+
+onMounted(() => {
+  refreshCart();
+  // Hydrate the wishlist store with the product ids only. The header counter
+  // comes from `total-count-mode: exact` and stays correct regardless of the
+  // limit - this is purely about how many ids `isInWishlist` can see.
+  getWishlistProducts({
+    limit: WISHLIST_ID_HYDRATION_LIMIT,
+    includes: {
+      product: ["id"],
+    },
+  });
+});
+</script>
+
+<template>
+  <div>
+    <NuxtRouteAnnouncer />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+
+    <SharedModal :controller="loginModalController">
+      <div class="w-full flex flex-col gap-3 p-5">
+        <h1 class="text-2xl font-bold">{{ $t("loginForm.header") }}</h1>
+        <p class="text-sm text-text-bg-surface-surface-disabled">
+          {{ $t("loginForm.subHeader") }}
+        </p>
+        <LoginForm @submit="handleModalLogin" />
+      </div>
+    </SharedModal>
+  </div>
+</template>
