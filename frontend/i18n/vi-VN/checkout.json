@@ -1,0 +1,52 @@
+{
+  "checkout": {
+    "title": "Thanh toán",
+    "summary": "Tóm tắt",
+    "subtotal": "Tạm tính",
+    "shippingCosts": "Phí vận chuyển",
+    "total": "Tổng cộng",
+    "placeOrderButton": "Xác nhận và đặt hàng",
+    "placingOrder": "Đang đặt hàng…",
+    "customerAddress": {
+      "firstNamePlaceholder": "Nhập tên",
+      "firstNameLabel": "Tên",
+      "lastNamePlaceholder": "Nhập họ",
+      "lastNameLabel": "Họ",
+      "streetPlaceholder": "Số nhà, tên đường, phường/xã",
+      "streetLabel": "Địa chỉ",
+      "zipcodePlaceholder": "Nhập mã bưu chính",
+      "zipcodeLabel": "Mã bưu chính",
+      "cityPlaceholder": "Nhập quận/huyện",
+      "cityLabel": "Quận/Huyện",
+      "countryPlaceholder": "Chọn quốc gia",
+      "countryLabel": "Quốc gia"
+    },
+    "customerBaseInfo": {
+      "emailPlaceholder": "Nhập địa chỉ email",
+      "emailLabel": "Địa chỉ email",
+      "passwordPlaceholder": "Nhập mật khẩu",
+      "passwordLabel": "Mật khẩu",
+      "createAccountToggleLabel": "Tạo tài khoản",
+      "continueAsGuestToggleLabel": "Mua không cần tài khoản"
+    },
+    "success": {
+      "title": "Cảm ơn bạn đã đặt hàng",
+      "header": "Chúng tôi đã nhận đơn hàng #{0} và sẽ xử lý sớm nhất.",
+      "items": "Sản phẩm đã đặt",
+      "deliveryAndPayment": "Giao hàng và thanh toán",
+      "continueShopping": "Tiếp tục mua sắm",
+      "viewInAccount": "Xem trong tài khoản",
+      "goToPayment": "Đi tới thanh toán",
+      "loadError": "Không tải được đơn hàng. Có thể phiên làm việc đã hết hạn.",
+      "paymentProcessLabel": "Hoàn tất thanh toán.",
+      "paymentProcessInfo": "Bạn sẽ được chuyển tới cổng thanh toán sau 5 giây."
+    },
+    "shippingAddressLabel": "Địa chỉ giao hàng",
+    "paymentMethodLabel": "Phương thức thanh toán",
+    "billingAddressLabel": "Địa chỉ thanh toán",
+    "shippingMethodLabel": "Phương thức vận chuyển",
+    "takesUpTo": "Giao trong khoảng",
+    "shippingPriceLabel": "Phí vận chuyển",
+    "totalLabel": "Tổng cộng"
+  }
+}

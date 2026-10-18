@@ -3,10 +3,11 @@ import { getPrefix } from "#imports";
 import type { Schemas } from "#shopware";
 
 useHead({
-  title: "Shopware Starter Demo store",
-  meta: [{ name: "description", content: "Shopware Starter Demo store" }],
+  // Tên nền tảng chưa chốt (CLAUDE.md) — tạm dùng ANIVELE như storefront Twig cũ.
+  // Meta description trang chủ chờ tên nền tảng (Phase 4).
+  title: "ANIVELE",
   htmlAttrs: {
-    lang: "en",
+    lang: "vi",
   },
   link: [
     {

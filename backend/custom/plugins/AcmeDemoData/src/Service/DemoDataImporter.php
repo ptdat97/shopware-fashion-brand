@@ -4,6 +4,7 @@ namespace Acme\DemoData\Service;
 
 use Acme\DemoData\DemoDataException;
 use Cocur\Slugify\SlugifyInterface;
+use Shopware\Core\Checkout\Shipping\ShippingMethodEntity;
 use Shopware\Core\Content\Media\File\FileSaver;
 use Shopware\Core\Content\Media\File\MediaFile;
 use Shopware\Core\Content\Media\MediaEntity;
@@ -270,7 +271,8 @@ class DemoDataImporter
         $mediaMap = $this->findImportedMedia($context, $this->mediaFiles());
         $categories = $this->findCategoryIds($context);
         [$colorMap, $sizeMap, $materialMap] = $this->findPropertyIds($context);
-        $salesChannelId = $this->findStorefrontSalesChannelId($context);
+        $salesChannelIds = $this->findSellingSalesChannelIds($context);
+        $deliveryTimeId = $this->findStandardDeliveryTimeId($context);
 
         $payload = [];
 
@@ -327,6 +329,8 @@ class DemoDataImporter
                 'productNumber' => $number,
                 'manufacturerId' => $this->manufacturerId($definition['brand']),
                 'stock' => $definition['stock'],
+                // Trường native — thiếu thì trang sản phẩm headless báo "không còn bán" dù còn hàng
+                'deliveryTimeId' => $deliveryTimeId,
                 'taxId' => $taxId,
                 'price' => [[
                     'currencyId' => Defaults::CURRENCY,
@@ -362,13 +366,13 @@ class DemoDataImporter
                 ]),
             ];
 
-            if ($salesChannelId !== null) {
-                $row['visibilities'] = [[
+            if ($salesChannelIds !== []) {
+                $row['visibilities'] = array_map(static fn (string $salesChannelId): array => [
                     // Id cố định: cặp (sản phẩm, kênh bán) là duy nhất, id ngẫu nhiên sẽ vỡ ở lần chạy thứ hai
                     'id' => Uuid::fromStringToHex('acme-demo-visibility-' . $key . '-' . $salesChannelId),
                     'salesChannelId' => $salesChannelId,
                     'visibility' => 30,
-                ]];
+                ], $salesChannelIds);
             }
 
             $payload[] = $row;
@@ -774,13 +778,37 @@ class DemoDataImporter
         return $this->mediaFolderRepository->searchIds($criteria, $context)->firstId();
     }
 
-    private function findStorefrontSalesChannelId(Context $context): ?string
+    /**
+     * Thời gian giao của phương thức vận chuyển chuẩn (AcmeShipping tính phí trên phương thức này).
+     * Không có thì để trống — sản phẩm vẫn bán được.
+     */
+    private function findStandardDeliveryTimeId(Context $context): ?string
     {
         $criteria = new Criteria();
-        $criteria->addFilter(new EqualsFilter('typeId', Defaults::SALES_CHANNEL_TYPE_STOREFRONT));
+        $criteria->addFilter(new EqualsFilter('technicalName', 'shipping_standard'));
         $criteria->setLimit(1);
 
-        return $this->salesChannelRepository->searchIds($criteria, $context)->firstId();
+        /** @var ShippingMethodEntity|null $method */
+        $method = $this->definitionRegistry->getRepository('shipping_method')->search($criteria, $context)->first();
+
+        return $method?->getDeliveryTimeId();
+    }
+
+    /**
+     * Channel khách mua hàng: Storefront (Twig) và API (frontend headless — ADR-005).
+     * Bỏ qua các loại khác như Product comparison.
+     *
+     * @return list<string>
+     */
+    private function findSellingSalesChannelIds(Context $context): array
+    {
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsAnyFilter('typeId', [
+            Defaults::SALES_CHANNEL_TYPE_STOREFRONT,
+            Defaults::SALES_CHANNEL_TYPE_API,
+        ]));
+
+        return array_values($this->salesChannelRepository->searchIds($criteria, $context)->getIds());
     }
 
     private function mediaId(string $file): string

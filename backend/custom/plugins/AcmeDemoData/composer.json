@@ -3,7 +3,7 @@
     "description": "Dữ liệu demo thời trang cho Acme",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "require": {
         "shopware/core": "~6.7"
     },

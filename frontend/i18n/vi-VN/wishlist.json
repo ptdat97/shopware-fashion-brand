@@ -1,0 +1,19 @@
+{
+  "wishlist": {
+    "header": "Yêu thích",
+    "subHeader": "Danh sách sản phẩm bạn yêu thích.",
+    "clearWishlist": "Xoá tất cả",
+    "empty": {
+      "title": "Chưa có sản phẩm yêu thích",
+      "description": "Lưu lại sản phẩm bạn thích bằng cách thêm vào danh sách yêu thích.",
+      "continueShopping": "Tiếp tục mua sắm"
+    },
+    "notLoggedIn": {
+      "title": "Chưa có sản phẩm yêu thích",
+      "description": "Lưu lại sản phẩm bạn thích bằng cách thêm vào danh sách yêu thích.",
+      "login": "Đăng nhập",
+      "register": "Đăng ký",
+      "continueShopping": "Tiếp tục mua sắm"
+    }
+  }
+}

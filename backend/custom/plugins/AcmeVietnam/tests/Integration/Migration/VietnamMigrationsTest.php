@@ -5,6 +5,7 @@ namespace Acme\Vietnam\Tests\Integration\Migration;
 use Acme\Vietnam\Migration\Migration1786157044VietnamMarketBaseline;
 use Acme\Vietnam\Migration\Migration1786157045VietnameseStorefront;
 use Acme\Vietnam\Migration\Migration1791973286VietnameseCoreLabels;
+use Acme\Vietnam\Migration\Migration1792336734VietnameseDeliveryTimes;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Defaults;
@@ -111,6 +112,31 @@ class VietnamMigrationsTest extends TestCase
             ['lang' => $vietnameseId]
         );
         static::assertEquals(['price-asc' => 'Rẻ trước', 'price-desc' => 'Giá giảm dần'], $labels, 'Nhãn đã sửa giữ nguyên, nhãn trống được điền');
+    }
+
+    public function testDeliveryTimesTranslatedWithoutOverwritingMerchantText(): void
+    {
+        $vietnameseId = $this->createVietnameseLanguage();
+        $threeToFour = $this->connection->fetchOne('SELECT id FROM delivery_time WHERE min = 3 AND max = 4 AND unit = "week"');
+        static::assertNotFalse($threeToFour, 'Bản cài core luôn có "3-4 weeks"');
+        $this->connection->insert('delivery_time_translation', [
+            'delivery_time_id' => $threeToFour,
+            'language_id' => $vietnameseId,
+            'name' => 'Đặt may 3-4 tuần',
+            'created_at' => '2026-10-18 00:00:00.000',
+        ]);
+
+        $migration = new Migration1792336734VietnameseDeliveryTimes();
+        $migration->update($this->connection);
+        $migration->update($this->connection);
+
+        $names = $this->connection->fetchAllKeyValue(
+            'SELECT CONCAT(d.min, "-", d.max, " ", d.unit), t.name FROM delivery_time_translation t
+               JOIN delivery_time d ON d.id = t.delivery_time_id WHERE t.language_id = :lang',
+            ['lang' => $vietnameseId]
+        );
+        static::assertSame('1-3 ngày', $names['1-3 day'] ?? null);
+        static::assertSame('Đặt may 3-4 tuần', $names['3-4 week'] ?? null, 'Chữ người vận hành đã sửa giữ nguyên');
     }
 
     private function provinceCount(): int

@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["vue"],
+  "categories": {
+    "correctness": "error"
+  },
+  "ignorePatterns": [
+    "node_modules",
+    ".output",
+    ".nuxt",
+    ".data",
+    "**/*apiSchema*.json",
+    "**/*ApiSchema*.json",
+    "**/*.d.ts"
+  ]
+}

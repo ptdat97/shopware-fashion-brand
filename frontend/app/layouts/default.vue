@@ -17,14 +17,24 @@ const {
 } = useCurrencySwitcher();
 provide("swNavigation-main-navigation", data);
 
+const { availableLocales } = useI18n();
+
+// Chỉ hiện ngôn ngữ frontend có bản dịch — channel có thể gán thêm ngôn ngữ
+// (English mặc định của bản cài) mà frontend không phục vụ.
 const languagesList = computed(
   () =>
-    languages.value?.map((language) => {
-      return {
-        id: language.id,
-        label: getLanguageName(language),
-      };
-    }) ?? [],
+    languages.value
+      ?.filter((language) =>
+        (availableLocales as string[]).includes(
+          language.translationCode?.code ?? "",
+        ),
+      )
+      .map((language) => {
+        return {
+          id: language.id,
+          label: getLanguageName(language),
+        };
+      }) ?? [],
 );
 
 async function onChangeHandler(id: string) {
@@ -50,15 +60,11 @@ const { data: footerData } = useAsyncData("mainFooterNavigation", () => {
 provide("swNavigation-footer-navigation", footerData);
 </script>
 <template>
-  <DevOnly>
-    <ShopwareBanner />
-  </DevOnly>
-
   <div class="flex flex-col min-h-screen">
     <header>
       <LayoutMetaNavigation
         v-if="
-          (languagesList.length > 1 || currenciesList.length > 0) &&
+          (languagesList.length > 1 || currenciesList.length > 1) &&
           currentLanguageId
         "
         class="px-6"

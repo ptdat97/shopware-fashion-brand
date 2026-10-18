@@ -1,0 +1,31 @@
+{
+  "listing": {
+    "categories": "Danh mục",
+    "loading": "Đang tải…",
+    "empty": "Không có kết quả.",
+    "error": "Đã có lỗi khi tải kết quả.",
+    "retry": "Thử lại",
+    "filters": "Bộ lọc",
+    "sort": "Sắp xếp",
+    "resetFilters": "Xoá bộ lọc",
+    "previous": "Trước",
+    "next": "Sau",
+    "variantsFrom": "nhiều lựa chọn từ",
+    "previously": "giá cũ",
+    "from": "từ",
+    "to": "đến",
+    "min": "Thấp nhất",
+    "max": "Cao nhất",
+    "freeShipping": "Miễn phí vận chuyển",
+    "noProducts": "Không tìm thấy sản phẩm",
+    "perPage": "Mỗi trang:",
+    "product": "Sản phẩm",
+    "products": "Sản phẩm",
+    "filterLabels": {
+      "manufacturer": "Thương hiệu",
+      "price": "Giá",
+      "rating": "Đánh giá",
+      "shipping-free": "Miễn phí vận chuyển"
+    }
+  }
+}

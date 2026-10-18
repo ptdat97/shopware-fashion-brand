@@ -1,0 +1,10 @@
+{
+  "loginForm": {
+    "header": "Đăng nhập tài khoản",
+    "subHeader": "Đăng nhập để tiếp tục",
+    "loginLabel": "Địa chỉ email",
+    "passwordLabel": "Mật khẩu",
+    "submitButtonLabel": "Đăng nhập",
+    "signUpButtonLabel": "Đăng ký"
+  }
+}

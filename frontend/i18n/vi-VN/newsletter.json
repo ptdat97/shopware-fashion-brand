@@ -1,0 +1,13 @@
+{
+  "newsletter": {
+    "subscriptionHeader": "Nhận bản tin",
+    "subscriptionCheckbox": "Có, tôi muốn nhận bản tin miễn phí. (Có thể huỷ bất cứ lúc nào.)",
+    "subscriptionInfo": "Đăng ký nhận bản tin đã được xác nhận. Bạn sẽ nhận thông tin và ưu đãi mới nhất.",
+    "backToHomepage": "Về trang chủ",
+    "messages": {
+      "loading": "Đang xác nhận đăng ký nhận bản tin...",
+      "newsletterSubscribed": "Cảm ơn bạn! Email của bạn đã được đăng ký.",
+      "newsletterUnsubscribed": "Đã huỷ nhận bản tin"
+    }
+  }
+}

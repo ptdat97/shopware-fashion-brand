@@ -1,0 +1,17 @@
+{
+  "cart": {
+    "title": "Giỏ hàng",
+    "emptyCartLabel": "Giỏ hàng đang trống",
+    "proceedToCheckout": "Thanh toán",
+    "continueShopping": "Tiếp tục mua sắm",
+    "digital": "Sản phẩm số",
+    "promotion": "Khuyến mãi",
+    "miniCart": {
+      "title": "Giỏ hàng",
+      "subtotal": "Tạm tính",
+      "taxEstimation": "Thuế và phí vận chuyển được tính ở bước thanh toán.",
+      "proceedToCheckout": "Tiến hành thanh toán",
+      "goToShoppingCart": "Xem giỏ hàng"
+    }
+  }
+}

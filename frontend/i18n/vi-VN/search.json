@@ -1,0 +1,15 @@
+{
+  "search": {
+    "placeholder": "Tìm sản phẩm",
+    "see": "xem",
+    "all": "tất cả",
+    "result": "kết quả | kết quả",
+    "noResults": "Không tìm thấy sản phẩm",
+    "resultsHeader": "Kết quả tìm kiếm cho",
+    "listing": {
+      "perPage": "Mỗi trang:",
+      "product": "Sản phẩm",
+      "products": "Sản phẩm"
+    }
+  }
+}

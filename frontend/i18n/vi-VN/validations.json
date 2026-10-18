@@ -1,0 +1,24 @@
+{
+  "validations": {
+    "alpha": "Chỉ được chứa chữ cái",
+    "alphaNum": "Chỉ được chứa chữ cái và chữ số",
+    "between": "Giá trị phải nằm trong khoảng {min} đến {max}",
+    "decimal": "Giá trị phải là số thập phân",
+    "email": "Email không hợp lệ",
+    "integer": "Giá trị phải là số nguyên",
+    "ipAddress": "Địa chỉ IP không hợp lệ",
+    "macAddress": "Địa chỉ MAC không hợp lệ",
+    "maxLength": "Tối đa {max} ký tự",
+    "minLength": "Tối thiểu {min} ký tự",
+    "minValue": "Giá trị nhỏ nhất là {min}",
+    "not": "Giá trị không hợp lệ",
+    "numeric": "Giá trị phải là số",
+    "or": "Giá trị không hợp lệ",
+    "required": "Trường này là bắt buộc",
+    "requiredIf": "Trường này là bắt buộc",
+    "requiredUnless": "Trường này là bắt buộc",
+    "sameAs": "Giá trị phải trùng với {otherName}",
+    "url": "Địa chỉ URL không hợp lệ",
+    "newPasswordConfirm": "Hai mật khẩu phải giống nhau"
+  }
+}

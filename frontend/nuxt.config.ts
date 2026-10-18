@@ -106,25 +106,18 @@ export default defineNuxtConfig({
   ],
   i18n: {
     strategy: "prefix_except_default",
-    defaultLocale: "en-GB",
+    // Một thị trường, một ngôn ngữ (ADR-005) — URL không có tiền tố ngôn ngữ.
+    // Nguồn dịch gốc của template là en-GB: khi nâng cấp template, so khoá mới với
+    // shopware/frontends/templates/vue-starter-template/i18n/en-GB.
+    defaultLocale: "vi-VN",
     detectBrowserLanguage: false,
     langDir: "./src/langs/",
     vueI18n: "config.ts",
     locales: [
       {
-        code: "en-GB",
-        language: "en-GB",
-        file: "en-GB.ts",
-      },
-      {
-        code: "pl-PL",
-        language: "pl-PL",
-        file: "pl-PL.ts",
-      },
-      {
-        code: "de-DE",
-        file: "de-DE.ts",
-        language: "de-DE",
+        code: "vi-VN",
+        language: "vi-VN",
+        file: "vi-VN.ts",
       },
     ],
   },

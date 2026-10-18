@@ -1,0 +1,44 @@
+{
+  "home": "Trang chủ",
+  "breadcrumbs": {
+    "search": "Tìm kiếm"
+  },
+  "layout": {
+    "sideMenu": {
+      "close": "Đóng menu"
+    },
+    "header": {
+      "myAccount": "Tài khoản",
+      "cart": "Giỏ hàng"
+    },
+    "footer": {
+      "newsletter": {
+        "title": "Đăng ký nhận tin",
+        "description": "Nhận thông tin mới nhất về ưu đãi và bộ sưu tập.",
+        "placeholder": "Nhập địa chỉ email",
+        "button": "Đăng ký",
+        "privacyPolicy": "Khi đăng ký, bạn đồng ý với chính sách bảo mật của chúng tôi.",
+        "messages": {
+          "subscribed": "Cảm ơn bạn! Email của bạn đã được đăng ký."
+        }
+      }
+    },
+    "ariaLabels": {
+      "mainNavigation": "Điều hướng chính",
+      "accountNavigation": "Điều hướng tài khoản",
+      "mainContent": "Nội dung chính",
+      "checkout": "Thanh toán",
+      "pagination": "Phân trang",
+      "page": "Trang {page}",
+      "previousPage": "Trang trước",
+      "nextPage": "Trang sau",
+      "breadcrumb": "Đường dẫn",
+      "sidebar": "Thanh bên",
+      "closeNotification": "Đóng thông báo",
+      "languageSwitcher": "Đổi ngôn ngữ",
+      "currencySwitcher": "Đổi tiền tệ",
+      "guidedSetup": "Hướng dẫn thiết lập",
+      "contentSidebar": "Thanh bên nội dung"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "product": {
+    "addToCart": "Thêm vào giỏ",
+    "details": "Chi tiết",
+    "addedToCart": "đã được thêm vào giỏ hàng.",
+    "notAddedToCart": "chưa thêm được vào giỏ hàng.",
+    "viewCart": "Xem giỏ hàng",
+    "addToWishlist": "Thêm vào yêu thích",
+    "removeFromWishlist": "Bỏ khỏi yêu thích",
+    "addReview": "Viết đánh giá",
+    "reviewsForm": {
+      "title": "Tiêu đề",
+      "titlePlaceholder": "Nhập tiêu đề đánh giá",
+      "review": "Nội dung đánh giá",
+      "reviewPlaceholder": "Chia sẻ trải nghiệm của bạn với sản phẩm (tối thiểu 40 ký tự)",
+      "submit": "Gửi",
+      "rating": "Số sao"
+    },
+    "errors": {
+      "reviewAlreadyExists": "Bạn đã đánh giá sản phẩm này rồi"
+    },
+    "messages": {
+      "reviewAdded": "Cảm ơn bạn! Đánh giá đã được gửi.",
+      "loginToReview": "Vui lòng đăng nhập để viết đánh giá"
+    },
+    "qty": "SL",
+    "productNumber": "Mã sản phẩm",
+    "addedToWishlist": "đã được thêm vào yêu thích.",
+    "removedFromTheWishlist": "đã được bỏ khỏi yêu thích.",
+    "reason": "Lý do",
+    "cannotAddToWishlist": "chưa thêm được vào yêu thích.",
+    "badges": {
+      "topseller": "Bán chạy"
+    },
+    "amount": "Số lượng",
+    "price": {
+      "label": "Giá",
+      "to": "Đến",
+      "from": "Từ"
+    },
+    "to": "Đến",
+    "from": "Từ",
+    "noReviews": "Chưa có đánh giá.",
+    "reviewNotAccepted": "Đánh giá của bạn đang chờ duyệt",
+    "reviewFeedback": "Phản hồi của cửa hàng",
+    "content": "Quy cách",
+    "deliveryTime": "Còn hàng, giao trong",
+    "days": "ngày",
+    "noAvailable": "Ngừng kinh doanh",
+    "chooseA": "Chọn",
+    "previously": "Giá cũ",
+    "pricesIncl": "Giá đã gồm VAT, chưa gồm phí vận chuyển",
+    "pricesExcl": "Giá chưa gồm VAT và phí vận chuyển",
+    "description": "Mô tả",
+    "reviews": "Đánh giá"
+  }
+}

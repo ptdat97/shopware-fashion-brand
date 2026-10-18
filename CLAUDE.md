@@ -52,7 +52,7 @@ Database  mysql://root@127.0.0.1:3306/shopware
 Shopware  6.7.15.1 · PHP 8.4 · MySQL 8.0.33 · Node 22 · pnpm 12
 ```
 
-Sales channel `anivele` chạy `vi-VN`, tiền tệ VND — channel **duy nhất** cho mọi thương hiệu; frontend Nuxt dùng access key của channel này (ADR-005). Channel `Headless` (type API) giữ `en-US`, chưa dùng.
+Sales channel **`Headless`** (type API) chạy `vi-VN`, VND — channel **duy nhất** cho mọi thương hiệu, frontend Nuxt dùng access key của nó. Channel Storefront `anivele` đã xoá 18/10/2026 (ADR-005). Domain frontend tạo theo biến `ACME_FRONTEND_URL` trong `backend/.env.local`.
 
 ## Cấu hình dữ liệu phải viết thành migration
 
@@ -99,6 +99,6 @@ pnpm lint && pnpm typecheck                                         # khi sửa 
 - **Dọn MB** ✅ (14/10) — nhãn Admin "Thương hiệu" qua file snippet native, menu không tô "Trang chủ" ở trang brand, bộ sưu tập `/collections/sale` (stream % giảm giá native)
 - **MB5** ✅ — đơn COD thật 2 brand (VAT, phí ship, tồn kho, huỷ hoàn kho đúng), khuyến mãi theo brand bằng Rule Builder, `manufacturerId` trong payload dòng đơn. Không code — chỉ test. Mọi brand dùng chung **một kho** → một kiện/đơn, một bảng phí ship
 
-- **Phase H — headless** 🔄 (18/10) — monorepo `backend/` + `frontend/` ✅, frontend Nuxt 4 scaffold + `pnpm build` đạt ✅. Còn H1–H8 (vi-VN, theme, trang brand qua Store API, swatch, trang cảm ơn, SEO) — [docs/15-headless.md](docs/15-headless.md) mục 4
+- **Phase H — headless** 🔄 (18/10) — monorepo `backend/` + `frontend/` ✅, channel `Headless` thành channel bán hàng (migration AcmeVietnam/AcmePayment 1.2.0) ✅, frontend chạy trên dữ liệu thật: trang chủ, danh mục, sản phẩm tiếng Việt ✅, H1 phần i18n ✅. Còn theme H1, H2–H8 (vi-VN, theme, trang brand qua Store API, swatch, trang cảm ơn, SEO) — [docs/15-headless.md](docs/15-headless.md) mục 4
 
 Tiếp theo: **Phase H** (H1 → H8). Song song: **MB6 — sẵn sàng mở rộng** (ERP/PIM qua Admin API/App, đa kho, bảng size theo brand × danh mục) — phần lớn là thiết kế, chờ nhu cầu thật. Báo cáo khảo sát ✅ [docs/14-mb6-khao-sat.md](docs/14-mb6-khao-sat.md) (14/10), chờ quyết định ở mục 5. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).

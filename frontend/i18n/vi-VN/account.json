@@ -1,0 +1,168 @@
+{
+  "account": {
+    "back": "Quay lại",
+    "signUpHeader": "Tạo tài khoản",
+    "signUpSubHeader": "Đăng ký để bắt đầu mua sắm",
+    "yourAddress": "Địa chỉ của bạn",
+    "documentsLabel": "Chứng từ",
+    "loginPageTitle": "Đăng nhập & Đăng ký",
+    "loginPageHeader": "Đăng nhập hoặc tạo tài khoản",
+    "order": {
+      "header": "Đơn hàng",
+      "subHeader": "Xem đơn hàng hiện tại và đã đặt trước đây",
+      "product": "Sản phẩm",
+      "quantity": "Số lượng",
+      "price": "Đơn giá",
+      "subtotal": "Tạm tính",
+      "orderNumber": "Mã đơn hàng",
+      "totalAmount": "Tổng tiền",
+      "orderDate": "Ngày đặt",
+      "orderStatus": "Trạng thái đơn",
+      "paymentMethod": "Phương thức thanh toán",
+      "repeatOrder": "Đặt lại đơn này",
+      "order": "Đơn hàng",
+      "orders": "Đơn hàng",
+      "seeMore": "Xem thêm",
+      "seeLess": "Thu gọn",
+      "orderLabel": "Đơn hàng",
+      "shippingStatus": "Trạng thái giao hàng",
+      "statusUnknown": "Không xác định",
+      "shipping": "Phí vận chuyển",
+      "shippingMethod": "Phương thức vận chuyển",
+      "total": "Tổng cộng",
+      "backToList": "Quay lại danh sách đơn hàng",
+      "authOrderTitle": "Xác minh đơn hàng",
+      "authOrderText": "Vui lòng nhập email và mã bưu chính đã dùng khi đặt hàng.",
+      "authOrderButton": "Xác minh đơn hàng",
+      "emailPlaceholder": "Địa chỉ email",
+      "postalCodePlaceholder": "Mã bưu chính"
+    },
+    "menu": {
+      "header": "Tài khoản của bạn",
+      "overview": "Tổng quan",
+      "yourProfile": "Hồ sơ",
+      "addresses": "Sổ địa chỉ",
+      "orders": "Đơn hàng",
+      "logout": "Đăng xuất"
+    },
+    "overview": {
+      "header": "Tổng quan",
+      "subHeader": "Xem nhanh thông tin cá nhân, phương thức thanh toán mặc định và địa chỉ đã lưu.",
+      "personalDataSectionHeader": "Thông tin cá nhân",
+      "defaultBillingAddressSectionHeader": "Địa chỉ thanh toán mặc định",
+      "defaultShippingAddressSectionHeader": "Địa chỉ giao hàng mặc định",
+      "newsletter": {
+        "subscriptionSectionHeader": "Nhận bản tin",
+        "subscriptionLabel": "Có, tôi muốn nhận bản tin miễn phí. (Có thể huỷ bất cứ lúc nào.)",
+        "confirmationNeeded": "Vui lòng xác nhận email trước khi đăng ký nhận bản tin.",
+        "messages": {
+          "subscribed": "Cảm ơn bạn! Email của bạn đã được đăng ký.",
+          "unsubscribed": "Đã huỷ nhận bản tin"
+        }
+      }
+    },
+    "address": {
+      "notFound": "Không tìm thấy địa chỉ",
+      "header": "Sổ địa chỉ",
+      "subHeader": "Xem địa chỉ mặc định hoặc thêm địa chỉ mới.",
+      "defaultBillingAddressSectionHeader": "Địa chỉ thanh toán mặc định",
+      "defaultShippingAddressSectionHeader": "Địa chỉ giao hàng mặc định",
+      "availableAddressesSectionHeader": "Địa chỉ đã lưu",
+      "addAddressButton": "Thêm địa chỉ mới",
+      "editAddressButton": "Sửa địa chỉ",
+      "deleteAddressButton": "Xoá địa chỉ",
+      "useAsDefaultBillingAddressButton": "Đặt làm địa chỉ thanh toán mặc định",
+      "useAsDefaultShippingAddressButton": "Đặt làm địa chỉ giao hàng mặc định",
+      "saveButton": "Lưu địa chỉ",
+      "new": {
+        "header": "Địa chỉ mới",
+        "subHeader": "Thêm địa chỉ mới vào tài khoản.",
+        "personalDataSectionHeader": "Thông tin cá nhân",
+        "successMessage": "Đã thêm địa chỉ."
+      },
+      "edit": {
+        "header": "Sửa địa chỉ",
+        "subHeader": "Chỉnh sửa địa chỉ của bạn.",
+        "personalDataSectionHeader": "Thông tin cá nhân",
+        "successMessage": "Đã cập nhật địa chỉ."
+      }
+    },
+    "profile": {
+      "header": "Hồ sơ",
+      "subHeader": "Kiểm tra thông tin cá nhân của bạn.",
+      "personalDataSectionHeader": "Thông tin cá nhân",
+      "loginDataSectionHeader": "Thông tin đăng nhập",
+      "changeEmailButton": "Đổi email",
+      "changePasswordButton": "Đổi mật khẩu",
+      "form": {
+        "accountType": "Loại tài khoản",
+        "firstName": "Tên",
+        "lastName": "Họ",
+        "company": "Công ty",
+        "vatIds": "Mã số thuế",
+        "buttonSubmit": "Cập nhật",
+        "successUpdate": "Đã cập nhật thông tin."
+      }
+    },
+    "changeEmail": {
+      "header": "Đổi địa chỉ email",
+      "subHeader": "Nhập email mới",
+      "form": {
+        "newEmailLabel": "Email mới",
+        "confirmEmailLabel": "Nhập lại email mới",
+        "passwordLabel": "Mật khẩu hiện tại*",
+        "buttonSubmit": "Lưu",
+        "successUpdate": "Đã đổi địa chỉ email.",
+        "errorUpdate": "Không đổi được email. Vui lòng thử lại."
+      }
+    },
+    "changePassword": {
+      "header": "Đổi mật khẩu",
+      "subHeader": "Nhập mật khẩu mới",
+      "form": {
+        "newPasswordLabel": "Mật khẩu mới*",
+        "confirmPasswordLabel": "Nhập lại mật khẩu mới*",
+        "currentPasswordLabel": "Mật khẩu hiện tại*",
+        "buttonSubmit": "Lưu",
+        "successUpdate": "Đã đổi mật khẩu.",
+        "errorUpdate": "Không đổi được mật khẩu. Vui lòng thử lại."
+      }
+    },
+    "orderDetails": {
+      "order": "Đơn hàng",
+      "placedOn": "Đặt ngày {d}",
+      "shippingAddress": "Địa chỉ giao hàng",
+      "billingAddress": "Địa chỉ thanh toán",
+      "orderSummary": "Tóm tắt đơn hàng",
+      "paymentMethod": "Phương thức thanh toán",
+      "shippingMethod": "Phương thức vận chuyển",
+      "subtotal": "Tạm tính",
+      "shipping": "Phí vận chuyển",
+      "total": "Tổng cộng",
+      "takesUpTo": "Giao trong khoảng",
+      "change": "Thay đổi",
+      "changePaymentMethod": "Đổi phương thức thanh toán",
+      "cancel": "Huỷ",
+      "confirm": "Xác nhận",
+      "close": "Đóng",
+      "backToOrdersList": "Quay lại danh sách đơn hàng",
+      "itemsHeader": {
+        "item": "Sản phẩm",
+        "quantity": "Số lượng",
+        "price": "Đơn giá",
+        "total": "Thành tiền"
+      }
+    },
+    "messages": {
+      "loggedInSuccess": "Đăng nhập thành công.",
+      "verifying": "Đang xác minh tài khoản...",
+      "signUpSuccess": "Cảm ơn bạn đã đăng ký! Bạn sẽ nhận được email xác nhận trong ít phút. Bấm vào liên kết trong email để hoàn tất.",
+      "verificationLinkInvalid": "Liên kết xác minh không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu gửi lại email xác nhận.",
+      "orderSuccessNoOrder": "Không tìm thấy đơn hàng.",
+      "orderWrongData": "Email hoặc mã bưu chính không đúng. Vui lòng thử lại.",
+      "paymentMethodChanged": "Đã đổi phương thức thanh toán.",
+      "productsAdded": "Đã thêm sản phẩm vào giỏ hàng.",
+      "loginRequired": "Cần đăng nhập để xem trang này. Đang chuyển tới trang đăng nhập."
+    }
+  }
+}

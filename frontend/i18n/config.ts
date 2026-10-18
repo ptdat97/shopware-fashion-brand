@@ -3,7 +3,7 @@
  */
 export default defineI18nConfig(() => ({
   legacy: false,
-  fallbackLocale: "en-GB",
+  fallbackLocale: "vi-VN",
   allowComposition: true,
   globalInjection: true,
 }));

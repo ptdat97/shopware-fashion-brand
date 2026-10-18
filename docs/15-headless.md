@@ -22,18 +22,32 @@ cd backend && bin/console cache:clear && bin/console cache:clear:http
 
 ## 2. Access key
 
-Frontend gọi Store API bằng access key của sales channel `anivele` (ADR-005 mục 3):
+Frontend gọi Store API bằng access key của channel `Headless` (type API — channel duy nhất, ADR-005 mục 3):
 
 ```sql
-SELECT sct.name, sc.access_key
-  FROM sales_channel sc
-  JOIN sales_channel_translation sct ON sct.sales_channel_id = sc.id
- GROUP BY sc.id;
+SELECT sc.access_key FROM sales_channel sc
+ WHERE sc.type_id = UNHEX('f183ee5650cf4bdb8a774337575067a6');   -- Defaults::SALES_CHANNEL_TYPE_API
 ```
 
-Hoặc Administration → Sales Channels → anivele → API access. Điền vào `NUXT_PUBLIC_SHOPWARE_ACCESS_TOKEN` và `OPENAPI_ACCESS_KEY` trong `frontend/.env` (file không vào git). Access key Store API là khoá công khai (trình duyệt gửi kèm mọi request) — không phải bí mật, nhưng vẫn không commit để mỗi môi trường dùng key của mình.
+Hoặc Administration → Sales Channels → Headless → API access. Điền vào `NUXT_PUBLIC_SHOPWARE_ACCESS_TOKEN` và `OPENAPI_ACCESS_KEY` trong `frontend/.env` (file không vào git). Access key Store API là khoá công khai (trình duyệt gửi kèm mọi request) — không phải bí mật, nhưng vẫn không commit để mỗi môi trường dùng key của mình.
 
-Thêm domain frontend (`http://localhost:3000`, sau này domain thật) vào channel `anivele`, ngôn ngữ vi-VN, tiền tệ VND — cần cho SEO URL và đăng ký tài khoản. Đây là thay đổi cấu hình phải tái lập → viết thành migration trong `AcmeVietnam` (xem CLAUDE.md "Cấu hình dữ liệu phải viết thành migration").
+Domain frontend do migration `AcmeVietnam` tạo, URL lấy từ `ACME_FRONTEND_URL` trong `backend/.env.local` (local: `http://localhost:3000`). **Đặt biến này trước khi chạy `plugin:update AcmeVietnam`** trên môi trường mới; quên thì thêm domain sau trong Administration (loại "External storefront", vi-VN, VND). Mỗi (channel, ngôn ngữ) chỉ có **một** domain external storefront — ràng buộc của core.
+
+Sau khi đổi dữ liệu catalog/SEO: `bin/console dal:refresh:index` (SEO URL headless có route `store-api.product.detail`, `store-api.category.detail`).
+
+### Triển khai đợt 18/10/2026 lên môi trường khác
+
+```bash
+cd backend
+# .env.local: ACME_FRONTEND_URL=https://<domain-frontend>
+bin/console plugin:refresh
+bin/console plugin:update AcmeVietnam
+bin/console plugin:update AcmePayment
+bin/console plugin:update AcmeDemoData
+bin/console acme:demo:seed          # chỉ môi trường có dữ liệu demo
+bin/console dal:refresh:index
+bin/console cache:clear && bin/console cache:clear:http
+```
 
 ## 3. Công nghệ
 
@@ -59,7 +73,7 @@ Thêm domain frontend (`http://localhost:3000`, sau này domain thật) vào cha
 
 | # | Chức năng | Hiện ở | Việc headless |
 |---|---|---|---|
-| H1 | i18n vi-VN, VND, theme nâu/be/kem, logo ANIVELE | `AcmeTheme`, template | Bản dịch `vi-VN`, design token UnoCSS, header/footer. |
+| H1 | i18n vi-VN, VND, theme nâu/be/kem, logo ANIVELE | `AcmeTheme`, template | ✅ i18n: `vi-VN` là locale duy nhất (bỏ en-GB/pl-PL/de-DE), dịch cả khoá của `cms-base-layer`, nhãn bộ lọc qua override `SwFilterDropdown`. ⬜ theme nâu/be/kem, logo; chip bộ lọc đang đặt chữ tiếng Anh cứng trong `SwFilterChips`. |
 | H2 | Trang `/brands`, `/brands/{slug}`, brand tắt → 404 | `AcmeBrand` Storefront controller | Route Store API trong `AcmeBrand` (danh sách brand, brand theo SEO path); component `FrontendBrandPage` trong `app/components/global/` để resolver `[...all].vue` nhận route brand. |
 | H3 | Link brand + logo brand ở trang sản phẩm | `AcmeBrand` Twig | Đọc `product.manufacturer` + extension `acmeBrand` từ Store API. |
 | H4 | Bộ sưu tập `/collections/*`, `/collections/sale` | `AcmeCatalog` (SEO navigation) | Không cần code mới nếu SEO URL resolve ra category — kiểm chứng. |
@@ -69,3 +83,9 @@ Thêm domain frontend (`http://localhost:3000`, sau này domain thật) vào cha
 | H8 | Phí ship theo khu vực, VAT, khuyến mãi brand | `AcmeShipping`, Rule Builder | Không đổi — tính trong cart backend, frontend chỉ hiển thị. |
 
 Xong H1–H8 + e2e COD → đánh giá gỡ storefront Twig (ADR riêng).
+
+## 5. Ghi chú khi tuỳ biến frontend
+
+- **Override component của layer:** đặt file cùng tên vào `frontend/app/components/cms/` (global, priority 2). Nuxt in cảnh báo `NUXT_B3011 Two component files resolving to the same name` — đó là hành vi bình thường của layer override; kiểm tra `.nuxt/components.d.ts` trỏ về file trong `app/`.
+- **Bản dịch:** `frontend/i18n/vi-VN/*.json`. Component của `cms-base-layer` đọc chung messages này qua `useCmsTranslations` (mặc định tiếng Anh nếu thiếu khoá). Khi nâng cấp template, so khoá với `i18n/en-GB` của upstream.
+- **Lint/format:** `.oxlintrc.json`, `.oxfmtrc.json` lấy từ gốc repo `shopware/frontends` (template dựa vào chúng nhưng không mang theo). `@nuxt/kit`, `@types/three`, `@types/js-cookie` khai báo thêm vì cùng lý do.

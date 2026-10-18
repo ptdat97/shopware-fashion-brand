@@ -1,0 +1,13 @@
+{
+  "cms": {
+    "image": {
+      "linkWithoutLabel": "Mở trang được liên kết"
+    },
+    "video": {
+      "playLabel": "Phát video",
+      "pauseLabel": "Tạm dừng video",
+      "loadError": "Không tải được video.",
+      "notSupported": "Trình duyệt không hỗ trợ video HTML5."
+    }
+  }
+}
