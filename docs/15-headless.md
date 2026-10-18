@@ -56,7 +56,7 @@ bin/console cache:clear && bin/console cache:clear:http
 | Framework | **Nuxt 4** (Vue 3.5, TypeScript strict) | Đi kèm template chính thức. SSR + ISR cho trang catalog/brand (SEO), CSR cho checkout/account (đã cấu hình sẵn trong `routeRules`). |
 | Dữ liệu Shopware | `@shopware/api-client`, `@shopware/composables`, `@shopware/nuxt-module` | Không tự viết fetch tới Store API. Kiểu dữ liệu sinh bằng `pnpm generate-types` từ OpenAPI của backend — có cả route plugin tự viết. |
 | Shopping Experiences | `@shopware/cms-base-layer` | Layout CMS dựng trong Admin (landing brand, bộ sưu tập, trang chủ) render được ngay; override block/element trong `frontend/app/components/cms/`. |
-| CSS | **UnoCSS** + `@shopware/unocss-design-tokens-layer` | Cú pháp tương thích Tailwind. Chuyển bảng màu nâu/be/kem, swatch tròn của `AcmeTheme` thành design token trong `uno.config.ts`. |
+| CSS | **Tailwind** (cú pháp v3) — chạy trên engine UnoCSS `presetWind3` | Quy ước ở mục 6. Không cài `tailwindcss`: layer CMS của Shopware cần UnoCSS. Bảng màu nâu/be/kem của `AcmeTheme` thành theme trong `uno.config.ts`. |
 | Đa ngôn ngữ | `@nuxtjs/i18n` | Đặt `vi-VN` mặc định, chiến lược `no_prefix` (chỉ một ngôn ngữ — URL giữ nguyên như storefront Twig). Bỏ `pl-PL`/`de-DE` của template. |
 | Ảnh | `@nuxt/image` | Dùng thumbnail Shopware sinh sẵn (`srcset`), không resize lần hai. |
 | Form | `@regle/core` | Có sẵn trong template; validate SĐT VN, địa chỉ 34 tỉnh/thành. |
@@ -89,3 +89,16 @@ Xong H1–H8 + e2e COD → đánh giá gỡ storefront Twig (ADR riêng).
 - **Override component của layer:** đặt file cùng tên vào `frontend/app/components/cms/` (global, priority 2). Nuxt in cảnh báo `NUXT_B3011 Two component files resolving to the same name` — đó là hành vi bình thường của layer override; kiểm tra `.nuxt/components.d.ts` trỏ về file trong `app/`.
 - **Bản dịch:** `frontend/i18n/vi-VN/*.json`. Component của `cms-base-layer` đọc chung messages này qua `useCmsTranslations` (mặc định tiếng Anh nếu thiếu khoá). Khi nâng cấp template, so khoá với `i18n/en-GB` của upstream.
 - **Lint/format:** `.oxlintrc.json`, `.oxfmtrc.json` lấy từ gốc repo `shopware/frontends` (template dựa vào chúng nhưng không mang theo). `@nuxt/kit`, `@types/three`, `@types/js-cookie` khai báo thêm vì cùng lý do.
+
+## 6. CSS: viết Tailwind, engine UnoCSS
+
+Quyết định 18/10/2026 (ADR-005 mục 6): **frontend viết class Tailwind**, nhưng không cài gói `tailwindcss`. Engine là **UnoCSS + `presetWind3`** — preset tương thích cú pháp Tailwind v3 — vì 121 component của `@shopware/cms-base-layer` và `@shopware/unocss-design-tokens-layer` dựa vào UnoCSS (~290 class design token, icon `i-carbon-*`, sinh class lúc chạy cho HTML soạn trong CMS). Thay bằng Tailwind thật phải viết lại phần này và kiểm lại mỗi lần nâng cấp template.
+
+| Được | Không |
+|---|---|
+| Class Tailwind v3 trong template: `flex gap-4 px-4 md:grid-cols-3 hover:bg-…` | Cài `tailwindcss`, `@tailwindcss/vite`, `@nuxtjs/tailwindcss` |
+| Màu/font thương hiệu khai báo trong `theme` của `frontend/uno.config.ts`, dùng như Tailwind: `bg-brand-primary`, `text-surface-on-surface` | Mã màu rời rạc `bg-[#8b5e3c]` trong component — thêm vào theme |
+| Icon: `i-carbon-*` (preset icons, có sẵn) | Chế độ attributify (`<div flex p-4>`) dù preset đang bật — không phải cú pháp Tailwind, dev mới không đọc được |
+| Cú pháp riêng của Tailwind v4 cần kiểm trước khi dùng (`@theme`, `size-*` v.v.) | Thư viện UI kéo theo Tailwind riêng (DaisyUI, Flowbite…) |
+
+Đọc thêm: tài liệu Tailwind v3 dùng được cho hầu hết class; sai khác giữa `presetWind3` và Tailwind: <https://unocss.dev/presets/wind3>. Gợi ý editor: extension **UnoCSS** (VS Code) để có autocomplete — extension Tailwind IntelliSense không nhận cấu hình này.

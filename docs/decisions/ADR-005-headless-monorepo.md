@@ -32,6 +32,7 @@ shopware-fashion-brand/
    Không tạo channel theo brand (vẫn là quy tắc cứng số 5).
 4. **Storefront Twig không còn phục vụ channel nào**, nhưng chưa gỡ `shopware/storefront` — `AcmeTheme`, `AcmeBrand` (controller `/brands`), `AcmePayment` (trang finish) còn phụ thuộc về mặt code. Gỡ là một ADR riêng sau khi xong H1–H8.
 5. **Plugin mở Store API, frontend vẽ UI.** Nghiệp vụ mới (trang brand, bảng size, …) viết thành route Store API trong plugin của nghiệp vụ đó; không đặt logic nghiệp vụ trong Nuxt.
+6. **CSS: cú pháp Tailwind trên engine UnoCSS** (quyết định 18/10/2026). Dev viết class Tailwind v3; engine là UnoCSS `presetWind3` của template, không cài `tailwindcss` — layer CMS của Shopware phụ thuộc UnoCSS. Quy ước: [15-headless.md](../15-headless.md) mục 6.
 
 ## Hệ quả với bảy quy tắc cứng
 
@@ -47,6 +48,7 @@ shopware-fashion-brand/
 | Phương án | Lý do loại |
 |---|---|
 | Giữ storefront Twig | Mục tiêu dự án đã đổi sang headless. |
+| Tailwind CSS thật (thay UnoCSS) | `cms-base-layer` và design-token layer dựa vào UnoCSS (token, icon, class sinh lúc chạy cho HTML từ CMS) — phải viết lại và kiểm lại mỗi lần nâng cấp template. Cú pháp Tailwind vẫn giữ được qua `presetWind3`. |
 | Next.js / React | Không có composables và renderer CMS chính thức — phải tự viết lại toàn bộ phần Shopping Experiences, cart, checkout. |
 | Tách hai repo | Thay đổi API và UI lệch phiên bản; dự án một nhóm nhỏ không cần ranh giới đó. |
 
