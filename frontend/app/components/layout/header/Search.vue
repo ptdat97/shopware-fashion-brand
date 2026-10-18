@@ -97,7 +97,7 @@ const handleEnterKey = () => {
         <template #rightIcon>
           <Icon
             name="shopware:search-s"
-            class="color-surface-on-surface-variant rotate-90 ml-2"
+            class="text-surface-on-surface-variant rotate-90 ml-2"
           />
         </template>
       </FormBaseInput>

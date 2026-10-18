@@ -34,7 +34,7 @@ const localePath = useLocalePath();
 const { formatLink } = useInternationalization(localePath);
 </script>
 <template>
-  <!-- don't remove; enforce unocss to include dynamically used classes: class="bg-blue-100 bg-green-100 bg-orange-100 bg-red-100" -->
+  <!-- don't remove; keep Tailwind generating dynamically used classes: class="bg-blue-100 bg-green-100 bg-orange-100 bg-red-100" -->
   <div
     v-if="notification.message.length > 0"
     :id="`toast-${notification.id}`"
@@ -46,7 +46,7 @@ const { formatLink } = useInternationalization(localePath);
       :class="`text-${themeTypeColor}-500 bg-${themeTypeColor}-100`"
       class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg"
     >
-      <!-- don't remove; enforce unocss to include dynamically used classes: class="i-carbon-information i-carbon-checkmark i-carbon-warning-alt i-carbon-close-outline" -->
+      <!-- don't remove; keep Tailwind generating dynamically used classes: class="i-carbon-information i-carbon-checkmark i-carbon-warning-alt i-carbon-close-outline" -->
       <div :class="`w-5 h-5 i-carbon-${icon}`" />
     </div>
     <div class="ml-3 flex-1 min-w-0">

@@ -33,10 +33,10 @@ onClickOutside(modalContentElement, () => close());
     >
       <div
         v-show="isOpen"
-        class="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50"
+        class="fixed z-10 inset-0 overflow-y-auto bg-black/50"
       >
         <div
-          class="flex items-center justify-center min-h-screen lg:-mt-3% text-center"
+          class="flex items-center justify-center min-h-screen lg:-mt-[3%] text-center"
         >
           <Transition
             enter-active-class="transition ease-out duration-500 transform "

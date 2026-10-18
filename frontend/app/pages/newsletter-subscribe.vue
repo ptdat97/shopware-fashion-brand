@@ -57,7 +57,7 @@ onMounted(async () => {
           {{ $t("newsletter.messages.loading") }}
         </p>
         <div
-          class="size-5 i-carbon-circle-dash animate-spin animate-count-infinite animate-duration-2000 text-brand-primary"
+          class="size-5 i-carbon-circle-dash animate-spin [animation-duration:2s] text-brand-primary"
         />
       </div>
       <div

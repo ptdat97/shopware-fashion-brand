@@ -8,7 +8,7 @@ defineProps<{
     <Icon
       size="1.2rem"
       name="shopware:shopping-cart"
-      class="color-brand-primary"
+      class="text-brand-primary"
     />
     <LayoutMainCounter
       v-if="counter > 0"

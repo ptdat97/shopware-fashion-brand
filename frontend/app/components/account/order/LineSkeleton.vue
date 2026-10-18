@@ -1,5 +1,5 @@
 <template>
-  <div class="border border-outline-outline p4 animate-pulse">
+  <div class="border border-outline-outline p-4 animate-pulse">
     <div
       class="flex justify-between items-center pb-2 border-b border-outline-outline"
     >

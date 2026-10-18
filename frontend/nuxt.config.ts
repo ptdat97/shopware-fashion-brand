@@ -1,5 +1,6 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 import { createResolver } from "@nuxt/kit";
+// https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from "@tailwindcss/vite";
 
 const { resolve } = createResolver(import.meta.url);
 const isStackBlitz = process.env.SHOPWARE_STACKBLITZ === "true";
@@ -17,7 +18,8 @@ export default defineNuxtConfig({
   extends: [
     "@shopware/composables/nuxt-layer",
     "@shopware/cms-base-layer",
-    "@shopware/unocss-design-tokens-layer",
+    // Không extend @shopware/unocss-design-tokens-layer: CSS là Tailwind v4,
+    // token màu chuyển vào app/assets/css/tailwind.css (ADR-005 mục 6).
   ],
   runtimeConfig: {
     shopware: {
@@ -41,7 +43,6 @@ export default defineNuxtConfig({
   devtools: { enabled: !isStackBlitz },
   modules: [
     "@vueuse/nuxt",
-    "@unocss/nuxt",
     "@shopware/nuxt-module",
     "@nuxtjs/i18n",
     "@nuxt/icon",
@@ -61,11 +62,11 @@ export default defineNuxtConfig({
   },
   vite: {
     ...viteServerWebSocketWorkaround,
+    plugins: [tailwindcss()],
     optimizeDeps: {
       include: [
         "@regle/core",
         "@regle/rules",
-        "@unocss/runtime",
         "entities",
         "fflate",
         "html-to-ast",
@@ -74,10 +75,7 @@ export default defineNuxtConfig({
       ],
     },
   },
-  css: ["@unocss/reset/tailwind-compat.css"],
-  unocss: {
-    nuxtLayers: true,
-  },
+  css: ["~/assets/css/tailwind.css"],
   // resolveComponent targets must be global, and each global group needs its own
   // directory path — Nuxt skips later scans under an already-scanned path.
   // Avoid global:true on every component (INEFFECTIVE_DYNAMIC_IMPORT vs auto-imports).
@@ -123,7 +121,7 @@ export default defineNuxtConfig({
   },
   icon: {
     // Avoid bundling the full @iconify-json/carbon collection into Nitro (~1.1 MB).
-    // Carbon icons in templates use UnoCSS (`i-carbon-*`); <Icon> uses shopware custom.
+    // Icon Carbon trong template là class `i-carbon-*` (plugin tailwind/carbon-icons.mjs); <Icon> dùng bộ shopware.
     serverBundle: {
       collections: [],
     },

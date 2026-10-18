@@ -14,7 +14,7 @@ docs/       tài liệu chung
 
 Lệnh JS chạy ở gốc repo: `pnpm install`, `pnpm dev` (http://localhost:3000), `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm generate-types`. Node theo `.nvmrc` (22.x — template yêu cầu `>=22.22.3`).
 
-**CSS frontend: viết class Tailwind (v3)** — engine là UnoCSS `presetWind3` của template, **không** cài `tailwindcss`; màu thương hiệu đặt trong `frontend/uno.config.ts`; không dùng chế độ attributify. Lý do và quy ước: [docs/15-headless.md](docs/15-headless.md) mục 6.
+**CSS frontend: Tailwind CSS v4** (`@tailwindcss/vite`, không còn UnoCSS). Cấu hình và màu thương hiệu ở `frontend/app/assets/css/tailwind.css` (`@theme`); icon `i-carbon-*` qua `frontend/tailwind/carbon-icons.mjs`. Nâng cấp `@shopware/cms-base-layer` → kiểm class mới của layer + so ảnh. Quy ước: [docs/15-headless.md](docs/15-headless.md) mục 6.
 
 Nghiệp vụ mới viết thành **route Store API trong plugin**, frontend chỉ vẽ UI; không đặt logic nghiệp vụ trong Nuxt. Tuỳ biến UI qua override component / Nuxt layer, không patch `node_modules/@shopware/*`. Storefront Twig `anivele` vẫn chạy song song tới khi frontend đủ chức năng (H1–H8 trong docs/15).
 

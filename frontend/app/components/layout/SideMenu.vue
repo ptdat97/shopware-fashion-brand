@@ -44,7 +44,7 @@ const toggleCollapse = (navigationElement: Schemas["Category"]) => {
         class="flex flex-col overflow-y-auto w-full"
       >
         <div class="overflow-y-auto">
-          <ul class="flex flex-col items-start p-x-2 space-y-2">
+          <ul class="flex flex-col items-start px-2 space-y-2">
             <li
               v-for="navigationElement in navigationElements"
               :key="navigationElement.id"

@@ -145,7 +145,7 @@ watch(
         <template v-else>
           <LayoutHeaderSearch v-model="searchText" />
           <FormLinkButton
-            class="text-sm border-b-1 border-b-solid border-b-brand-primary hover:border-none"
+            class="text-sm border-b-1 border-solid border-b-brand-primary hover:border-none"
             @click="toggleMobileSearch"
             label="Close"
           />

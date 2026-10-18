@@ -41,7 +41,7 @@ function changeLanguage(event: Event) {
 <template>
   <div class="bg-surface-surface-primary py-2.5">
     <div
-      class="flex items-center justify-between container mx-auto color-surface-on-surface-primary"
+      class="flex items-center justify-between container mx-auto text-surface-on-surface-primary"
     >
       <div class="flex flex-wrap items-center gap-2">
         <label

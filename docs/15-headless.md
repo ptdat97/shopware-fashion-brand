@@ -56,7 +56,7 @@ bin/console cache:clear && bin/console cache:clear:http
 | Framework | **Nuxt 4** (Vue 3.5, TypeScript strict) | Đi kèm template chính thức. SSR + ISR cho trang catalog/brand (SEO), CSR cho checkout/account (đã cấu hình sẵn trong `routeRules`). |
 | Dữ liệu Shopware | `@shopware/api-client`, `@shopware/composables`, `@shopware/nuxt-module` | Không tự viết fetch tới Store API. Kiểu dữ liệu sinh bằng `pnpm generate-types` từ OpenAPI của backend — có cả route plugin tự viết. |
 | Shopping Experiences | `@shopware/cms-base-layer` | Layout CMS dựng trong Admin (landing brand, bộ sưu tập, trang chủ) render được ngay; override block/element trong `frontend/app/components/cms/`. |
-| CSS | **Tailwind** (cú pháp v3) — chạy trên engine UnoCSS `presetWind3` | Quy ước ở mục 6. Không cài `tailwindcss`: layer CMS của Shopware cần UnoCSS. Bảng màu nâu/be/kem của `AcmeTheme` thành theme trong `uno.config.ts`. |
+| CSS | **Tailwind CSS v4** (`@tailwindcss/vite`) | Thay UnoCSS của template (18/10). Cấu hình trong `app/assets/css/tailwind.css`, quy ước ở mục 6. Bảng màu nâu/be/kem của `AcmeTheme` thành biến `@theme`. |
 | Đa ngôn ngữ | `@nuxtjs/i18n` | Đặt `vi-VN` mặc định, chiến lược `no_prefix` (chỉ một ngôn ngữ — URL giữ nguyên như storefront Twig). Bỏ `pl-PL`/`de-DE` của template. |
 | Ảnh | `@nuxt/image` | Dùng thumbnail Shopware sinh sẵn (`srcset`), không resize lần hai. |
 | Form | `@regle/core` | Có sẵn trong template; validate SĐT VN, địa chỉ 34 tỉnh/thành. |
@@ -90,15 +90,33 @@ Xong H1–H8 + e2e COD → đánh giá gỡ storefront Twig (ADR riêng).
 - **Bản dịch:** `frontend/i18n/vi-VN/*.json`. Component của `cms-base-layer` đọc chung messages này qua `useCmsTranslations` (mặc định tiếng Anh nếu thiếu khoá). Khi nâng cấp template, so khoá với `i18n/en-GB` của upstream.
 - **Lint/format:** `.oxlintrc.json`, `.oxfmtrc.json` lấy từ gốc repo `shopware/frontends` (template dựa vào chúng nhưng không mang theo). `@nuxt/kit`, `@types/three`, `@types/js-cookie` khai báo thêm vì cùng lý do.
 
-## 6. CSS: viết Tailwind, engine UnoCSS
+## 6. CSS: Tailwind CSS v4
 
-Quyết định 18/10/2026 (ADR-005 mục 6): **frontend viết class Tailwind**, nhưng không cài gói `tailwindcss`. Engine là **UnoCSS + `presetWind3`** — preset tương thích cú pháp Tailwind v3 — vì 121 component của `@shopware/cms-base-layer` và `@shopware/unocss-design-tokens-layer` dựa vào UnoCSS (~290 class design token, icon `i-carbon-*`, sinh class lúc chạy cho HTML soạn trong CMS). Thay bằng Tailwind thật phải viết lại phần này và kiểm lại mỗi lần nâng cấp template.
+Quyết định 18/10/2026 (ADR-005 mục 6): **Tailwind CSS v4 thật**, qua `@tailwindcss/vite`. UnoCSS và `@shopware/unocss-design-tokens-layer` đã gỡ — README của `cms-base-layer` cho phép: *"keep only `@shopware/cms-base-layer` and provide your own UnoCSS or Tailwind setup"*.
+
+Toàn bộ cấu hình nằm trong **`frontend/app/assets/css/tailwind.css`** (Tailwind v4 cấu hình bằng CSS, không có `tailwind.config.js`):
+
+| Phần | Vì sao |
+|---|---|
+| `@source "../../../node_modules/@shopware/cms-base-layer/app"` | Component của layer nằm trong `node_modules` — Tailwind không tự quét |
+| `@source inline("…")` | Class do CMS trả về, không có trong mã nguồn (trước là `safelist` của UnoCSS) |
+| `@theme { --color-brand-primary … }` | 70 token màu của Shopware, trước nằm trong design-tokens layer. **Bảng màu thương hiệu (H1) sửa ở đây** |
+| `--radius-sm`, `--shadow-sm`, `--blur-sm`, `--default-ring-width: 3px` | Layer viết theo thang Tailwind v3; v4 đổi nghĩa các tên này |
+| `@layer base` | Hành vi v3: viền mặc định gray-200 (v4 là currentColor), placeholder gray-400, con trỏ tay trên nút |
+| `@utility text-red / c-gray-500 / text-3` | Class riêng của UnoCSS mà layer còn dùng (giá khuyến mãi, spinner, hộp đánh giá) |
+| `@plugin "../../../tailwind/carbon-icons.mjs"` | Sinh class icon `i-carbon-*` mà layer và template dùng (Iconify Carbon, mask + currentColor) |
+
+Kiểm chứng khi chuyển: chụp 5 trang × desktop/mobile trước và sau, so điểm ảnh — lệch ≈ 0,08% (chỉ nút devtools của Nuxt), đối chứng hai trang khác nhau lệch 45%.
 
 | Được | Không |
 |---|---|
-| Class Tailwind v3 trong template: `flex gap-4 px-4 md:grid-cols-3 hover:bg-…` | Cài `tailwindcss`, `@tailwindcss/vite`, `@nuxtjs/tailwindcss` |
-| Màu/font thương hiệu khai báo trong `theme` của `frontend/uno.config.ts`, dùng như Tailwind: `bg-brand-primary`, `text-surface-on-surface` | Mã màu rời rạc `bg-[#8b5e3c]` trong component — thêm vào theme |
-| Icon: `i-carbon-*` (preset icons, có sẵn) | Chế độ attributify (`<div flex p-4>`) dù preset đang bật — không phải cú pháp Tailwind, dev mới không đọc được |
-| Cú pháp riêng của Tailwind v4 cần kiểm trước khi dùng (`@theme`, `size-*` v.v.) | Thư viện UI kéo theo Tailwind riêng (DaisyUI, Flowbite…) |
+| Class Tailwind v4 chuẩn: `flex gap-4 px-4 md:grid-cols-3 bg-black/50 text-[2.5rem]` | Cú pháp riêng UnoCSS: `color-*`, `c-*`, `p4`, `p-x-2`, `text-10`, attributify `<div flex>`, nhóm biến thể `hover:(…)` |
+| Màu/font mới: thêm biến vào `@theme` (`--color-…`, `--font-…`) rồi dùng `bg-…`, `font-…` | Mã màu rời rạc `bg-[#8b5e3c]` lặp lại nhiều chỗ — thêm vào `@theme` |
+| Icon: `i-carbon-<tên>` | Cài thêm `@nuxtjs/tailwindcss` (module cho Tailwind v3) hay file `tailwind.config.js` |
+| Dùng `text-red`/`c-gray-500`/`text-3` **chỉ** để giữ layer hiển thị đúng | Dùng các class tương thích đó trong mã của mình — viết `text-red-400`, `text-gray-500`, `text-xs` |
 
-Đọc thêm: tài liệu Tailwind v3 dùng được cho hầu hết class; sai khác giữa `presetWind3` và Tailwind: <https://unocss.dev/presets/wind3>. Gợi ý editor: extension **UnoCSS** (VS Code) để có autocomplete — extension Tailwind IntelliSense không nhận cấu hình này.
+**Đã biết, chấp nhận:** `focus:ring-opacity-20` của layer (ô "Mỗi trang") không còn tác dụng ở v4 → viền focus ô đó đậm hơn trước. Trang lỗi 404/500 mặc định của Nuxt vẫn mang CSS UnoCSS dựng sẵn của Nuxt — không phải mã của mình.
+
+**Khi nâng cấp `cms-base-layer`:** class kiểu UnoCSS mới trong layer sẽ không có CSS — lỗi im lặng, không báo khi build. Chụp lại các trang chính trước/sau nâng cấp và so điểm ảnh (`magick compare -metric RMSE`), đọc changelog của layer; class lạ thì thêm `@utility` tương thích vào `tailwind.css`.
+
+Editor: extension **Tailwind CSS IntelliSense** (VS Code) nhận cấu hình v4 trong file CSS.

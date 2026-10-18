@@ -22,7 +22,7 @@ onClickOutside(sidebarContentElement, () => close());
     >
       <div
         v-show="isOpen"
-        class="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50"
+        class="fixed z-10 inset-0 overflow-y-auto bg-black/50"
       >
         <div
           class="flex items-start justify-center min-h-screen pt-24 text-center"

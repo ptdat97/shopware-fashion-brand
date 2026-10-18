@@ -51,7 +51,7 @@ const cover = computed(() =>
       </div>
       <div class="content-end text-right">
         <FormLinkButton
-          class="text-sm border-b-1 border-b-solid border-b-brand-primary hover:border-none"
+          class="text-sm border-b-1 border-solid border-b-brand-primary hover:border-none"
           label="Remove"
           data-testid="checkout-product-tile-remove-button"
           @click="emit('remove', item.id)"

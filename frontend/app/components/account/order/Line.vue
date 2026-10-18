@@ -35,7 +35,7 @@ const shippingStatusLabel = computed(
 );
 </script>
 <template>
-  <div class="border border-outline-outline p4">
+  <div class="border border-outline-outline p-4">
     <div class="flex justify-between pb-2 border-b border-outline-outline">
       <NuxtLink :to="formatLink(`/account/order/details/${order.id}`)">
         <div class="font-bold">

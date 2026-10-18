@@ -23,7 +23,7 @@ function handleUpdateQuantity(id: string, quantity: number) {
 <template>
   <div class="border border-outline-outline sticky top-2">
     <div class="border-b border-outline-outline-variant">
-      <h2 class="text-10 px-6 font-['Noto_Serif']">
+      <h2 class="text-[2.5rem] px-6 font-['Noto_Serif']">
         {{ $t("checkout.summary") }}
       </h2>
     </div>

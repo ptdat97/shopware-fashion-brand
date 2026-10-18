@@ -57,7 +57,7 @@ function switchToGuest() {
         data-testid="checkout-create-account-toggle"
         @click="switchToAccount"
       >
-        <Icon name="shopware:plus-xs" class="color-brand-primary" />
+        <Icon name="shopware:plus-xs" class="text-brand-primary" />
         <span class="text-brand-primary">{{
           $t("checkout.customerBaseInfo.createAccountToggleLabel")
         }}</span>

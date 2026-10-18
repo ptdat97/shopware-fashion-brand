@@ -17,7 +17,7 @@ const { isSelected, disabled = false } = defineProps<{
       <Icon
         size="1.2rem"
         :name="isSelected ? 'shopware:solid-heart' : 'shopware:heart'"
-        class="color-brand-primary"
+        class="text-brand-primary"
       />
     </div>
   </FormIconButton>

@@ -68,7 +68,7 @@ const srcPath = computed(() => {
           data-testid="layout-search-suggest-units"
           :product="product"
           :show-content="false"
-          class="text-3"
+          class="text-xs"
         />
       </div>
     </div>

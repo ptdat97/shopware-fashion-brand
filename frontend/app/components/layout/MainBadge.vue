@@ -4,7 +4,6 @@ const { label, type = "info" } = defineProps<{
   type?: "info" | "success" | "warning" | "error";
 }>();
 
-// @unocss-include
 const classes = {
   info: "bg-states-info",
   success: "bg-states-success",
