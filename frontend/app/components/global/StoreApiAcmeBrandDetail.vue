@@ -33,6 +33,7 @@ const { apiClient } = useShopwareContext();
 const route = useRoute();
 const requestUrl = useRequestURL();
 const { t } = useI18n();
+const { shopName } = useShopSettings();
 
 const { data: detail } = await useAsyncData(
   `acmeBrand-${props.navigationId}`,
@@ -125,7 +126,7 @@ useBreadcrumbs([
 ]);
 
 useHead({
-  title: `${detail.value.metaTitle} | ${useAppConfig().siteName}`,
+  title: [detail.value.metaTitle, shopName.value].filter(Boolean).join(" | "),
   meta: [
     { name: "description", content: detail.value.metaDescription },
     { name: "keywords", content: detail.value.metaKeywords },

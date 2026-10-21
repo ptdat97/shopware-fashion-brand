@@ -100,6 +100,8 @@ Xong H1–H8 + e2e COD → đánh giá gỡ storefront Twig (ADR riêng).
   | `SwVariantConfigurator.vue` | Ô màu tròn, size 48×44, tổ hợp hết hàng, đổi nhóm qua `find-variant` (H5) — script giữ bản gốc trừ `onHandleChange` |
   | `SwProductCardImage.vue` | Khung 2:3, ảnh rê chuột, badge giảm giá (H5) — script giữ bản gốc |
   | `CmsElementBuyBox.vue` | **Bọc** (không chép) bản gốc + `ProductSizeGuide` bên dưới (H5) |
+  | `CmsElementProductListing.vue` | Không gửi `limit`/`order` mặc định tự chế — backend áp cấu hình (quy tắc 8, L2/L3) |
+  | `SwProductListingPagination.vue` | Lựa chọn số sản phẩm/trang theo `productsPerPage` của backend (L2) |
 
   Logic dịch nhãn dùng chung: `app/composables/useFilterLabel.ts`.
 - **Bản dịch:** `frontend/i18n/vi-VN/*.json`. Component của `cms-base-layer` đọc chung messages này qua `useCmsTranslations` (mặc định tiếng Anh nếu thiếu khoá). Khi nâng cấp template, so khoá với `i18n/en-GB` của upstream.
@@ -180,11 +182,11 @@ Quy tắc cứng số 8 (CLAUDE.md), chi tiết [08-quy-tac-phat-trien.md](08-qu
 
 | # | Gán cứng ở frontend | Backend đã có / cần có | Hướng sửa |
 |---|---|---|---|
-| L1 | Tên shop `siteName: "ANIVELE"` (`app.config.ts`) | `shop-settings` → `general.shopName` (Administration → Settings → Basic information; DB hiện là `anivele`) | Đọc từ `shop-settings`; người vận hành sửa tên trong Admin |
-| L2 | Số sản phẩm/trang `15` (`buildListingCriteria`, trang tìm kiếm, `CmsElementProductListing` của layer) | `shop-settings` → `listing.productsPerPage` | Không gửi `limit` khi URL không có — Store API tự dùng cấu hình; layer cần override |
-| L3 | Sắp xếp mặc định `"name-asc"` ở danh mục (`CmsElementProductListing` của layer) | `core.listing.defaultSorting` (hiện cũng là name-asc nên chưa lộ) | Không gửi `order` mặc định — như đã làm ở trang tìm kiếm |
+| L1 | ✅ (21/10) ~~Tên shop `siteName: "ANIVELE"`~~ | `shop-settings` → `general.shopName` | `useShopSettings`: tiêu đề trang, tiêu đề brand, logo chữ đều đọc tên shop từ backend. Tên trong Admin hiện là `anivele` (chữ thường) → tiêu đề "Đầm \| anivele"; sửa ở Administration → Settings → Basic information khi chốt tên nền tảng |
+| L2 | ✅ (21/10) ~~Số sản phẩm/trang `15`~~ | `listing.productsPerPage` (hiện 24) | Không gửi `limit` khi URL không có (trang brand, tìm kiếm, override `CmsElementProductListing`); ô chọn = 1×/2×/3× giá trị backend (override `SwProductListingPagination`, bỏ lựa chọn cứng 1/15/30/45) |
+| L3 | ✅ (21/10) ~~Sắp xếp mặc định `"name-asc"`~~ | `core.listing.defaultSorting` | Không gửi `order` khi URL không có; so khớp URL dùng `listing.sorting` backend trả |
 | L4 | Quy tắc chặn trong `/robots.txt` (`server/routes/robots.txt.get.ts`) | `core.basicInformation.robotsRules` — có trong DB nhưng **chưa có Store API** | Route Store API nhỏ trong plugin (hoặc chấp nhận gán cứng, ghi lý do) — cần quyết định |
-| L5 | Logo chữ "ANIVELE" (`LayoutLogo`) | **Chưa có** nguồn logo cho headless (logo Twig nằm trong theme) | Quyết định nơi lưu logo (media + cấu hình) khi có file logo thật |
+| L5 | 🔄 Logo: **chữ** đã lấy tên shop từ backend (L1); **ảnh** logo vẫn chưa có nguồn cho headless | Logo Twig nằm trong theme | Quyết định nơi lưu ảnh logo khi có file logo thật |
 | L6 | Múi giờ `Asia/Ho_Chi_Minh` ở trang cảm ơn | Store API không trả múi giờ shop | Chấp nhận — một thị trường VN; ghi lại nếu mở thị trường khác |
 
 **Chưa rà:** các cấu hình `shop-settings` khác mà template có thể đang bỏ qua — `cart.showDeliveryTime`, `cart.wishlistEnabled`, `cart.showTosCheckbox`, `listing.allowBuyInListing`, `loginRegistration.requireDataProtectionCheckbox`… Rà khi làm tới từng màn hình tương ứng.

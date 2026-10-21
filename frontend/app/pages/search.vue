@@ -22,7 +22,9 @@ const {
 
 const { t } = useI18n();
 const productListElement = useTemplateRef("productListElement");
-const defaultLimit = 15;
+// Số sản phẩm/trang do backend quyết (shop-settings → listing.productsPerPage, quy tắc cứng
+// số 8). Không gửi `limit` khi URL không có — Store API tự dùng cấu hình đó.
+const { productsPerPage } = useShopSettings();
 const defaultPage = 1;
 
 useBreadcrumbs([
@@ -36,7 +38,11 @@ useBreadcrumbs([
 // never drift from the listing request. The setter is the one place a
 // page-size change navigates (and resets to the first page).
 const limit = computed({
-  get: () => toNumber(firstQueryValue(route.query.limit)) ?? defaultLimit,
+  get: () =>
+    toNumber(firstQueryValue(route.query.limit)) ??
+    getCurrentListing.value?.limit ??
+    productsPerPage.value ??
+    0,
   set: async (value) => {
     await router.push({
       query: { ...route.query, limit: value, p: defaultPage },
@@ -52,7 +58,6 @@ const buildSearchCriteria =
       search: firstQueryValue(query.search) ?? "",
       // Derive from the URL (not limit.value) so the request always matches the
       // query that useAsyncData keys and watches on.
-      limit: toNumber(firstQueryValue(query.limit)) ?? defaultLimit,
       p: toNumber(firstQueryValue(query.p)) ?? defaultPage,
       // Expose the categories of the result set so the sidebar can offer a
       // category filter with product counts.
@@ -63,6 +68,8 @@ const buildSearchCriteria =
     // Template gán cứng "name-asc" làm "dam den" ra đầm màu be trước đầm đen.
     const order = firstQueryValue(query.order);
     if (order) criteria.order = order;
+    const limitFromUrl = toNumber(firstQueryValue(query.limit));
+    if (limitFromUrl !== undefined) criteria.limit = limitFromUrl;
     const manufacturer = firstQueryValue(query.manufacturer);
     if (manufacturer) criteria.manufacturer = manufacturer;
     const properties = firstQueryValue(query.properties);

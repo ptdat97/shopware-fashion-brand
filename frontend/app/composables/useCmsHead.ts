@@ -35,7 +35,7 @@ export function useCmsHead(
   const unrefEntity = unref(entity);
   const route = useRoute();
   const requestUrl = useRequestURL();
-  const mainShopTitle = options?.mainShopTitle ?? useAppConfig().siteName;
+  const { shopName } = useShopSettings();
   // Không giữ query: mỗi cách sắp xếp / lọc / UTM không phải một trang chuẩn riêng
   const canonicalUrl = computed(
     () =>
@@ -47,6 +47,7 @@ export function useCmsHead(
 
   const title = computed(() => {
     const title = metaTitle.value;
+    const mainShopTitle = options?.mainShopTitle ?? shopName.value;
     if (mainShopTitle) {
       return `${title} | ${mainShopTitle}`;
     }

@@ -2,13 +2,15 @@
 import { getPrefix } from "#imports";
 import type { Schemas } from "#shopware";
 
-const { siteName } = useAppConfig();
+// Tên shop do backend cung cấp (quy tắc cứng số 8) — chờ để tiêu đề SSR có ngay
+const { shopName, ready: shopSettingsReady } = useShopSettings();
+await shopSettingsReady;
 const shopwareOrigin = new URL(useRuntimeConfig().public.shopware.endpoint)
   .origin;
 
 useHead({
   // Meta description trang chủ chờ tên nền tảng (Phase 4)
-  title: siteName,
+  title: shopName,
   htmlAttrs: {
     lang: "vi",
   },

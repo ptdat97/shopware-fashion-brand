@@ -9,6 +9,7 @@ import { getTranslatedProperty } from "@shopware/helpers";
 
 const { apiClient } = useShopwareContext();
 const { t } = useI18n();
+const { shopName } = useShopSettings();
 const localePath = useLocalePath();
 const { formatLink } = useInternationalization(localePath);
 
@@ -50,7 +51,7 @@ const brands = computed(() => data.value?.brands ?? []);
 useBreadcrumbs([{ name: t("brand.list.title"), path: "/brands" }]);
 
 useHead({
-  title: `${t("brand.list.title")} | ${useAppConfig().siteName}`,
+  title: [t("brand.list.title"), shopName.value].filter(Boolean).join(" | "),
   meta: [{ name: "description", content: t("brand.list.metaDescription") }],
 });
 </script>

@@ -8,17 +8,16 @@ type ListingCriteria =
 /**
  * Tham số listing (trang, số lượng, sắp xếp, bộ lọc) từ query URL — cùng quy ước với
  * CmsElementProductListing của cms-base-layer, để lần tải đầu (SSR) khớp với những gì
- * component đó tải lại khi khách đổi bộ lọc. Không gán thứ tự mặc định: Store API dùng
- * cấu hình sắp xếp của Administration.
+ * component đó tải lại khi khách đổi bộ lọc. Không gán số sản phẩm/trang hay thứ tự mặc
+ * định: Store API dùng cấu hình của Administration (quy tắc cứng số 8).
  */
-export function buildListingCriteria(
-  query: LocationQuery,
-  defaultLimit = 15,
-): ListingCriteria {
+export function buildListingCriteria(query: LocationQuery): ListingCriteria {
   const criteria: Record<string, unknown> = {
-    limit: toNumber(firstQueryValue(query.limit)) ?? defaultLimit,
     p: toNumber(firstQueryValue(query.p)) ?? 1,
   };
+
+  const limit = toNumber(firstQueryValue(query.limit));
+  if (limit !== undefined) criteria.limit = limit;
 
   const order = firstQueryValue(query.order);
   if (order) criteria.order = order;

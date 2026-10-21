@@ -14,15 +14,10 @@ import type { MaybeRefOrGetter } from "vue";
 export function useAddressFieldSettings(
   countryId: MaybeRefOrGetter<string | null | undefined>,
 ) {
-  const { apiClient } = useShopwareContext();
   const { getCountries } = useCountries();
-
-  const { data: settings } = useAsyncData("shopSettings", async () => {
-    const { data } = await apiClient.invoke(
-      "getShopSettings get /shop-settings",
-    );
-    return data.loginRegistration;
-  });
+  // Cùng một nguồn với tên shop, số sản phẩm/trang… (useShopSettings) — một request, một cache
+  const { settings: shopSettings } = useShopSettings();
+  const settings = computed(() => shopSettings.value?.loginRegistration);
 
   // Mặc định hiện ô SĐT trong lúc chờ cấu hình — tránh form nhảy bố cục
   const showPhoneNumber = computed(
