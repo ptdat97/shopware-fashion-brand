@@ -121,7 +121,7 @@ product.manufacturer_id ───► brand          seo_url (route frontend.acme
 |---|---|---|
 | `/brands` | Headless: trang Nuxt `pages/brands/index.vue` + Store API `store-api.acme.brand.list` · Twig: `frontend.acme.brand.list` | ❌ |
 | `/brands/{slug}` | Headless: SEO URL route `store-api.acme.brand.detail` (template `is_headless`) → component `StoreApiAcmeBrandDetail` · Twig: `frontend.acme.brand.page` | ❌ |
-| `/collections/new-arrivals` | Category trong cây "Bộ sưu tập" + product stream | ✅ |
+| `/collections/new-arrivals` | Category trong cây "Bộ sưu tập" + product stream; template SEO storefront **và** headless (`AcmeCatalog`) | ✅ |
 | Lọc brand trong danh mục | `?manufacturer=<id>` | ✅ |
 
 ### 5.2.1 Store API thương hiệu (H2, 21/10/2026) — hợp đồng HTTP (API-04)

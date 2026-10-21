@@ -58,7 +58,31 @@ if (canonicalRedirectTarget) {
   });
 }
 
-if (!canonicalRedirectTarget && !seoResult.value?.foreignKey) {
+// URL sai hoa thường / URL cũ không còn canonical → 301 về URL canonical (ADR-005, H4)
+const { resolveRedirect } = useSeoCanonicalRedirect();
+const { data: seoRedirectPath } = await useAsyncData(
+  `seoCanonical${routePath}`,
+  () =>
+    isTechnicalUrl || canonicalRedirectTarget
+      ? Promise.resolve(null)
+      : resolveRedirect(
+          routePath,
+          seoResult.value as Partial<Schemas["SeoUrl"]> | null,
+        ),
+);
+
+if (seoRedirectPath.value) {
+  await navigateTo(
+    localePath({ path: seoRedirectPath.value, query: route.query }),
+    { redirectCode: 301, replace: true },
+  );
+}
+
+if (
+  !canonicalRedirectTarget &&
+  !seoRedirectPath.value &&
+  !seoResult.value?.foreignKey
+) {
   console.error("[...all].vue:", `No data found in API for ${routePath}`);
 
   throw createError({
@@ -68,7 +92,7 @@ if (!canonicalRedirectTarget && !seoResult.value?.foreignKey) {
 }
 
 const navigationContext = computed(() =>
-  canonicalRedirectTarget ? null : seoResult.value,
+  canonicalRedirectTarget || seoRedirectPath.value ? null : seoResult.value,
 );
 const { routeName, foreignKey } = useNavigationContext(
   navigationContext as Ref<Schemas["SeoUrl"] | null>,
@@ -89,7 +113,7 @@ const resolvedPageComponent = computed(() => {
 </script>
 
 <template>
-  <template v-if="!canonicalRedirectTarget">
+  <template v-if="!canonicalRedirectTarget && !seoRedirectPath">
     <component
       :is="resolvedPageComponent"
       v-if="resolvedPageComponent"

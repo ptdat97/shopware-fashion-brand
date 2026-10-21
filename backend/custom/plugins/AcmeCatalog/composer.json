@@ -3,7 +3,7 @@
     "description": "Cấu trúc catalog thời trang: nhóm Hoạ tiết, sinh biến thể Màu × Size",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "require": {
         "shopware/core": "~6.7"
     },
