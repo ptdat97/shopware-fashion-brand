@@ -75,7 +75,7 @@ bin/console cache:clear && bin/console cache:clear:http
 |---|---|---|---|
 | H1 | i18n vi-VN, VND, theme nâu/be/kem, logo ANIVELE | `AcmeTheme`, template | ✅ (21/10) `vi-VN` là locale duy nhất, dịch cả khoá của `cms-base-layer`. Bảng màu AcmeTheme vào token `@theme` (đen mực cho nút/icon, nâu hover/focus, kem/be nền phụ và viền, đỏ trầm giá KM). Font tự host Inter + Cormorant Garamond (`font-serif` — tên sản phẩm, tiêu đề). Logo chữ `LayoutLogo`. Nhãn bộ lọc ngang/thanh bên và chip bộ lọc tiếng Việt, giá chip theo VND. |
 | H2 | Trang `/brands`, `/brands/{slug}`, brand tắt → 404 | `AcmeBrand` Storefront controller | ✅ (21/10) 3 route Store API + SEO URL headless trong `AcmeBrand` 1.3.0 ([12 mục 5.2.1](12-da-thuong-hieu.md)). Frontend: `pages/brands/index.vue`, `components/global/StoreApiAcmeBrandDetail.vue` (resolver nhận theo tên route), listing dùng lại component layer bằng cách provide `categoryListing`. Mục "Thương hiệu" trên menu. Kiểm: SSR, đổi sắp xếp phía client (Chrome thật), brand tắt → 404 nhưng sản phẩm vẫn bán. |
-| H3 | Link brand + logo brand ở trang sản phẩm | `AcmeBrand` Twig | Đọc `product.manufacturer` + extension `acmeBrand` từ Store API. |
+| H3 | Link brand + logo brand ở trang sản phẩm | `AcmeBrand` Twig | ✅ (21/10) Override `CmsElementManufacturerLogo`: brand đang bật + người vận hành chưa đặt link → dẫn về trang brand nội bộ, cùng tab (logo, chưa có logo thì tên); còn lại giữ bản gốc của layer — giống template Twig. Đường dẫn qua `useBrandPath` (SEO URL native). Kiểm bằng bấm thật trong Chrome. |
 | H4 | Bộ sưu tập `/collections/*`, `/collections/sale` | `AcmeCatalog` (SEO navigation) | Không cần code mới nếu SEO URL resolve ra category — kiểm chứng. |
 | H5 | Card sản phẩm, swatch Màu × Size, buy box | `AcmeTheme` Twig | Override component `product/` của template. |
 | H6 | Trang cảm ơn: hướng dẫn chuyển khoản / VietQR | `AcmePayment` Twig | Đọc thông tin từ đơn hàng / Store API; VietQR đang tạm gác. COD chạy qua flow chuẩn. |
@@ -96,6 +96,7 @@ Xong H1–H8 + e2e COD → đánh giá gỡ storefront Twig (ADR riêng).
   | `SwFilterDropdown.vue` | Nhãn bộ lọc dạng ngang là mã aggregation thô |
   | `SwProductListingFilter.vue` | Như trên, cho bộ lọc dạng thanh bên — chặn ở đây thay vì override 4 component con |
   | `SwFilterChips.vue` | Chuỗi "Price:", "Rating:", "Free Shipping" cứng; giá hiện số thô |
+  | `CmsElementManufacturerLogo.vue` | Logo/tên brand ở trang sản phẩm dẫn về trang brand nội bộ (H3) |
 
   Logic dịch nhãn dùng chung: `app/composables/useFilterLabel.ts`.
 - **Bản dịch:** `frontend/i18n/vi-VN/*.json`. Component của `cms-base-layer` đọc chung messages này qua `useCmsTranslations` (mặc định tiếng Anh nếu thiếu khoá). Khi nâng cấp template, so khoá với `i18n/en-GB` của upstream.
