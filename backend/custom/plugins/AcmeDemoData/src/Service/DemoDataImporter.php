@@ -635,8 +635,10 @@ class DemoDataImporter
 
             $row = [
                 'id' => Uuid::fromStringToHex('acme-demo-option-' . $groupName . '-' . $name),
-                'translations' => $this->translate($context, ['name' => $name]),
-                'position' => $position + 1,
+                // `position` là field DỊCH ĐƯỢC của core: đặt ở gốc payload chỉ ghi vào ngôn
+                // ngữ của context, bản dịch vi-VN mặc định 1 → size hiện "L, XL, S, M".
+                // Ghi vào từng bản dịch.
+                'translations' => $this->translate($context, ['name' => $name, 'position' => $position + 1]),
             ];
             if (isset($colorCodes[$name])) {
                 $row['colorHexCode'] = $colorCodes[$name];
