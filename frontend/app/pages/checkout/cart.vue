@@ -51,6 +51,7 @@ function handleUpdateQuantity(id: string, quantity: number) {
       </ul>
 
       <div class="block w-fit ml-auto mb-20">
+        <CheckoutPromotionCode class="mb-6" />
         <div class="flex items-center justify-between mb-2">
           <div class="text-surface-on-surface">
             {{ $t("cart.miniCart.subtotal") }}

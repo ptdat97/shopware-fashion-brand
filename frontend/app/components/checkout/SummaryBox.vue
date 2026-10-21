@@ -39,6 +39,10 @@ function handleUpdateQuantity(id: string, quantity: number) {
         />
       </div>
 
+      <CheckoutPromotionCode
+        class="py-4 border-t border-outline-outline-variant"
+      />
+
       <div
         class="py-4 border-t border-outline-outline-variant flex flex-col gap-1"
       >

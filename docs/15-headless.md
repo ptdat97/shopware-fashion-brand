@@ -80,7 +80,7 @@ bin/console cache:clear && bin/console cache:clear:http
 | H5 | Card sản phẩm, swatch Màu × Size, buy box | `AcmeTheme` Twig | ✅ (21/10) Thẻ: khung 2:3 nền kem, ảnh thứ hai khi rê chuột (chỉ `pointer-fine`, điện thoại không tải), badge tách "-x%" / "Bán chạy" (layer luôn ghi "Bán chạy"). Bộ chọn biến thể: ô màu tròn theo `colorHexCode`, size ≥ 48×44, tổ hợp hết hàng làm mờ + gạch (không ẩn), đổi nhóm qua `find-variant` + `switchedGroup` như storefront Twig. Khối mua: "Người mẫu mặc size", **bảng size** từ danh mục chính (`<dialog>` native). Sửa dữ liệu: thứ tự size vi-VN "L, XL, S, M" → S, M, L, XL (`AcmeCatalog` 1.7.0 + `AcmeDemoData` 1.2.1). Khác Twig có chủ ý: tên trên thẻ giữ serif (đồng bộ trang chi tiết); bỏ ô số lượng trên thẻ (tiện ích phụ, phải chép cả component) |
 | H6 | Trang cảm ơn: hướng dẫn chuyển khoản / VietQR | `AcmePayment` Twig | ✅ (21/10) Đặt được đơn COD và Chuyển khoản trước qua frontend (#10003–#10005, cả khổ mobile): VND, VAT 10%, SĐT + tỉnh lưu vào đơn, `manufacturerId` trong dòng đơn, trừ tồn kho. Sửa trên đường: SĐT bắt buộc (khoá sai từ Phase 0 — `AcmeVietnam` 1.4.0), ô SĐT `type=tel` ở thanh toán / sổ địa chỉ / đăng ký, mã bưu chính theo quốc gia, bỏ độ dài tối thiểu của tên/họ, trạng thái đơn tiếng Việt (migration), giờ đặt hàng theo giờ VN, địa chỉ có tỉnh + SĐT, nhãn tiếng Việt, "Miễn phí" ở phí ship, **bố cục thanh toán mobile** (template cố định hai cột). Khối VietQR: chưa port — VietQR tạm gác, không gắn vào channel |
 | H7 | Canonical, meta, sitemap, robots | Core + `AcmeBrand` | ✅ (21/10) URL chữ thường + `/collections/` + 301 (cùng H4). Canonical: bỏ query; biến thể trỏ về biến thể canonical (`canonicalProductId`, Phase 4) qua `useProductSeoPath`. Tiêu đề `"<trang> \| ANIVELE"` từ `app.config` `siteName` (một chỗ, chờ chốt tên nền tảng). Sitemap + robots.txt phục vụ ở domain frontend (mục 7). `AcmeBrand` 1.3.1: URL brand vào sitemap của channel headless. Còn: meta trang chủ — chờ tên nền tảng |
-| H8 | Phí ship theo khu vực, VAT, khuyến mãi brand | `AcmeShipping`, Rule Builder | 🔄 Tính ở backend như cũ. Đã thấy qua đơn thật: VAT 10%, miễn phí ship từ 500.000 ₫. Chưa thử qua frontend: phí 25k/35k (sản phẩm demo đều ≥ 590.000 ₫), khuyến mãi theo brand (cần mã/khuyến mãi đang chạy) |
+| H8 | Phí ship theo khu vực, VAT, khuyến mãi brand | `AcmeShipping`, Rule Builder | ✅ (21/10) Tính ở backend như cũ, frontend chỉ hiển thị. Kiểm qua frontend bằng sản phẩm thử 200.000 ₫: Hà Nội → phí 25.000 (#10009), Đà Nẵng → 35.000 (#10007); 2 brand + mã `MAY10` (Rule Builder: dòng hàng của Mây Atelier) → giảm 10% chỉ trên món Mây Atelier, đủ 500.000 ₫ miễn ship (#10008, #10010). Thêm: ô **mã khuyến mãi** ở giỏ và thanh toán (`CheckoutPromotionCode` — câu lỗi lấy từ backend), dòng khuyến mãi trong giỏ không có ô số lượng; khách vãng lai chọn tỉnh/thành → `PATCH /context` để phí ship trước khi đặt đúng khu vực (trước đó hiện 35.000 cho Hà Nội). Dữ liệu thử: core cấm xoá khuyến mãi đã dùng trong đơn → mã `MAY10` và sản phẩm `LLN-H8-TEST` để **tắt**, không xoá (chỉ có ở DB local) |
 
 Xong H1–H8 + e2e COD → đánh giá gỡ storefront Twig (ADR riêng).
 
@@ -102,6 +102,8 @@ Xong H1–H8 + e2e COD → đánh giá gỡ storefront Twig (ADR riêng).
   | `CmsElementBuyBox.vue` | **Bọc** (không chép) bản gốc + `ProductSizeGuide` bên dưới (H5) |
   | `CmsElementProductListing.vue` | Không gửi `limit`/`order` mặc định tự chế — backend áp cấu hình (quy tắc 8, L2/L3) |
   | `SwProductListingPagination.vue` | Lựa chọn số sản phẩm/trang theo `productsPerPage` của backend (L2) |
+
+  Component của template (`app/components/checkout/`, không thuộc layer) đã sửa: `ProductTile.vue` (dòng khuyến mãi: icon thay ảnh, không ô số lượng), `SummaryBox.vue` + `pages/checkout/cart.vue` (thêm `PromotionCode.vue` mới), `pages/checkout/index.vue` (khách vãng lai đổi tỉnh/thành → cập nhật context để tính lại phí ship — H8).
 
   Logic dịch nhãn dùng chung: `app/composables/useFilterLabel.ts`.
 - **Bản dịch:** `frontend/i18n/vi-VN/*.json`. Component của `cms-base-layer` đọc chung messages này qua `useCmsTranslations` (mặc định tiếng Anh nếu thiếu khoá). Khi nâng cấp template, so khoá với `i18n/en-GB` của upstream.
@@ -177,6 +179,8 @@ Quy tắc cứng số 8 (CLAUDE.md), chi tiết [08-quy-tac-phat-trien.md](08-qu
 | Tìm kiếm không dấu | Backend (`AcmeVietnam`) |
 | Trạng thái đơn, thời gian giao | Bản dịch trong DB (`AcmeVietnam`) |
 | Sitemap | Core sinh, frontend chỉ proxy |
+| Mã khuyến mãi: áp/không áp, câu lỗi, số tiền giảm | Giỏ hàng core (`addPromotionCode`, `translatedMessage` của lỗi — H8) |
+| Phí ship theo tỉnh trước khi đặt | `AcmeShipping` theo `countryStateId` trong context (frontend chỉ gửi tỉnh khách chọn) |
 
 ### Đang lệch — cần sửa
 

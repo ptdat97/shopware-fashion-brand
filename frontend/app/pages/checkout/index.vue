@@ -54,6 +54,31 @@ const {
 } = useTemplateCheckout();
 
 const isUserSession = computed(() => isLoggedIn.value || isGuestSession.value);
+
+// Khách vãng lai chưa có địa chỉ trong ngữ cảnh → backend tính phí ship theo ngữ cảnh mặc định
+// (chưa có tỉnh): khách Hà Nội thấy 35.000 ₫ trong khi đơn tính 25.000 ₫ (H8). Báo quốc gia /
+// tỉnh vừa chọn lên ngữ cảnh rồi tải lại giỏ — phí do backend tính lại (quy tắc cứng số 8).
+const { apiClient } = useShopwareContext();
+watch(
+  () => [billingAddress.value.countryId, billingAddress.value.countryStateId],
+  async ([countryId, countryStateId]) => {
+    if (isUserSession.value || !countryId) return;
+    try {
+      await apiClient.invoke("updateContext patch /context", {
+        body: {
+          countryId,
+          ...(countryStateId ? { countryStateId } : {}),
+        },
+      });
+      await refreshCart();
+    } catch (error) {
+      console.error(
+        "[checkout] cập nhật tỉnh/thành vào ngữ cảnh thất bại",
+        error,
+      );
+    }
+  },
+);
 const registeredDuringCheckout = ref(false);
 const showCustomerForm = computed(
   () => !isUserSession.value || registeredDuringCheckout.value,

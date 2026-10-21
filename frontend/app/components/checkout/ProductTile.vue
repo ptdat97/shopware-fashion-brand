@@ -24,12 +24,19 @@ const cover = computed(() =>
     data-testid="checkout-product-tile-item"
     :data-product-id="item.referencedId"
   >
-    <div class="w-37.5 h-37.5">
+    <div class="w-37.5 h-37.5 shrink-0 flex items-center justify-center">
+      <!-- Dòng khuyến mãi không có ảnh — template vẽ ảnh hỏng, chữ alt tràn ra ngoài -->
       <NuxtImg
+        v-if="cover"
         data-testid="checkout-product-tile-image"
         :src="cover"
-        :alt="`${item.label || item.payload?.name || ''} cart item`"
+        :alt="item.label || item.payload?.name || ''"
         class="object-cover object-center"
+      />
+      <span
+        v-else-if="item.type === 'promotion'"
+        class="i-carbon-tag size-8 text-surface-on-surface-variant"
+        aria-hidden="true"
       />
     </div>
     <div class="grid grid-cols-2 justify-between py-2.5 grow">
@@ -43,7 +50,9 @@ const cover = computed(() =>
       />
 
       <div class="content-end">
+        <!-- Dòng khuyến mãi không có số lượng (template vẽ như sản phẩm); giữ ô trống cho thẳng hàng -->
         <FormQuantitySelect
+          v-if="item.type !== 'promotion'"
           v-model="quantity"
           size="small"
           @update:modelValue="emit('updateQuantity', item.id, quantity)"

@@ -50,6 +50,11 @@
     "takesUpTo": "Giao trong khoảng",
     "shippingPriceLabel": "Phí vận chuyển",
     "totalLabel": "Tổng cộng",
-    "freeShipping": "Miễn phí"
+    "freeShipping": "Miễn phí",
+    "promotionCode": {
+      "label": "Mã khuyến mãi",
+      "apply": "Áp dụng",
+      "added": "Đã áp dụng mã {code}"
+    }
   }
 }
