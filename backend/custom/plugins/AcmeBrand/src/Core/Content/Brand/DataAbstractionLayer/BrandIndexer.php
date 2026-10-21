@@ -4,6 +4,7 @@ namespace Acme\Brand\Core\Content\Brand\DataAbstractionLayer;
 
 use Acme\Brand\Core\Content\Brand\BrandDefinition;
 use Acme\Brand\Seo\BrandPageSeoUrlRoute;
+use Acme\Brand\Seo\BrandStoreApiUrlRoute;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Content\Product\Aggregate\ProductManufacturer\ProductManufacturerDefinition;
@@ -79,7 +80,11 @@ class BrandIndexer extends EntityIndexer
             return;
         }
 
-        $this->seoUrlUpdater->update(BrandPageSeoUrlRoute::ROUTE_NAME, array_values(array_unique($ids)));
+        $ids = array_values(array_unique($ids));
+
+        // Storefront (Twig) và headless (Store API) — mỗi route tự bỏ qua khi không có template
+        $this->seoUrlUpdater->update(BrandPageSeoUrlRoute::ROUTE_NAME, $ids);
+        $this->seoUrlUpdater->update(BrandStoreApiUrlRoute::ROUTE_NAME, $ids);
     }
 
     public function getOptions(): array

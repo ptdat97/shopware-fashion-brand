@@ -1,4 +1,5 @@
 import account from "./account.json";
+import brand from "./brand.json";
 import cart from "./cart.json";
 import checkout from "./checkout.json";
 import cms from "./cms.json";
@@ -18,6 +19,7 @@ export default {
   ...validations,
   ...loginForm,
   ...account,
+  ...brand,
   ...form,
   ...errors,
   ...layout,

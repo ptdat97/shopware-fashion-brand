@@ -206,10 +206,10 @@ Một thay đổi plugin chỉ được coi là xong khi:
 
 | Plugin | Version | Test tự động | Ghi chú tuân thủ |
 |---|---|---|---|
-| `AcmeBrand` | 1.2.1 | 31 integration + unit | Đạt. Route SEO dùng `StorefrontFrameworkException` như route SEO của core (DATA-07) |
+| `AcmeBrand` | 1.3.0 | 38 integration + unit | Đạt. Store API thương hiệu (API-02) + SEO URL headless; `BrandPageLoader` gọi lại route Store API. Route SEO storefront dùng `StorefrontFrameworkException` như route SEO của core (DATA-07); bản headless dùng `SeoException` của core — phần headless không phụ thuộc gói storefront. Test Store API gọi thẳng `HttpKernel::handle()` vì dự án không cài `symfony/browser-kit` |
 | `AcmeCatalog` | 1.5.0 | 18 integration | Đạt. Nhóm thuộc tính native "Chất liệu" + custom field `acme_model_size` (ARCH-04). Logic sinh biến thể tách khỏi lệnh sang service `VariantGenerator` (ARCH-07), lỗi miền `CatalogException` (DATA-07), bỏ association nạp thừa (PERF-01) |
 | `AcmeShipping` | 1.0.0 | 3 integration | Đạt; test chạy một mình (TEST-03) |
-| `AcmeVietnam` | 1.1.1 | 5 integration | Đạt. Test gọi migration trong transaction, **không** cài plugin vào DB test dùng chung (đổi tiền tệ, tắt quốc gia sẽ làm hỏng test plugin khác) |
+| `AcmeVietnam` | 1.3.0 | 21 integration + unit | Đạt. Tìm kiếm tiếng Việt (decorator analyzer/interpreter — EXT-01: core không có sự kiện ở bước này), channel headless, cấu hình tìm kiếm vi-VN. Test gọi migration trong transaction, **không** cài plugin vào DB test dùng chung (đổi tiền tệ, tắt quốc gia sẽ làm hỏng test plugin khác) |
 | `AcmePayment` | 1.1.1 | 5 unit | Đạt. Payload VietQR so với chuỗi sinh bằng cài đặt CRC độc lập. Test bắt được lỗi thật: `iconv` trên macOS xoá "Đơ" khỏi nội dung chuyển khoản → đổi sang `UnicodeString::ascii()` |
 | `AcmeTheme` | 1.1.0 | 2 unit + ảnh chụp | Đạt. Namespace đổi sang `Acme\Theme\` (STR-01 · [ADR-004](decisions/ADR-004-namespace-acme-theme.md)). Bảng size lọc qua `sw_sanitize` (SEC-03) |
 | `AcmeDemoData` | 1.1.0 | 13 unit | Lỗi miền `DemoDataException` kế thừa `HttpException`, mã `ACME_DEMO_DATA__*` (DATA-07). Chất liệu ghi bằng thuộc tính native thay cho custom field không ai định nghĩa. Còn: importer chưa có integration test |

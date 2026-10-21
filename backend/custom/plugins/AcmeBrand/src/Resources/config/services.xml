@@ -40,11 +40,36 @@
             <tag name="shopware.sitemap_url_provider"/>
         </service>
 
+        <!-- H2: Store API thương hiệu — frontend headless và trang Twig dùng chung -->
+        <service id="Acme\Brand\Core\Content\Brand\SalesChannel\ActiveBrandLoader">
+            <argument type="service" id="product_manufacturer.repository"/>
+        </service>
+
+        <service id="Acme\Brand\Core\Content\Brand\SalesChannel\BrandListRoute" public="true">
+            <argument type="service" id="product_manufacturer.repository"/>
+        </service>
+
+        <service id="Acme\Brand\Core\Content\Brand\SalesChannel\BrandRoute" public="true">
+            <argument type="service" id="Acme\Brand\Core\Content\Brand\SalesChannel\ActiveBrandLoader"/>
+            <argument type="service" id="Shopware\Core\Content\Cms\SalesChannel\SalesChannelCmsPageLoader"/>
+        </service>
+
+        <service id="Acme\Brand\Core\Content\Brand\SalesChannel\BrandListingRoute" public="true">
+            <argument type="service" id="Acme\Brand\Core\Content\Brand\SalesChannel\ActiveBrandLoader"/>
+            <argument type="service" id="Shopware\Core\Content\Product\SalesChannel\Listing\ProductListingRoute"/>
+        </service>
+
+        <service id="Acme\Brand\Seo\BrandStoreApiUrlRoute">
+            <argument type="service" id="Shopware\Core\Content\Product\Aggregate\ProductManufacturer\ProductManufacturerDefinition"/>
+            <tag name="shopware.entity.seo_url.route"/>
+        </service>
+
         <service id="Acme\Brand\Storefront\Page\Brand\BrandPageLoader">
             <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
-            <argument type="service" id="product_manufacturer.repository"/>
-            <argument type="service" id="Shopware\Core\Content\Product\SalesChannel\Listing\ProductListingRoute"/>
-            <argument type="service" id="Shopware\Core\Content\Cms\SalesChannel\SalesChannelCmsPageLoader"/>
+            <argument type="service" id="Acme\Brand\Core\Content\Brand\SalesChannel\BrandListRoute"/>
+            <argument type="service" id="Acme\Brand\Core\Content\Brand\SalesChannel\BrandRoute"/>
+            <argument type="service" id="Acme\Brand\Core\Content\Brand\SalesChannel\BrandListingRoute"/>
+            <argument type="service" id="Acme\Brand\Core\Content\Brand\SalesChannel\ActiveBrandLoader"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="translator"/>
         </service>

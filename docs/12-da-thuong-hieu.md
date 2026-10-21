@@ -119,10 +119,22 @@ product.manufacturer_id ───► brand          seo_url (route frontend.acme
 
 | URL | Cơ chế | Native? |
 |---|---|---|
-| `/brands` | Route `frontend.acme.brand.list` (plugin) | ❌ |
-| `/brands/{slug}` | Route `frontend.acme.brand.page` + SEO URL route | ❌ |
+| `/brands` | Headless: trang Nuxt `pages/brands/index.vue` + Store API `store-api.acme.brand.list` · Twig: `frontend.acme.brand.list` | ❌ |
+| `/brands/{slug}` | Headless: SEO URL route `store-api.acme.brand.detail` (template `is_headless`) → component `StoreApiAcmeBrandDetail` · Twig: `frontend.acme.brand.page` | ❌ |
 | `/collections/new-arrivals` | Category trong cây "Bộ sưu tập" + product stream | ✅ |
 | Lọc brand trong danh mục | `?manufacturer=<id>` | ✅ |
+
+### 5.2.1 Store API thương hiệu (H2, 21/10/2026) — hợp đồng HTTP (API-04)
+
+Ba route trong `AcmeBrand` (`src/Core/Content/Brand/SalesChannel/`), theo mẫu `Abstract*Route` decorate được (API-02). Frontend headless và trang Twig dùng chung — `BrandPageLoader` chỉ gọi lại các route này, quy tắc brand nằm một chỗ (`ActiveBrandLoader`). Kiểu TypeScript phía frontend: `frontend/api-types/storeApiTypes.overrides.ts`.
+
+| Route | Đường dẫn (GET \| POST) | Trả về | Lỗi |
+|---|---|---|---|
+| `store-api.acme.brand.list` | `/store-api/acme/brand` | `{ elements: ProductManufacturer[], total }` — brand đang bật, kèm `media` và `extensions.acmeBrand`; thứ tự: nổi bật → vị trí → tên | — |
+| `store-api.acme.brand.detail` | `/store-api/acme/brand/{manufacturerId}` | `acme_brand_detail`: `manufacturer` (+ `acmeBrand.bannerMedia`), `cmsPage` \| null, `metaTitle`, `metaDescription`, `metaKeywords` (đã áp dự phòng: custom field → tên / mô tả) | 404 `ACME_BRAND__NOT_FOUND` — brand tắt, chưa có dữ liệu brand, id sai định dạng |
+| `store-api.acme.brand.listing` | `/store-api/acme/brand/{manufacturerId}/listing` | `product_listing` — **cùng tham số và định dạng** `/store-api/product-listing` (`p`, `limit`, `order`, `properties`, `min-price`…), không có bộ lọc theo brand | 404 như trên |
+
+SEO URL headless: `BrandStoreApiUrlRoute` (tag `shopware.entity.seo_url.route`) + template `seo_url_template.is_headless = 1` cùng mẫu `brands/{{ manufacturer.translated.name|lower }}`. Core chỉ sinh URL này cho channel type API có domain **external storefront**; `seo_url.pathInfo` trỏ về route chi tiết. `BrandIndexer` cập nhật cả URL storefront lẫn headless.
 
 ### 5.3 Một sales channel
 

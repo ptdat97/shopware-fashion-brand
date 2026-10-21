@@ -46,6 +46,16 @@ const route = useRoute();
           {{ getTranslatedProperty(navigationElement, "name") }}
         </NuxtLink>
       </li>
+      <!-- Trang tổng thương hiệu (H2) — liên kết cố định của nền tảng đa thương hiệu -->
+      <li
+        role="none"
+        class="text-surface-on-surface border-b hover:border-surface-on-surface border-transparent has-[.router-link-active]:border-surface-on-surface"
+        @mouseover="currentMenuPosition = undefined"
+      >
+        <NuxtLink role="menuitem" :to="formatLink('/brands')">
+          {{ $t("brand.list.title") }}
+        </NuxtLink>
+      </li>
     </ul>
   </nav>
 </template>

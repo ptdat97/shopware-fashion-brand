@@ -1,25 +1,18 @@
 declare module "#shopware" {
   import type { createAPIClient } from "@shopware/api-client";
 
-  // for default types
-  export type operations =
-    import("@shopware/api-client/store-api-types").operations;
-  // or for local TypeScript overlays
-  // export type operations = import("@shopware/api-client").WithApiOverrides<
-  //   import("@shopware/api-client/store-api-types").operations,
-  //   import("./api-types/storeApiTypes.overrides").operations
-  // >;
+  // Kiểu của Shopware + route Store API của plugin (api-types/storeApiTypes.overrides.ts)
+  export type operations = import("@shopware/api-client").WithApiOverrides<
+    import("@shopware/api-client/store-api-types").operations,
+    import("./api-types/storeApiTypes.overrides").operations
+  >;
   // or for locally generated types
   // export type operations = import("./api-types/storeApiTypes").operations;
 
-  // for default types
-  export type Schemas =
-    import("@shopware/api-client/store-api-types").components["schemas"];
-  // or for local TypeScript overlays
-  // export type Schemas = import("@shopware/api-client").WithApiOverrides<
-  //   import("@shopware/api-client/store-api-types").components["schemas"],
-  //   import("./api-types/storeApiTypes.overrides").Schemas
-  // >;
+  export type Schemas = import("@shopware/api-client").WithApiOverrides<
+    import("@shopware/api-client/store-api-types").components["schemas"],
+    import("./api-types/storeApiTypes.overrides").Schemas
+  >;
   // or for locally generated types
   // export type Schemas =
   //   import("./api-types/storeApiTypes").components["schemas"];

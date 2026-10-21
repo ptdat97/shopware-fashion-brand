@@ -74,7 +74,7 @@ bin/console cache:clear && bin/console cache:clear:http
 | # | Chức năng | Hiện ở | Việc headless |
 |---|---|---|---|
 | H1 | i18n vi-VN, VND, theme nâu/be/kem, logo ANIVELE | `AcmeTheme`, template | ✅ (21/10) `vi-VN` là locale duy nhất, dịch cả khoá của `cms-base-layer`. Bảng màu AcmeTheme vào token `@theme` (đen mực cho nút/icon, nâu hover/focus, kem/be nền phụ và viền, đỏ trầm giá KM). Font tự host Inter + Cormorant Garamond (`font-serif` — tên sản phẩm, tiêu đề). Logo chữ `LayoutLogo`. Nhãn bộ lọc ngang/thanh bên và chip bộ lọc tiếng Việt, giá chip theo VND. |
-| H2 | Trang `/brands`, `/brands/{slug}`, brand tắt → 404 | `AcmeBrand` Storefront controller | Route Store API trong `AcmeBrand` (danh sách brand, brand theo SEO path); component `FrontendBrandPage` trong `app/components/global/` để resolver `[...all].vue` nhận route brand. |
+| H2 | Trang `/brands`, `/brands/{slug}`, brand tắt → 404 | `AcmeBrand` Storefront controller | ✅ (21/10) 3 route Store API + SEO URL headless trong `AcmeBrand` 1.3.0 ([12 mục 5.2.1](12-da-thuong-hieu.md)). Frontend: `pages/brands/index.vue`, `components/global/StoreApiAcmeBrandDetail.vue` (resolver nhận theo tên route), listing dùng lại component layer bằng cách provide `categoryListing`. Mục "Thương hiệu" trên menu. Kiểm: SSR, đổi sắp xếp phía client (Chrome thật), brand tắt → 404 nhưng sản phẩm vẫn bán. |
 | H3 | Link brand + logo brand ở trang sản phẩm | `AcmeBrand` Twig | Đọc `product.manufacturer` + extension `acmeBrand` từ Store API. |
 | H4 | Bộ sưu tập `/collections/*`, `/collections/sale` | `AcmeCatalog` (SEO navigation) | Không cần code mới nếu SEO URL resolve ra category — kiểm chứng. |
 | H5 | Card sản phẩm, swatch Màu × Size, buy box | `AcmeTheme` Twig | Override component `product/` của template. |

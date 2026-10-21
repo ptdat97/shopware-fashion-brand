@@ -57,8 +57,7 @@ class BrandController extends StorefrontController
     )]
     public function listing(string $manufacturerId, Request $request, SalesChannelContext $context): Response
     {
-        $this->pageLoader->loadActiveBrand($manufacturerId, $context);
-
+        // Brand tắt → 404 do BrandListingRoute kiểm
         $response = $this->renderStorefront('@AcmeBrand/storefront/page/brand/listing.html.twig', [
             'manufacturerId' => $manufacturerId,
             'searchResult' => $this->pageLoader->loadListing($manufacturerId, $request, $context),

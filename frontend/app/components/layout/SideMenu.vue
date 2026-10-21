@@ -96,6 +96,15 @@ const toggleCollapse = (navigationElement: Schemas["Category"]) => {
                 </li>
               </ul>
             </li>
+            <li class="flex flex-col flex-1 w-full">
+              <NuxtLink
+                :to="formatLink('/brands')"
+                class="flex items-center px-5 py-3 text-base font-normal break-all"
+                @click="sideMenuController.close"
+              >
+                {{ $t("brand.list.title") }}
+              </NuxtLink>
+            </li>
           </ul>
         </div>
       </aside>
