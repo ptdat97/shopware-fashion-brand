@@ -73,7 +73,7 @@ bin/console cache:clear && bin/console cache:clear:http
 
 | # | Chức năng | Hiện ở | Việc headless |
 |---|---|---|---|
-| H1 | i18n vi-VN, VND, theme nâu/be/kem, logo ANIVELE | `AcmeTheme`, template | ✅ i18n: `vi-VN` là locale duy nhất (bỏ en-GB/pl-PL/de-DE), dịch cả khoá của `cms-base-layer`, nhãn bộ lọc qua override `SwFilterDropdown`. ⬜ theme nâu/be/kem, logo; chip bộ lọc đang đặt chữ tiếng Anh cứng trong `SwFilterChips`. |
+| H1 | i18n vi-VN, VND, theme nâu/be/kem, logo ANIVELE | `AcmeTheme`, template | ✅ (21/10) `vi-VN` là locale duy nhất, dịch cả khoá của `cms-base-layer`. Bảng màu AcmeTheme vào token `@theme` (đen mực cho nút/icon, nâu hover/focus, kem/be nền phụ và viền, đỏ trầm giá KM). Font tự host Inter + Cormorant Garamond (`font-serif` — tên sản phẩm, tiêu đề). Logo chữ `LayoutLogo`. Nhãn bộ lọc ngang/thanh bên và chip bộ lọc tiếng Việt, giá chip theo VND. |
 | H2 | Trang `/brands`, `/brands/{slug}`, brand tắt → 404 | `AcmeBrand` Storefront controller | Route Store API trong `AcmeBrand` (danh sách brand, brand theo SEO path); component `FrontendBrandPage` trong `app/components/global/` để resolver `[...all].vue` nhận route brand. |
 | H3 | Link brand + logo brand ở trang sản phẩm | `AcmeBrand` Twig | Đọc `product.manufacturer` + extension `acmeBrand` từ Store API. |
 | H4 | Bộ sưu tập `/collections/*`, `/collections/sale` | `AcmeCatalog` (SEO navigation) | Không cần code mới nếu SEO URL resolve ra category — kiểm chứng. |
@@ -84,9 +84,20 @@ bin/console cache:clear && bin/console cache:clear:http
 
 Xong H1–H8 + e2e COD → đánh giá gỡ storefront Twig (ADR riêng).
 
+**Phát hiện ngoài danh sách (21/10):** tìm kiếm **không dấu** không ra kết quả — Store API `search` với `dam` trả 0, `đầm` trả 7. Lỗi có từ trước (cùng backend với storefront Twig), ảnh hưởng lớn vì khách VN hay gõ không dấu. Thuộc backend: xem cấu hình tìm kiếm của core (từ khoá/tokenizer, hoặc OpenSearch với bộ lọc `asciifolding`) trước khi tính tới plugin.
+
 ## 5. Ghi chú khi tuỳ biến frontend
 
-- **Override component của layer:** đặt file cùng tên vào `frontend/app/components/cms/` (global, priority 2). Nuxt in cảnh báo `NUXT_B3011 Two component files resolving to the same name` — đó là hành vi bình thường của layer override; kiểm tra `.nuxt/components.d.ts` trỏ về file trong `app/`.
+- **Override component của layer:** đặt file cùng tên vào `frontend/app/components/cms/` (global, priority 2). Nuxt in cảnh báo `NUXT_B3011 Two component files resolving to the same name` — đó là hành vi bình thường của layer override; kiểm tra `.nuxt/components.d.ts` trỏ về file trong `app/`. Override cần import component con của layer thì dùng alias **`#cms-base-layer`** (khai báo trong `nuxt.config.ts`) — package chỉ export `.` và `./package.json`, không import sâu được bằng tên package.
+- **Override hiện có** (khi nâng cấp layer, so lại với bản gốc cùng tên):
+
+  | File | Lý do |
+  |---|---|
+  | `SwFilterDropdown.vue` | Nhãn bộ lọc dạng ngang là mã aggregation thô |
+  | `SwProductListingFilter.vue` | Như trên, cho bộ lọc dạng thanh bên — chặn ở đây thay vì override 4 component con |
+  | `SwFilterChips.vue` | Chuỗi "Price:", "Rating:", "Free Shipping" cứng; giá hiện số thô |
+
+  Logic dịch nhãn dùng chung: `app/composables/useFilterLabel.ts`.
 - **Bản dịch:** `frontend/i18n/vi-VN/*.json`. Component của `cms-base-layer` đọc chung messages này qua `useCmsTranslations` (mặc định tiếng Anh nếu thiếu khoá). Khi nâng cấp template, so khoá với `i18n/en-GB` của upstream.
 - **Lint/format:** `.oxlintrc.json`, `.oxfmtrc.json` lấy từ gốc repo `shopware/frontends` (template dựa vào chúng nhưng không mang theo). `@nuxt/kit`, `@types/three`, `@types/js-cookie` khai báo thêm vì cùng lý do.
 
@@ -100,7 +111,8 @@ Toàn bộ cấu hình nằm trong **`frontend/app/assets/css/tailwind.css`** (T
 |---|---|
 | `@source "../../../node_modules/@shopware/cms-base-layer/app"` | Component của layer nằm trong `node_modules` — Tailwind không tự quét |
 | `@source inline("…")` | Class do CMS trả về, không có trong mã nguồn (trước là `safelist` của UnoCSS) |
-| `@theme { --color-brand-primary … }` | 70 token màu của Shopware, trước nằm trong design-tokens layer. **Bảng màu thương hiệu (H1) sửa ở đây** |
+| `@theme { --color-brand-primary … }` | Token màu — **tên** của Shopware (layer dùng), **giá trị** theo bảng màu thương hiệu AcmeTheme. Nền trang trắng: layer tô trắng nhiều khối, nền kem gây vệt lệch màu |
+| `@import "./fonts.css"`, `--font-sans`, `--font-serif` | Inter + Cormorant Garamond tự host ở `public/fonts/` (latin + vietnamese, OFL). Layer dùng `font-serif` cho tên sản phẩm/tiêu đề |
 | `--radius-sm`, `--shadow-sm`, `--blur-sm`, `--default-ring-width: 3px` | Layer viết theo thang Tailwind v3; v4 đổi nghĩa các tên này |
 | `@layer base` | Hành vi v3: viền mặc định gray-200 (v4 là currentColor), placeholder gray-400, con trỏ tay trên nút |
 | `@utility text-red / c-gray-500 / text-3` | Class riêng của UnoCSS mà layer còn dùng (giá khuyến mãi, spinner, hộp đánh giá) |

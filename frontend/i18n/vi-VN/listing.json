@@ -26,6 +26,10 @@
       "price": "Giá",
       "rating": "Đánh giá",
       "shipping-free": "Miễn phí vận chuyển"
+    },
+    "chips": {
+      "price": "Giá: {min} – {max}",
+      "rating": "Đánh giá: {rating}★"
     }
   }
 }

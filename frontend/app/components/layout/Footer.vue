@@ -13,11 +13,7 @@ const { formatLink } = useInternationalization(localePath);
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
       >
         <NuxtLink class="mb-4 md:mb-0" :to="formatLink(`/`)">
-          <NuxtImg
-            class="h-16 sm:h-20"
-            src="/logo-white.svg"
-            alt="logo of the shop"
-          />
+          <LayoutLogo inverse />
         </NuxtLink>
 
         <div

@@ -60,7 +60,7 @@ async function handleSubmit() {
         </div>
         <div>
           <FormBaseButton
-            class="mt-0.5"
+            class="mt-0.5 whitespace-nowrap"
             type="submit"
             variant="secondary"
             size="small"

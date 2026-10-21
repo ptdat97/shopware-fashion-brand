@@ -71,7 +71,7 @@ watch(
             :to="formatLink('/')"
             class="flex-shrink-0 sm:justify-self-start"
           >
-            <NuxtImg class="h-20 max-sm:h-10" src="/logo.svg" alt="logo" />
+            <LayoutLogo />
           </NuxtLink>
           <LayoutHeaderSearch
             v-model="searchText"

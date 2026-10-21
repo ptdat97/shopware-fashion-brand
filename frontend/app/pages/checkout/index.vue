@@ -241,7 +241,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="container mx-auto">
-    <h1 v-if="!isEmpty" class="text-[2.5rem] my-20 font-['Noto_Serif']">
+    <h1 v-if="!isEmpty" class="text-[2.5rem] my-20 font-serif">
       {{ $t("checkout.title") }}
     </h1>
 

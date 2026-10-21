@@ -1,8 +1,18 @@
-import { createResolver } from "@nuxt/kit";
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { createRequire } from "node:module";
+import { dirname } from "node:path";
+
+import { createResolver } from "@nuxt/kit";
 import tailwindcss from "@tailwindcss/vite";
 
 const { resolve } = createResolver(import.meta.url);
+// Thư mục của @shopware/cms-base-layer — package chỉ export "." và "./package.json",
+// override component cần import component con của layer qua alias #cms-base-layer.
+const cmsBaseLayerDir = dirname(
+  createRequire(import.meta.url).resolve(
+    "@shopware/cms-base-layer/package.json",
+  ),
+);
 const isStackBlitz = process.env.SHOPWARE_STACKBLITZ === "true";
 const viteServerWebSocketWorkaround = {
   $server: {
@@ -38,6 +48,9 @@ export default defineNuxtConfig({
         // useUserContextInSSR: true,
       },
     },
+  },
+  alias: {
+    "#cms-base-layer": cmsBaseLayerDir,
   },
   compatibilityDate: "2025-04-15",
   devtools: { enabled: !isStackBlitz },

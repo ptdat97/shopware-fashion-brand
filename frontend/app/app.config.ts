@@ -4,7 +4,7 @@ export default defineAppConfig({
 
   // Image placeholder configuration (cms-base-layer uses this setting)
   imagePlaceholder: {
-    color: "#543B95", // brand-primary - can be overridden in child layers
+    color: "#f0e6d2", // kem — nền chờ ảnh sản phẩm, như theme Twig
   },
   backgroundImage: {
     format: "webp",

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-// Override SwFilterDropdown của @shopware/cms-base-layer: layer truyền thẳng mã
-// aggregation (manufacturer, price, rating, shipping-free) làm nhãn. Dịch qua
-// listing.filterLabels; nhóm thuộc tính (Màu sắc, Kích cỡ…) đã có tên dịch từ backend.
+// Override SwFilterDropdown của @shopware/cms-base-layer (bộ lọc dạng ngang): layer
+// truyền thẳng mã aggregation làm nhãn — dịch qua useFilterLabel.
 import { onClickOutside } from "@vueuse/core";
 import { computed, ref, useTemplateRef } from "vue";
 
@@ -10,11 +9,8 @@ const props = defineProps<{
   isActive?: boolean;
 }>();
 
-const { t, te } = useI18n();
-const displayLabel = computed(() => {
-  const key = `listing.filterLabels.${props.label}`;
-  return te(key) ? t(key) : props.label;
-});
+const filterLabel = useFilterLabel();
+const displayLabel = computed(() => filterLabel(props.label));
 
 const isOpen = ref(false);
 const dropdownElement = useTemplateRef<HTMLDivElement>("dropdownElement");

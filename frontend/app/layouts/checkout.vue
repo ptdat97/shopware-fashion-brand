@@ -66,7 +66,7 @@ async function onCurrencyChangeHandler(id: string) {
         >
           <div class="py-3.5 relative">
             <NuxtLink :to="formatLink('/')">
-              <NuxtImg class="h-20 max-sm:h-10" src="/logo.svg" alt="logo" />
+              <LayoutLogo />
             </NuxtLink>
           </div>
           <div>

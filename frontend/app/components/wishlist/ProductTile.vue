@@ -93,7 +93,7 @@ async function handleRemoveFromWishlist() {
 
     <NuxtLink
       :to="formatLink(getProductRoute(product))"
-      class="text-surface-on-surface text-2xl font-normal font-['Noto_Serif'] leading-9"
+      class="text-surface-on-surface text-2xl font-normal font-serif leading-9"
     >
       {{ getTranslatedProperty(product, "name") }}
     </NuxtLink>

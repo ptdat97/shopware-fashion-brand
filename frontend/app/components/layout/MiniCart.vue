@@ -39,7 +39,7 @@ onClickOutside(miniCartContainer, () => {
       class="px-6 pt-4 pb-3 border bg-surface-surface flex items-center justify-between"
     >
       <div
-        class="text-surface-on-surface text-2xl font-normal font-['Noto_Serif'] leading-9"
+        class="text-surface-on-surface text-2xl font-normal font-serif leading-9"
       >
         {{ $t("cart.miniCart.title") }}
       </div>

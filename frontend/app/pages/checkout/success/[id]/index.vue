@@ -137,7 +137,7 @@ const showPaymentAlert = computed(
         </div>
         <div class="min-w-0">
           <h1
-            class="text-[2.5rem] font-['Noto_Serif'] text-surface-on-surface leading-15"
+            class="text-[2.5rem] font-serif text-surface-on-surface leading-15"
           >
             {{ $t("checkout.success.title") }}
           </h1>
@@ -229,7 +229,7 @@ const showPaymentAlert = computed(
         <aside class="w-full lg:w-1/2 order-1 lg:order-2">
           <div class="border border-outline-outline sticky top-2">
             <div class="border-b border-outline-outline-variant">
-              <h2 class="text-[2.5rem] px-6 font-['Noto_Serif']">
+              <h2 class="text-[2.5rem] px-6 font-serif">
                 {{ $t("checkout.summary") }}
               </h2>
             </div>

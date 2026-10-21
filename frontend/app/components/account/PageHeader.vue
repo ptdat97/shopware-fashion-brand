@@ -6,12 +6,10 @@ defineProps<{
 </script>
 <template>
   <div class="flex flex-col gap-2">
-    <h1
-      class="text-surface-on-surface text-[2.5rem] font-['Noto_Serif'] leading-15"
-    >
+    <h1 class="text-surface-on-surface text-[2.5rem] font-serif leading-15">
       {{ title }}
     </h1>
-    <p class="self-stretch text-surface-on-surface font-['Inter']">
+    <p class="self-stretch text-surface-on-surface font-sans">
       {{ subtitle }}
     </p>
   </div>

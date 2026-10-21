@@ -1,0 +1,176 @@
+<script setup lang="ts">
+// Override SwFilterChips của @shopware/cms-base-layer: bản gốc ghép chuỗi tiếng Anh cứng
+// ("Price:", "Rating:", "Free Shipping") và hiện giá dạng số thô. Ở đây dịch qua i18n
+// (listing.chips.*) và định dạng giá theo tiền tệ của channel. Phần còn lại giữ nguyên.
+import { usePrice } from "@shopware/composables";
+import { computed } from "vue";
+
+import type { Schemas } from "#shopware";
+
+type FilterState = {
+  manufacturer: Set<string>;
+  properties: Set<string>;
+  // Optional: consumers building their own filter-state object predate this
+  // field, so a missing one must render no category chips, not throw.
+  categories?: Set<string>;
+  "min-price": number | undefined;
+  "max-price": number | undefined;
+  rating: number | undefined;
+  "shipping-free": boolean | undefined;
+};
+
+type Filter = {
+  id: string;
+  code: string;
+  options?: Array<
+    | Schemas["PropertyGroupOption"]
+    | { id: string; translated?: { name?: string } }
+  >;
+  entities?: Array<
+    | Schemas["ProductManufacturer"]
+    | { id: string; translated?: { name?: string } }
+  >;
+};
+
+const props = defineProps<{
+  filters: FilterState;
+  availableFilters: Filter[];
+}>();
+
+const emit = defineEmits<{
+  remove: [{ code: string; value: string | number }];
+}>();
+
+const { t } = useI18n();
+const { getFormattedPrice } = usePrice();
+
+const getTranslatedName = (
+  item: { translated?: { name?: string }; name?: string } | undefined,
+): string | null => {
+  if (!item) return null;
+  if ("translated" in item) {
+    return item.translated?.name || ("name" in item ? item.name : null) || null;
+  }
+  return null;
+};
+
+const activeChips = computed(() => {
+  const chips: Array<{ label: string; code: string; value: string | number }> =
+    [];
+
+  // Add property filters
+  const properties = Array.from(props.filters.properties);
+  for (const propertyId of properties) {
+    // Check all filters, not just the one with code "properties"
+    // because properties can be in multiple filter groups
+    for (const filter of props.availableFilters) {
+      if ("options" in filter && filter.options) {
+        const option = filter.options.find((o) => o.id === propertyId);
+        const name = getTranslatedName(option);
+        if (name) {
+          chips.push({
+            label: name,
+            code: "properties",
+            value: propertyId,
+          });
+          break;
+        }
+      }
+    }
+  }
+
+  // Add manufacturer filters
+  const manufacturerFilter = props.availableFilters.find(
+    (f) => f.code === "manufacturer",
+  );
+  if (manufacturerFilter?.entities) {
+    for (const manufacturerId of props.filters.manufacturer) {
+      const entity = manufacturerFilter.entities.find(
+        (e) => e.id === manufacturerId,
+      );
+      const name = getTranslatedName(entity);
+      if (name) {
+        chips.push({
+          label: name,
+          code: "manufacturer",
+          value: manufacturerId,
+        });
+      }
+    }
+  }
+
+  // Add category filters
+  const categoryFilter = props.availableFilters.find(
+    (f) => f.code === "categories",
+  );
+  if (categoryFilter?.entities) {
+    for (const categoryId of props.filters.categories ?? []) {
+      const entity = categoryFilter.entities.find((e) => e.id === categoryId);
+      const name = getTranslatedName(entity);
+      if (name) {
+        chips.push({
+          label: name,
+          code: "categories",
+          value: categoryId,
+        });
+      }
+    }
+  }
+
+  // Add price filters
+  if (props.filters["min-price"] || props.filters["max-price"]) {
+    const min = getFormattedPrice(props.filters["min-price"] || 0);
+    const max = props.filters["max-price"]
+      ? getFormattedPrice(props.filters["max-price"])
+      : "∞";
+    chips.push({
+      label: t("listing.chips.price", { min, max }),
+      code: "price",
+      value: "price-range",
+    });
+  }
+
+  // Add rating filter
+  if (props.filters.rating) {
+    chips.push({
+      label: t("listing.chips.rating", { rating: props.filters.rating }),
+      code: "rating",
+      value: props.filters.rating,
+    });
+  }
+
+  // Add shipping free filter
+  if (props.filters["shipping-free"]) {
+    chips.push({
+      label: t("listing.freeShipping"),
+      code: "shipping-free",
+      value: "true",
+    });
+  }
+
+  return chips;
+});
+
+const handleRemoveChip = (chip: { code: string; value: string | number }) => {
+  emit("remove", chip);
+};
+</script>
+
+<template>
+  <div
+    v-if="activeChips.length > 0"
+    class="self-stretch inline-flex justify-start items-center gap-4 flex-wrap content-center mb-6"
+  >
+    <button
+      v-for="(chip, index) in activeChips"
+      :key="`${chip.code}-${chip.value}-${index}`"
+      @click="handleRemoveChip(chip)"
+      class="px-4 py-1.5 bg-brand-tertiary rounded-full inline-flex justify-center items-center gap-1 hover:bg-brand-tertiary-hover transition-colors"
+    >
+      <span class="text-brand-on-tertiary text-base font-normal leading-normal">
+        {{ chip.label }}
+      </span>
+      <span class="i-carbon-close w-5 h-5 text-brand-on-tertiary"></span>
+    </button>
+  </div>
+</template>
