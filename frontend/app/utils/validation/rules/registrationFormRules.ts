@@ -2,10 +2,13 @@ import { type Ref, computed } from "vue";
 
 import { customValidators } from "#imports";
 
+import type { AddressFieldFlags } from "./addressFormRules";
+
 export function registrationFormRules(
   accountType: Ref<string>,
   countryId: Ref<string>,
   countryHasStates: Ref<boolean>,
+  fields: AddressFieldFlags,
 ) {
   const { required, minLength, email, requiredIf } = customValidators();
 
@@ -13,13 +16,12 @@ export function registrationFormRules(
     accountType: {
       required,
     },
+    // Chỉ bắt buộc — họ Việt 2 ký tự (Lê, Lý, Hồ…) phải đăng ký được
     firstName: {
       required,
-      minLength: minLength(3),
     },
     lastName: {
       required,
-      minLength: minLength(3),
     },
     email: {
       required,
@@ -38,7 +40,7 @@ export function registrationFormRules(
         minLength: minLength(3),
       },
       zipcode: {
-        required,
+        required: requiredIf(() => fields.postalCodeRequired.value),
       },
       city: {
         required,
@@ -50,6 +52,9 @@ export function registrationFormRules(
         required: requiredIf(() => {
           return !!unref(countryId) && countryHasStates.value;
         }),
+      },
+      phoneNumber: {
+        required: requiredIf(() => fields.phoneNumberRequired.value),
       },
     },
   }));

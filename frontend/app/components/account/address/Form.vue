@@ -28,8 +28,10 @@ const state = ref({
   city: "",
   countryId: "",
   countryStateId: "",
+  phoneNumber: "",
 });
 const countryHasStates = ref(false);
+const addressFields = useAddressFieldSettings(() => state.value.countryId);
 
 function populateStateFromAddress(address: Schemas["CustomerAddress"]) {
   Object.assign(state.value, address);
@@ -49,7 +51,10 @@ watch(
   { immediate: true },
 );
 
-const { r$ } = useRegle(state, addressFormRules(countryHasStates));
+const { r$ } = useRegle(
+  state,
+  addressFormRules(countryHasStates, addressFields),
+);
 
 async function handleSubmit() {
   const { valid } = await r$.$validate();
@@ -86,6 +91,17 @@ async function handleSubmit() {
         :errorMessage="r$.lastName.$errors[0]"
       />
     </div>
+
+    <FormInputField
+      v-if="addressFields.showPhoneNumber.value"
+      v-model="state.phoneNumber"
+      id="phone-number"
+      type="tel"
+      autocomplete="tel"
+      :label="$t('form.phoneNumber')"
+      :placeholder="$t('form.phoneNumberPlaceholder')"
+      :errorMessage="r$.phoneNumber.$errors[0]"
+    />
 
     <FormInputField
       v-model="state.street"

@@ -87,6 +87,17 @@ Shopware thiết kế theo chuẩn địa chỉ châu Âu: `Đường + Số nh�
 
 Địa chỉ Việt Nam có cấu trúc phân cấp: `Số nhà, Đường → Phường/Xã → Quận/Huyện → Tỉnh/Thành phố`.
 
+### Đã kiểm qua đơn thật trên frontend headless (21/10/2026)
+
+| Quy tắc | Cấu hình native | Ghi chú |
+|---|---|---|
+| SĐT bắt buộc ở địa chỉ | `core.loginRegistration.phoneNumberFieldRequired` (`AcmeVietnam` 1.4.0) | Phase 0 đặt nhầm khoá của form liên hệ — xem đính chính ở runbook/04 |
+| Mã bưu chính không bắt buộc | `country.postal_code_required = 0` | Frontend đọc theo quốc gia, không gán cứng |
+| Tỉnh/thành bắt buộc | `country.force_state_in_registration = 1` | 34 tỉnh/thành |
+| Tên/họ ngắn hợp lệ | Core chỉ `NotBlank` | Template frontend từng bắt tối thiểu 3 ký tự → họ "Lê", "Hồ", "Võ" không đặt hàng được; đã bỏ |
+
+Frontend đọc các quy tắc này từ Shopware (`/store-api/shop-settings`, `country.postalCodeRequired`) qua `useAddressFieldSettings` — đổi trong Administration là form theo, không sửa code.
+
 ### Điểm cần xử lý
 
 | Vấn đề | Ghi chú |

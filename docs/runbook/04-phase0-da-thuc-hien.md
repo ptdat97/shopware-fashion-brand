@@ -121,7 +121,7 @@ php bin/console system:config:set core.loginRegistration.addressInputFieldArrang
 
 Ba giá trị hợp lệ: `city-zip-state`, `zip-city-state`, `city-state-zip`. Chọn `city-state-zip` vì mã bưu chính là tuỳ chọn ở VN nên đưa xuống cuối.
 
-`phoneNumberFieldRequired` đã bật sẵn — số điện thoại bắt buộc, đúng nhu cầu giao hàng VN.
+> ⚠️ **Đính chính 21/10/2026.** Câu cũ ở đây ("`phoneNumberFieldRequired` đã bật sẵn — số điện thoại bắt buộc") **sai**. Migration baseline đặt `core.basicInformation.phoneNumberFieldRequired` — khoá này chỉ áp cho **form liên hệ**. Kiểm địa chỉ khi đăng ký / đặt hàng đọc `core.loginRegistration.phoneNumberFieldRequired` (`AddressValidationFactory`), chưa từng được đặt → từ Phase 0 khách đặt được đơn **không có SĐT** (cả storefront Twig). Sửa bằng `AcmeVietnam` `Migration1792575582RequirePhoneNumberOnAddress` (1.4.0). Phát hiện khi thử đặt đơn qua frontend headless (H6).
 
 ---
 

@@ -73,6 +73,10 @@ function handleUpdateQuantity(id: string, quantity: number) {
               :value="shippingCost.shippingCosts.totalPrice"
             />
           </div>
+          <!-- Miễn phí (đơn từ 500.000 ₫ — AcmeShipping): nói rõ thay vì để trống -->
+          <div v-else class="text-surface-on-surface text-sm font-normal">
+            {{ $t("checkout.freeShipping") }}
+          </div>
         </div>
       </div>
       <div

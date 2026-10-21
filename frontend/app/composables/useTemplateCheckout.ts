@@ -44,7 +44,12 @@ export function useTemplateCheckout(): UseTemplateCheckoutReturn {
     city: "",
     countryId: "",
     countryStateId: "",
+    phoneNumber: "",
   });
+
+  const { phoneNumberRequired, postalCodeRequired } = useAddressFieldSettings(
+    () => billingAddress.value.countryId,
+  );
 
   const customerBaseInfo = ref<CheckoutBaseInfo>({
     email: "",
@@ -55,21 +60,21 @@ export function useTemplateCheckout(): UseTemplateCheckoutReturn {
     () => !!(selectedShippingMethod.value && selectedPaymentMethod.value),
   );
 
+  // Tên/họ chỉ bắt buộc, không giới hạn độ dài tối thiểu như template: họ Việt 2 ký tự
+  // (Lê, Lý, Hồ, Võ, Vũ, Đỗ…) và tên như "An" phải đặt hàng được. Backend cũng chỉ NotBlank.
   const { r$: $vBillingAddress } = useRegle(billingAddress, () => ({
     firstName: {
       required,
-      minLength: minLength(3),
     },
     lastName: {
       required,
-      minLength: minLength(3),
     },
     street: {
       required,
       minLength: minLength(3),
     },
     zipcode: {
-      required,
+      required: requiredIf(() => postalCodeRequired.value),
     },
     city: {
       required,
@@ -79,6 +84,9 @@ export function useTemplateCheckout(): UseTemplateCheckoutReturn {
     },
     countryStateId: {
       required: requiredIf(() => countryHasStates.value),
+    },
+    phoneNumber: {
+      required: requiredIf(() => phoneNumberRequired.value),
     },
   }));
 

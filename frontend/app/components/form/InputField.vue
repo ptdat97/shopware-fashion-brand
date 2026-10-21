@@ -15,7 +15,8 @@ const {
   placeholder?: string;
   label?: string;
   id?: string;
-  type?: "text" | "password" | "email";
+  // "tel": bàn phím số trên điện thoại cho ô số điện thoại
+  type?: "text" | "password" | "email" | "tel";
   errorMessage?: MaybeRef<string>;
   autocomplete?: string;
 }>();

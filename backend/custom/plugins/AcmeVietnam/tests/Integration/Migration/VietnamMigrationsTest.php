@@ -7,6 +7,8 @@ use Acme\Vietnam\Migration\Migration1786157045VietnameseStorefront;
 use Acme\Vietnam\Migration\Migration1791973286VietnameseCoreLabels;
 use Acme\Vietnam\Migration\Migration1792336734VietnameseDeliveryTimes;
 use Acme\Vietnam\Migration\Migration1792572392VietnameseSearchConfig;
+use Acme\Vietnam\Migration\Migration1792575582RequirePhoneNumberOnAddress as RequirePhone;
+use Acme\Vietnam\Migration\Migration1792575782VietnameseOrderStates as OrderStates;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Defaults;
@@ -191,6 +193,71 @@ class VietnamMigrationsTest extends TestCase
                 ['lang' => $vietnameseId]
             )
         ));
+    }
+
+    public function testPhoneNumberBecomesRequiredOnAddresses(): void
+    {
+        $this->connection->executeStatement('DELETE FROM system_config WHERE configuration_key = :k', ['k' => RequirePhone::CONFIG_KEY]);
+        $migration = new RequirePhone();
+
+        $migration->update($this->connection);
+        $migration->update($this->connection);
+
+        static::assertSame(['{"_value": true}'], $this->connection->fetchFirstColumn(
+            'SELECT configuration_value FROM system_config WHERE configuration_key = :k AND sales_channel_id IS NULL',
+            ['k' => RequirePhone::CONFIG_KEY]
+        ), 'Đúng khoá AddressValidationFactory đọc, chạy lại không nhân đôi');
+    }
+
+    public function testPhoneNumberChoiceOfMerchantIsKept(): void
+    {
+        $this->connection->executeStatement('DELETE FROM system_config WHERE configuration_key = :k', ['k' => RequirePhone::CONFIG_KEY]);
+        $this->connection->insert('system_config', [
+            'id' => Uuid::randomBytes(),
+            'configuration_key' => RequirePhone::CONFIG_KEY,
+            'configuration_value' => '{"_value": false}',
+            'created_at' => '2026-10-21 00:00:00.000',
+        ]);
+
+        (new RequirePhone())->update($this->connection);
+
+        static::assertSame('{"_value": false}', $this->connection->fetchOne(
+            'SELECT configuration_value FROM system_config WHERE configuration_key = :k',
+            ['k' => RequirePhone::CONFIG_KEY]
+        ));
+    }
+
+    public function testOrderStatesTranslatedWithoutOverwritingMerchantText(): void
+    {
+        $vietnameseId = $this->createVietnameseLanguage();
+        $completedId = $this->connection->fetchOne(
+            'SELECT s.id FROM state_machine_state s JOIN state_machine m ON m.id = s.state_machine_id
+              WHERE m.technical_name = "order.state" AND s.technical_name = "completed"'
+        );
+        $this->connection->insert('state_machine_state_translation', [
+            'state_machine_state_id' => $completedId,
+            'language_id' => $vietnameseId,
+            'name' => 'Giao thành công',
+            'created_at' => '2026-10-21 00:00:00.000',
+        ]);
+
+        $migration = new OrderStates();
+        $migration->update($this->connection);
+        $migration->update($this->connection);
+
+        $names = $this->connection->fetchAllKeyValue(
+            'SELECT CONCAT(m.technical_name, ":", s.technical_name), t.name FROM state_machine_state_translation t
+               JOIN state_machine_state s ON s.id = t.state_machine_state_id
+               JOIN state_machine m ON m.id = s.state_machine_id
+              WHERE t.language_id = :lang',
+            ['lang' => $vietnameseId]
+        );
+
+        $expected = array_sum(array_map('count', OrderStates::NAMES));
+        static::assertCount($expected, $names, 'Mọi trạng thái của 3 state machine đều có bản dịch, chạy lại không nhân đôi');
+        static::assertSame('Đang chờ xử lý', $names['order.state:open']);
+        static::assertSame('Đã thanh toán', $names['order_transaction.state:paid']);
+        static::assertSame('Giao thành công', $names['order.state:completed'], 'Chữ người vận hành đã sửa giữ nguyên');
     }
 
     private function provinceCount(): int

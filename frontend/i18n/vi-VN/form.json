@@ -66,6 +66,8 @@
     "unsubscribeLabel": "Huỷ nhận bản tin",
     "action": "Thao tác",
     "privacyLabel": "Tôi đã đọc chính sách bảo mật dữ liệu.",
-    "newsletterBenefits": "Cập nhật sớm nhất các đợt giảm giá, sự kiện, quà tặng và ưu đãi riêng!"
+    "newsletterBenefits": "Cập nhật sớm nhất các đợt giảm giá, sự kiện, quà tặng và ưu đãi riêng!",
+    "phoneNumber": "Số điện thoại",
+    "phoneNumberPlaceholder": "Số điện thoại nhận hàng..."
   }
 }

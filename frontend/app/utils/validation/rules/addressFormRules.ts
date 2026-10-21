@@ -1,27 +1,36 @@
 import { type Ref, computed } from "vue";
 
 import { customValidators } from "#imports";
-export function addressFormRules(countryHasStates: Ref<boolean>) {
+
+/** Trường theo cấu hình Shopware — xem useAddressFieldSettings */
+export type AddressFieldFlags = {
+  phoneNumberRequired: Ref<boolean>;
+  postalCodeRequired: Ref<boolean>;
+};
+
+export function addressFormRules(
+  countryHasStates: Ref<boolean>,
+  fields: AddressFieldFlags,
+) {
   const { required, minLength, requiredIf } = customValidators();
 
   return computed(() => ({
     salutationId: {
       required,
     },
+    // Chỉ bắt buộc — tên/họ Việt có thể rất ngắn (backend cũng chỉ NotBlank)
     firstName: {
       required,
-      minLength: minLength(2),
     },
     lastName: {
       required,
-      minLength: minLength(2),
     },
     street: {
       required,
       minLength: minLength(3),
     },
     zipcode: {
-      required,
+      required: requiredIf(() => fields.postalCodeRequired.value),
     },
     city: {
       required,
@@ -33,6 +42,9 @@ export function addressFormRules(countryHasStates: Ref<boolean>) {
       required: requiredIf(() => {
         return countryHasStates.value;
       }),
+    },
+    phoneNumber: {
+      required: requiredIf(() => fields.phoneNumberRequired.value),
     },
   }));
 }

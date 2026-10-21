@@ -15,6 +15,17 @@ const { address } = defineProps<{
 const countryName = computed(() =>
   address.country ? getTranslatedProperty(address.country, "name") : "",
 );
+// Tỉnh/thành và SĐT — khách tự kiểm thông tin giao hàng (shipper VN giao theo tỉnh, gọi SĐT)
+const stateName = computed(() =>
+  address.countryState
+    ? getTranslatedProperty(address.countryState, "name")
+    : "",
+);
+const cityLine = computed(() =>
+  [address.zipcode, [address.city, stateName.value].filter(Boolean).join(", ")]
+    .filter(Boolean)
+    .join(" "),
+);
 </script>
 <template>
   <div>
@@ -31,13 +42,19 @@ const countryName = computed(() =>
         {{ address.street }}
       </div>
       <div class="text-surface-on-surface text-base leading-normal">
-        {{ address.zipcode }} {{ address.city }}
+        {{ cityLine }}
       </div>
       <div
         v-if="countryName"
         class="text-surface-on-surface text-base leading-normal"
       >
         {{ countryName }}
+      </div>
+      <div
+        v-if="address.phoneNumber"
+        class="text-surface-on-surface text-base leading-normal"
+      >
+        {{ address.phoneNumber }}
       </div>
     </address>
   </div>

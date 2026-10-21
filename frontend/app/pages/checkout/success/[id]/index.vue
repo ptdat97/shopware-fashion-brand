@@ -23,9 +23,11 @@ const {
   total,
   shippingCosts,
 } = useOrderDetails(orderId, {
-  addresses: { associations: { country: {} } },
+  addresses: { associations: { country: {}, countryState: {} } },
   deliveries: {
-    associations: { shippingOrderAddress: { associations: { country: {} } } },
+    associations: {
+      shippingOrderAddress: { associations: { country: {}, countryState: {} } },
+    },
   },
 });
 
@@ -70,18 +72,21 @@ watchDebounced(
   { debounce: 5000 },
 );
 
-const { browserLocale } = useShopwareContext();
+const { locale } = useI18n();
 const localePath = useLocalePath();
 const { formatLink } = useInternationalization(localePath);
 const { t } = useI18n();
 
+// Ngôn ngữ của shop và giờ Việt Nam cố định — không theo trình duyệt hay múi giờ của máy
+// chủ render SSR (thường là UTC), nếu không khách thấy giờ đặt hàng lệch 7 tiếng.
 const formatDate = (date: string) =>
-  new Intl.DateTimeFormat(browserLocale, {
+  new Intl.DateTimeFormat(locale.value, {
     year: "numeric",
     month: "numeric",
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
+    timeZone: "Asia/Ho_Chi_Minh",
   }).format(new Date(date));
 
 const shippingDeliveryTime = computed(() => {
@@ -159,10 +164,10 @@ const showPaymentAlert = computed(
               :state="order.stateMachineState"
             />
             <span
-              v-if="order.orderDate"
+              v-if="order.orderDateTime"
               class="text-sm text-surface-on-surface-variant"
             >
-              {{ formatDate(order.orderDate) }}
+              {{ formatDate(order.orderDateTime) }}
             </span>
           </div>
         </div>

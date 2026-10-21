@@ -1,12 +1,5 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: "checkout",
-});
-
-import { getLanguageName } from "@shopware/helpers";
-
-const { languages, changeLanguage, replaceToDevStorefront } =
-  useInternationalization();
+const { changeLanguage, replaceToDevStorefront } = useInternationalization();
 const { currentLanguageId } = useSessionContext();
 const {
   currenciesList,
@@ -15,15 +8,7 @@ const {
   changeCurrency,
 } = useCurrencySwitcher();
 
-const languagesList = computed(
-  () =>
-    languages.value?.map((language) => {
-      return {
-        id: language.id,
-        label: getLanguageName(language),
-      };
-    }) ?? [],
-);
+const languagesList = useLanguageOptions();
 
 const localePath = useLocalePath();
 const { formatLink } = useInternationalization(localePath);
@@ -47,7 +32,7 @@ async function onCurrencyChangeHandler(id: string) {
     <header>
       <LayoutMetaNavigation
         v-if="
-          (languagesList.length > 1 || currenciesList.length > 0) &&
+          (languagesList.length > 1 || currenciesList.length > 1) &&
           currentLanguageId
         "
         class="px-6"

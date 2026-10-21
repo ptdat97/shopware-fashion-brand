@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { getLanguageName } from "@shopware/helpers";
-
 const { loadNavigationElements } = useNavigation();
 const { data } = useAsyncData("mainNavigation", () => {
   return loadNavigationElements({ depth: 2 });
 });
 
-const { languages, changeLanguage, replaceToDevStorefront } =
-  useInternationalization();
+const { changeLanguage, replaceToDevStorefront } = useInternationalization();
 const { currentLanguageId } = useSessionContext();
 const {
   currenciesList,
@@ -17,25 +14,7 @@ const {
 } = useCurrencySwitcher();
 provide("swNavigation-main-navigation", data);
 
-const { availableLocales } = useI18n();
-
-// Chỉ hiện ngôn ngữ frontend có bản dịch — channel có thể gán thêm ngôn ngữ
-// (English mặc định của bản cài) mà frontend không phục vụ.
-const languagesList = computed(
-  () =>
-    languages.value
-      ?.filter((language) =>
-        (availableLocales as string[]).includes(
-          language.translationCode?.code ?? "",
-        ),
-      )
-      .map((language) => {
-        return {
-          id: language.id,
-          label: getLanguageName(language),
-        };
-      }) ?? [],
-);
+const languagesList = useLanguageOptions();
 
 async function onChangeHandler(id: string) {
   const data = await changeLanguage(id);

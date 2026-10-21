@@ -26,6 +26,17 @@ const zipcodeModel = computed({
   },
 });
 
+const phoneNumberModel = computed({
+  get: () => state.value.phoneNumber ?? "",
+  set: (value: string) => {
+    state.value.phoneNumber = value;
+  },
+});
+
+const { showPhoneNumber } = useAddressFieldSettings(
+  () => state.value.countryId,
+);
+
 const countryStateIdModel = computed({
   get: () => state.value.countryStateId ?? "",
   set: (value: string) => {
@@ -64,6 +75,18 @@ function handleCountryStatesChange(states: Schemas["CountryState"][]) {
         @blur="validation?.lastName.$touch()"
       />
     </div>
+    <FormInputField
+      v-if="showPhoneNumber"
+      v-model="phoneNumberModel"
+      id="phone-number"
+      type="tel"
+      autocomplete="tel"
+      data-testid="checkout-pi-phone-number-input"
+      :label="$t('checkout.customerAddress.phoneNumberLabel')"
+      :placeholder="$t('checkout.customerAddress.phoneNumberPlaceholder')"
+      :errorMessage="validation?.phoneNumber?.$errors[0]"
+      @blur="validation?.phoneNumber?.$touch()"
+    />
     <div>
       <FormInputField
         v-model="state.street"

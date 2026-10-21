@@ -19,7 +19,9 @@
       "cityPlaceholder": "Nhập quận/huyện",
       "cityLabel": "Quận/Huyện",
       "countryPlaceholder": "Chọn quốc gia",
-      "countryLabel": "Quốc gia"
+      "countryLabel": "Quốc gia",
+      "phoneNumberLabel": "Số điện thoại",
+      "phoneNumberPlaceholder": "Số điện thoại nhận hàng"
     },
     "customerBaseInfo": {
       "emailPlaceholder": "Nhập địa chỉ email",
@@ -47,6 +49,7 @@
     "shippingMethodLabel": "Phương thức vận chuyển",
     "takesUpTo": "Giao trong khoảng",
     "shippingPriceLabel": "Phí vận chuyển",
-    "totalLabel": "Tổng cộng"
+    "totalLabel": "Tổng cộng",
+    "freeShipping": "Miễn phí"
   }
 }

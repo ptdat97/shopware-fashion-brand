@@ -118,6 +118,7 @@ function getBillingAddressFields() {
     city: billingAddress.value.city,
     countryId: billingAddress.value.countryId,
     countryStateId: billingAddress.value.countryStateId || undefined,
+    phoneNumber: billingAddress.value.phoneNumber || undefined,
   };
 }
 
@@ -257,8 +258,13 @@ onMounted(() => {
       </NuxtLink>
     </div>
 
-    <div v-else class="flex gap-20 justify-between">
-      <div class="w-1/2 relative">
+    <!-- Mobile-first: xếp dọc trên điện thoại (Tóm tắt lên đầu để thấy tổng tiền trước khi
+         điền form), hai cột từ lg. Template gốc cố định hai cột w-1/2 → form bị ép ~200px. -->
+    <div
+      v-else
+      class="flex flex-col lg:flex-row gap-10 lg:gap-20 justify-between"
+    >
+      <div class="w-full lg:w-1/2 relative">
         <div
           v-if="isPlacingOrder"
           class="absolute inset-0 z-10 flex items-center justify-center bg-surface-surface/70 backdrop-blur-[1px] cursor-wait"
@@ -275,7 +281,10 @@ onMounted(() => {
             </span>
           </div>
         </div>
-        <CheckoutStepHeader :step="1" label="Shipping address">
+        <CheckoutStepHeader
+          :step="1"
+          :label="$t('checkout.shippingAddressLabel')"
+        >
           <div v-if="showCustomerForm" class="flex flex-col">
             <CheckoutCustomerBaseInfo
               class="mb-4"
@@ -294,14 +303,20 @@ onMounted(() => {
 
           <CheckoutCustomerAddressChosen v-else :address="billingAddress" />
         </CheckoutStepHeader>
-        <CheckoutStepHeader :step="2" label="Shipping">
+        <CheckoutStepHeader
+          :step="2"
+          :label="$t('checkout.shippingMethodLabel')"
+        >
           <CheckoutShippingMethods
             :shippingMethods="shippingMethods"
             v-model:selectedShippingMethod="selectedShippingMethod"
             @change="handleChangeShippingMethod"
           />
         </CheckoutStepHeader>
-        <CheckoutStepHeader :step="3" label="Payment information">
+        <CheckoutStepHeader
+          :step="3"
+          :label="$t('checkout.paymentMethodLabel')"
+        >
           <CheckoutPaymentMethods
             :paymentMethods="paymentMethods"
             v-model:selectedPaymentMethod="selectedPaymentMethod"
@@ -321,7 +336,7 @@ onMounted(() => {
           @click="handlePlaceOrder"
         />
       </div>
-      <div class="w-1/2 relative">
+      <div class="w-full lg:w-1/2 relative order-first lg:order-none">
         <div
           v-if="isPlacingOrder"
           class="absolute inset-0 z-10 bg-surface-surface/70 backdrop-blur-[1px] cursor-wait"

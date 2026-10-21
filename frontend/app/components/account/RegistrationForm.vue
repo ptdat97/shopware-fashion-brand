@@ -59,6 +59,7 @@ const initialState: RegistrationFormState = {
     city: "",
     countryId: "",
     countryStateId: "",
+    phoneNumber: "",
   },
   acceptedDataProtection: true,
 };
@@ -110,6 +111,15 @@ const countryStateIdModel = computed({
   },
 });
 const countryHasStates = ref(false);
+const addressFields = useAddressFieldSettings(
+  () => state.billingAddress.countryId,
+);
+const phoneNumberModel = computed({
+  get: () => state.billingAddress.phoneNumber ?? "",
+  set: (value: string) => {
+    state.billingAddress.phoneNumber = value;
+  },
+});
 
 function handleCountryStatesChange(states: Schemas["CountryState"][]) {
   countryHasStates.value = states.length > 0;
@@ -121,6 +131,7 @@ const { r$ } = useRegle(
     computed(() => state.accountType ?? "private"),
     computed(() => state.billingAddress.countryId),
     countryHasStates,
+    addressFields,
   ),
 );
 const invokeSubmit = async () => {
@@ -297,6 +308,19 @@ const invokeSubmit = async () => {
           :state-id-validation="r$.billingAddress.countryStateId"
           class="col-span-12 md:col-span-8"
           @states-change="handleCountryStatesChange"
+        />
+
+        <FormInputField
+          v-if="addressFields.showPhoneNumber.value"
+          class="col-span-12 md:col-span-4"
+          :label="$t('form.phoneNumber')"
+          id="phone-number"
+          type="tel"
+          v-model="phoneNumberModel"
+          autocomplete="tel"
+          data-testid="registration-phone-number-input"
+          @blur="r$.billingAddress.phoneNumber.$touch()"
+          :errorMessage="r$.billingAddress.phoneNumber.$errors[0]"
         />
       </div>
       <div class="mb-5 text-right">
