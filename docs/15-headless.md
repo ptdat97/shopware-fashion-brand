@@ -84,7 +84,7 @@ bin/console cache:clear && bin/console cache:clear:http
 
 Xong H1–H8 + e2e COD → đánh giá gỡ storefront Twig (ADR riêng).
 
-**Phát hiện ngoài danh sách (21/10):** tìm kiếm **không dấu** không ra kết quả — Store API `search` với `dam` trả 0, `đầm` trả 7. Lỗi có từ trước (cùng backend với storefront Twig), ảnh hưởng lớn vì khách VN hay gõ không dấu. Thuộc backend: xem cấu hình tìm kiếm của core (từ khoá/tokenizer, hoặc OpenSearch với bộ lọc `asciifolding`) trước khi tính tới plugin.
+**Phát hiện ngoài danh sách (21/10):** tìm kiếm không dấu (`dam` → 0 kết quả) — ✅ đã sửa cùng ngày trong `AcmeVietnam` 1.3.0, xem [04-thi-truong-vn.md](04-thi-truong-vn.md) mục 7.
 
 ## 5. Ghi chú khi tuỳ biến frontend
 

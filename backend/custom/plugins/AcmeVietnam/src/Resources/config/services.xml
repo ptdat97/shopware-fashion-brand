@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Tìm kiếm không dấu: "dam" ra "đầm" — xem Acme\Vietnam\Search\VietnameseTextFolding -->
+        <service id="Acme\Vietnam\Search\VietnameseSearchKeywordAnalyzer"
+                 decorates="Shopware\Core\Content\Product\SearchKeyword\ProductSearchKeywordAnalyzer">
+            <argument type="service" id=".inner"/>
+        </service>
+
+        <service id="Acme\Vietnam\Search\VietnameseSearchTermInterpreter"
+                 decorates="Shopware\Core\Content\Product\SearchKeyword\ProductSearchTermInterpreter">
+            <argument type="service" id=".inner"/>
+        </service>
+    </services>
+</container>

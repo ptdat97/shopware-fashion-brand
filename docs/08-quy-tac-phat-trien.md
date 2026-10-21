@@ -321,7 +321,7 @@ grep -n "custom-field-set-renderer" vendor/shopware/administration/Resources/app
 
 | Plugin | Nghiệp vụ | Tắt thì mất gì | Ghi chú |
 |---|---|---|---|
-| `AcmeVietnam` | Thị trường VN: VND, VAT, quốc gia, 34 tỉnh/thành, vi-VN, **Việt hoá dữ liệu core** (danh mục gốc, nhãn sắp xếp) | Không gì — cấu hình đã ghi vào entity core, cố ý không hoàn tác | |
+| `AcmeVietnam` | Thị trường VN: VND, VAT, quốc gia, 34 tỉnh/thành, vi-VN, **Việt hoá dữ liệu core** (danh mục gốc, nhãn sắp xếp, thời gian giao), channel headless, **tìm kiếm tiếng Việt** (cấu hình tìm kiếm vi-VN, gõ không dấu `đ→d`) | Tìm "dam" không còn ra "đầm" — từ có dấu vẫn tìm được. Cấu hình đã ghi vào entity core, cố ý không hoàn tác | Từ khoá gấp còn trong chỉ mục tới lần `dal:refresh:index` sau — vô hại |
 | `AcmeCatalog` | Cấu trúc catalog: thuộc tính, sinh biến thể, **canonical biến thể**, **custom field bảng size**, bộ sưu tập, template SEO URL | Lệnh `acme:catalog:variants` | Dữ liệu và template SEO là của core → vẫn chạy |
 | `AcmePayment` | Thanh toán: dọn phương thức, VietQR (QR + CSS của khối QR) | Phương thức VietQR (tự tắt khi plugin tắt) | COD, chuyển khoản là của core |
 | `AcmeShipping` | Vận chuyển nội địa: phí theo khu vực; sau này GHN/GHTK | Không gì — bảng phí là cấu hình core | Tách khỏi `AcmePayment` ngày 14/10/2026 |

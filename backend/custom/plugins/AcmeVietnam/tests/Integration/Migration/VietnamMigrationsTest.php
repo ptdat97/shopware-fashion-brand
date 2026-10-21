@@ -6,6 +6,7 @@ use Acme\Vietnam\Migration\Migration1786157044VietnamMarketBaseline;
 use Acme\Vietnam\Migration\Migration1786157045VietnameseStorefront;
 use Acme\Vietnam\Migration\Migration1791973286VietnameseCoreLabels;
 use Acme\Vietnam\Migration\Migration1792336734VietnameseDeliveryTimes;
+use Acme\Vietnam\Migration\Migration1792572392VietnameseSearchConfig;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Defaults;
@@ -137,6 +138,59 @@ class VietnamMigrationsTest extends TestCase
         );
         static::assertSame('1-3 ngày', $names['1-3 day'] ?? null);
         static::assertSame('Đặt may 3-4 tuần', $names['3-4 week'] ?? null, 'Chữ người vận hành đã sửa giữ nguyên');
+    }
+
+    public function testSearchConfigCopiesSystemFieldsWithVietnameseStopwords(): void
+    {
+        $vietnameseId = $this->createVietnameseLanguage();
+        $migration = new Migration1792572392VietnameseSearchConfig();
+
+        $migration->update($this->connection);
+        $migration->update($this->connection);
+
+        $configs = $this->connection->fetchAllAssociative(
+            'SELECT id, excluded_terms FROM product_search_config WHERE language_id = :lang',
+            ['lang' => $vietnameseId]
+        );
+        static::assertCount(1, $configs, 'Chạy lại không tạo cấu hình thứ hai');
+        static::assertSame(
+            Migration1792572392VietnameseSearchConfig::EXCLUDED_TERMS,
+            json_decode((string) $configs[0]['excluded_terms'], true),
+            'Hư từ tiếng Việt thay cho stopword tiếng Anh'
+        );
+
+        $fieldsOf = fn (string $configId): array => $this->connection->fetchAllKeyValue(
+            'SELECT field, CONCAT(searchable, "/", ranking) FROM product_search_config_field WHERE product_search_config_id = :id ORDER BY field',
+            ['id' => $configId]
+        );
+        $systemConfigId = (string) $this->connection->fetchOne(
+            'SELECT id FROM product_search_config WHERE language_id = :lang',
+            ['lang' => Uuid::fromHexToBytes(Defaults::LANGUAGE_SYSTEM)]
+        );
+        static::assertSame($fieldsOf($systemConfigId), $fieldsOf((string) $configs[0]['id']), 'Cùng trường tìm kiếm và ranking');
+    }
+
+    public function testSearchConfigCreatedByMerchantIsKept(): void
+    {
+        $vietnameseId = $this->createVietnameseLanguage();
+        $this->connection->insert('product_search_config', [
+            'id' => Uuid::randomBytes(),
+            'language_id' => $vietnameseId,
+            'and_logic' => 1,
+            'min_search_length' => 3,
+            'excluded_terms' => '["shop"]',
+            'created_at' => '2026-10-21 00:00:00.000',
+        ]);
+
+        (new Migration1792572392VietnameseSearchConfig())->update($this->connection);
+
+        static::assertSame(['and_logic' => 1, 'excluded_terms' => '["shop"]'], array_map(
+            static fn ($v) => is_numeric($v) ? (int) $v : $v,
+            (array) $this->connection->fetchAssociative(
+                'SELECT and_logic, excluded_terms FROM product_search_config WHERE language_id = :lang',
+                ['lang' => $vietnameseId]
+            )
+        ));
     }
 
     private function provinceCount(): int

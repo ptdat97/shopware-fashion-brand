@@ -131,6 +131,25 @@ Shop TMĐT tại Việt Nam cần có các trang:
 
 ---
 
+## 7. Tìm kiếm tiếng Việt ✅ (21/10/2026)
+
+Khách VN gõ không dấu rất nhiều. Hai vấn đề đã sửa, cả hai trong `AcmeVietnam` 1.3.0:
+
+**Gõ không dấu với chữ "đ".** Tìm kiếm chạy trên MySQL (`SHOPWARE_ES_ENABLED=0`), bảng từ khoá dùng collation `utf8mb4_unicode_ci`. Collation này **đã** coi mọi nguyên âm có dấu bằng chữ không dấu (á = a, ặ = a, ơ = o, ữ = u — kiểm từng chữ cái bằng MySQL 8.0), nhưng **"đ" là một chữ cái riêng, không bằng "d"**. Hậu quả: "ao polo" vẫn ra "áo polo" nhưng "dam" trả 0 kết quả thay vì 7 chiếc đầm. Sửa bằng hai decorator chỉ áp cho tìm kiếm **sản phẩm**:
+
+- `VietnameseSearchKeywordAnalyzer` (decorate `ProductSearchKeywordAnalyzer`) — lập chỉ mục thêm bản gấp "đầm → dầm" cùng ranking
+- `VietnameseSearchTermInterpreter` (decorate `ProductSearchTermInterpreter`) — gấp từ khách gõ trước khi tra
+
+Không decorate `Tokenizer` chung vì tìm kiếm trong Administration (khách hàng "Đức"…) cũng dùng nó. Core không có sự kiện/extension point nào ở hai bước này (EXT-01).
+
+**Stopword tiếng Anh áp cho tiếng Việt.** vi-VN không có `product_search_config` riêng nên dùng cấu hình English với 181 stopword ("to", "do", "an", "no" bị bỏ khi lập chỉ mục tên sản phẩm). Migration tạo cấu hình vi-VN (chép trường + ranking) với 12 hư từ tiếng Việt — sửa tiếp ở Administration → Settings → Search.
+
+Kết quả (Store API `search`): `dam` 0 → 7 · `dam den` 7, đầm đen xếp đầu · `den` 5 · `chan vay` 4. Frontend: trang tìm kiếm bỏ thứ tự gán cứng "name-asc" của template, dùng cấu hình "Sắp xếp kết quả tìm kiếm" của Admin (đang là độ liên quan).
+
+> ⚠️ **Sau khi cài/cập nhật plugin phải lập chỉ mục lại sản phẩm** (`bin/console dal:refresh:index --only=product.indexer`) — trước đó từ có "đ" sẽ không khớp vì từ khách gõ đã gấp mà chỉ mục chưa có bản gấp.
+>
+> ⚠️ **Nếu bật OpenSearch** (`SHOPWARE_ES_ENABLED=1`): hai decorator không áp cho đường OpenSearch. Phải cấu hình analyzer có `asciifolding` (gấp cả "đ") cho vi-VN.
+
 ## Thứ tự thực hiện
 
 1. Tạo VND, đặt mặc định, sửa `decimal_precision = 0`

@@ -50,7 +50,6 @@ const buildSearchCriteria =
     const query = route.query;
     const criteria: operations["searchPage post /search"]["body"] = {
       search: firstQueryValue(query.search) ?? "",
-      order: firstQueryValue(query.order) ?? "name-asc",
       // Derive from the URL (not limit.value) so the request always matches the
       // query that useAsyncData keys and watches on.
       limit: toNumber(firstQueryValue(query.limit)) ?? defaultLimit,
@@ -59,6 +58,11 @@ const buildSearchCriteria =
       // category filter with product counts.
       aggregations: getCategoryFilterAggregations(),
     };
+    // Không gán thứ tự mặc định: Store API dùng cấu hình "Sắp xếp kết quả tìm kiếm"
+    // trong Administration (core.listing.defaultSearchResultSorting — đang là độ liên quan).
+    // Template gán cứng "name-asc" làm "dam den" ra đầm màu be trước đầm đen.
+    const order = firstQueryValue(query.order);
+    if (order) criteria.order = order;
     const manufacturer = firstQueryValue(query.manufacturer);
     if (manufacturer) criteria.manufacturer = manufacturer;
     const properties = firstQueryValue(query.properties);
