@@ -369,6 +369,33 @@ Chuyển logic đã làm cùng đợt: phí vận chuyển `AcmePayment` → `Ac
 
 > ~~Phát hiện chưa xử lý: `AcmeDemoData` ghi custom field `acme_material`, `acme_model_size` không plugin nào định nghĩa.~~ ✅ 14/10/2026: chất liệu → nhóm thuộc tính **native** "Chất liệu" (bảng thông số, bộ lọc — đúng thiết kế ở [05-catalog-fashion.md](05-catalog-fashion.md)); người mẫu mặc size → custom field `acme_model_size` do `AcmeCatalog` định nghĩa, `AcmeTheme` hiển thị.
 
+## Quy tắc số 6 — Frontend chỉ hiển thị dữ liệu backend cung cấp
+
+**Frontend Nuxt (`frontend/`) không tự tạo, tính toán hay quyết định dữ liệu kinh doanh. Mọi giá trị khách thấy — giá, phí, tồn kho, quy tắc bắt buộc của form, thứ tự, đường dẫn, nội dung, tên shop — đến từ Shopware (Store API, cấu hình Administration, dữ liệu entity). Frontend chỉ lấy về, trình bày, và gửi lại thao tác của khách.**
+
+Phép thử: *"Người vận hành đổi điều này trong Administration — frontend có đổi theo mà **không** cần sửa code, build và deploy lại frontend không?"* Nếu không → đang vi phạm.
+
+### Thuộc về backend — frontend không được tự làm
+
+| Loại | Ví dụ trong dự án | Nguồn đúng |
+|---|---|---|
+| Tính tiền | giá, giá gạch, % giảm, VAT, phí ship, ngưỡng miễn phí, tổng đơn | giỏ hàng / sản phẩm do core tính (`calculatedPrice`, `listPrice.percentage`, `shippingCosts`) |
+| Quy tắc | trường nào bắt buộc (SĐT, mã bưu chính), brand nào được hiển thị, tổ hợp biến thể nào còn bán | `/store-api/shop-settings`, `country.postalCodeRequired`, route Store API của plugin, `option.combinable`, `find-variant` |
+| Cấu hình | tên shop, số sản phẩm/trang, cách sắp xếp mặc định, quy tắc robots | `shop-settings` (`general`, `listing`), system config |
+| Đường dẫn | URL trang, canonical, chuyển hướng URL cũ | `seo_url` của core |
+| Nội dung | tên, mô tả, bảng size, meta SEO, nhãn trạng thái đơn | entity / custom field / bản dịch trong DB |
+
+Frontend **được** quyết: bố cục, màu sắc, font, khoảng cách; chữ cố định của giao diện (nhãn nút, tiêu đề form — bản dịch `i18n/`); định dạng hiển thị một giá trị backend đã trả (số tiền → "1.690.000 ₫", giá trị 0 → "Miễn phí", ngày → giờ VN).
+
+### Backend chưa có dữ liệu thì làm gì
+
+Không gán cứng trong Nuxt "cho nhanh". Đưa dữ liệu vào backend theo đúng thứ tự Quy tắc số 4: trường / cấu hình native → custom field → **route Store API trong plugin của nghiệp vụ đó** (mẫu `Abstract*Route`, API-02) → frontend gọi route đó. Ví dụ đã làm: trang thương hiệu — quy tắc "brand đang bật", meta dự phòng nằm trong `AcmeBrand`, frontend chỉ vẽ (H2).
+
+Validate trong form frontend chỉ để báo lỗi sớm — luật phải đọc từ cấu hình backend, và backend vẫn tự kiểm khi nhận dữ liệu.
+
+Hiện trạng từng chỗ trong code frontend: [15-headless.md](15-headless.md) mục 8.
+
+
 ---
 
 ## Vì sao quy tắc này quan trọng
@@ -529,15 +556,17 @@ Tuyệt đối không sửa tay trực tiếp rồi để đó.
 | ❌ Không `composer require` | Plugin tự viết trong `custom/plugins/` |
 | ❌ **Không bịa API** | Tên class từ trí nhớ/blog/AI mà chưa `grep` xác nhận |
 | ❌ **Không để plugin phụ thuộc nhau** | Mỗi plugin một nghiệp vụ; tắt một plugin chỉ mất chức năng của chính nó (Quy tắc số 5) |
+| ❌ **Không để frontend tự quyết dữ liệu** | Giá, phí, quy tắc form, tên shop, số sản phẩm/trang… gán cứng trong Nuxt — lấy từ Store API / cấu hình backend (Quy tắc số 6) |
 | ❌ **Không tạo lại thứ core có** | Bảng/entity/ô nhập/lệnh riêng cho việc core đã làm được — dùng trường sẵn có → cấu hình native → custom field → điểm mở rộng, bảng riêng là cuối cùng |
 
-**Năm câu hỏi tự kiểm tra trước mỗi thay đổi:**
+**Sáu câu hỏi tự kiểm tra trước mỗi thay đổi:**
 
 1. *"Sau khi chạy `composer update`, thay đổi này còn không?"* — Nếu **không** → đang sửa nhầm chỗ, phải làm qua plugin/theme.
 2. *"Thay đổi này có buộc phải sửa file dùng chung (`composer.json`, `composer.lock`) không?"* — Nếu **có** mà chỉ để cài plugin tự viết → thừa, bỏ đi.
 3. *"Mọi class và method mình đang dùng, đã mở `vendor/` xác nhận có thật trong 6.7 chưa?"* — Nếu **chưa** → dừng lại, `grep` trước khi viết tiếp.
 4. *"Shopware đã có trường, cấu hình, custom field hay điểm mở rộng làm được việc này chưa?"* — Nếu **có** → dùng nó, không tạo bản song song (Quy tắc số 4).
 5. *"Logic này thuộc nghiệp vụ của plugin nào? Tắt plugin đó thì nghiệp vụ chung còn chạy không?"* — Đặt đúng plugin, và chỉ phụ thuộc dữ liệu kiểu "có thì dùng" (Quy tắc số 5).
+6. *"Giá trị mình sắp viết vào frontend, người vận hành đổi trong Administration thì frontend có đổi theo không?"* — Nếu **không** → đưa nó về backend (Quy tắc số 6).
 
 ---
 

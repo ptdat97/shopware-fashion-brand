@@ -154,3 +154,37 @@ Vận hành:
 - Sitemap làm mới bằng scheduled task (`core.sitemap.sitemapRefreshStrategy = 2`, mỗi giờ) → production phải chạy `bin/console scheduled-task:run` và worker `messenger:consume`. Sinh ngay: `bin/console sitemap:generate`.
 - Trang `/brands` (trang tổng) không thuộc entity nào nên không tự vào sitemap — thêm ở Administration → Settings → Sitemap → **Custom URLs** (cấu hình native, không cần code).
 - Nếu chạy frontend sau CDN: `/sitemap*` và `/robots.txt` đã đặt `cache-control` (1 giờ / 1 ngày).
+
+## 8. Rà soát: frontend chỉ hiển thị dữ liệu backend cung cấp
+
+Quy tắc cứng số 8 (CLAUDE.md), chi tiết [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 6. Rà ngày 21/10/2026 trên code `frontend/` đến hết H5.
+
+### Đúng nguyên tắc
+
+| Hiển thị | Nguồn backend |
+|---|---|
+| Giá, giá gạch, VAT, tổng đơn, phí ship ("Miễn phí" = định dạng giá trị 0) | Giỏ hàng / sản phẩm do core tính |
+| Badge "-x%" | `calculatedPrice.listPrice.percentage` |
+| Danh sách brand, thứ tự, brand tắt → 404, meta SEO dự phòng | Store API `AcmeBrand` (H2) |
+| SĐT bắt buộc, mã bưu chính bắt buộc | `/store-api/shop-settings` → `loginRegistration`, `country.postalCodeRequired` (`useAddressFieldSettings`; backend vẫn tự kiểm) |
+| Tổ hợp biến thể hết hàng, biến thể khi đổi màu/size | `option.combinable`, `/product/{id}/find-variant` + `switchedGroup` |
+| Thứ tự size / màu | `position` của giá trị thuộc tính (core sắp) |
+| Bảng size, "Người mẫu mặc size" | Custom field danh mục chính / sản phẩm |
+| URL, canonical, 301 về URL chuẩn | `seo_url` của core (`useSeoCanonicalRedirect`, `useProductSeoPath`) |
+| Sắp xếp kết quả tìm kiếm | `core.listing.defaultSearchResultSorting` (đã bỏ "name-asc" gán cứng — đợt sửa tìm kiếm 21/10) |
+| Tìm kiếm không dấu | Backend (`AcmeVietnam`) |
+| Trạng thái đơn, thời gian giao | Bản dịch trong DB (`AcmeVietnam`) |
+| Sitemap | Core sinh, frontend chỉ proxy |
+
+### Đang lệch — cần sửa
+
+| # | Gán cứng ở frontend | Backend đã có / cần có | Hướng sửa |
+|---|---|---|---|
+| L1 | Tên shop `siteName: "ANIVELE"` (`app.config.ts`) | `shop-settings` → `general.shopName` (Administration → Settings → Basic information; DB hiện là `anivele`) | Đọc từ `shop-settings`; người vận hành sửa tên trong Admin |
+| L2 | Số sản phẩm/trang `15` (`buildListingCriteria`, trang tìm kiếm, `CmsElementProductListing` của layer) | `shop-settings` → `listing.productsPerPage` | Không gửi `limit` khi URL không có — Store API tự dùng cấu hình; layer cần override |
+| L3 | Sắp xếp mặc định `"name-asc"` ở danh mục (`CmsElementProductListing` của layer) | `core.listing.defaultSorting` (hiện cũng là name-asc nên chưa lộ) | Không gửi `order` mặc định — như đã làm ở trang tìm kiếm |
+| L4 | Quy tắc chặn trong `/robots.txt` (`server/routes/robots.txt.get.ts`) | `core.basicInformation.robotsRules` — có trong DB nhưng **chưa có Store API** | Route Store API nhỏ trong plugin (hoặc chấp nhận gán cứng, ghi lý do) — cần quyết định |
+| L5 | Logo chữ "ANIVELE" (`LayoutLogo`) | **Chưa có** nguồn logo cho headless (logo Twig nằm trong theme) | Quyết định nơi lưu logo (media + cấu hình) khi có file logo thật |
+| L6 | Múi giờ `Asia/Ho_Chi_Minh` ở trang cảm ơn | Store API không trả múi giờ shop | Chấp nhận — một thị trường VN; ghi lại nếu mở thị trường khác |
+
+**Chưa rà:** các cấu hình `shop-settings` khác mà template có thể đang bỏ qua — `cart.showDeliveryTime`, `cart.wishlistEnabled`, `cart.showTosCheckbox`, `listing.allowBuyInListing`, `loginRegistration.requireDataProtectionCheckbox`… Rà khi làm tới từng màn hình tương ứng.

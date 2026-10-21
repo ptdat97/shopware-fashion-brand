@@ -18,7 +18,7 @@ Lệnh JS chạy ở gốc repo: `pnpm install`, `pnpm dev` (http://localhost:30
 
 Nghiệp vụ mới viết thành **route Store API trong plugin**, frontend chỉ vẽ UI; không đặt logic nghiệp vụ trong Nuxt. Tuỳ biến UI qua override component / Nuxt layer, không patch `node_modules/@shopware/*`. Storefront Twig không còn phục vụ channel nào (channel `anivele` đã xoá); gói `shopware/storefront` còn giữ tới khi xong H1–H8 (docs/15) vì code plugin còn phụ thuộc.
 
-## Bảy quy tắc cứng
+## Tám quy tắc cứng
 
 **1. Không sửa `backend/vendor/` (và `node_modules/`).** Mọi tuỳ biến backend viết qua Plugin, App hoặc Theme trong `backend/custom/`. `composer update` ghi đè sạch `vendor/`, git không track thư mục này.
 
@@ -35,6 +35,8 @@ Lệnh kiểm tra (hỏi autoloader, bắt class ma): [docs/08-quy-tac-phat-trie
 **6. Không tạo lại thứ Shopware đã có.** Trước khi thêm bảng/entity/trường/ô nhập Admin/subscriber/lệnh: tìm theo thứ tự trường sẵn có → cấu hình native (Rule Builder, CMS, product stream, snippet) → custom field → điểm mở rộng (EntityIndexer, SeoUrlRoute, decorator) → bảng riêng là cuối cùng, phải ghi lý do. Xem [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) Quy tắc số 4.
 
 **7. Mỗi plugin một nghiệp vụ, độc lập.** Không `use`/inject class của plugin khác; phụ thuộc dữ liệu kiểu "có thì dùng, không có thì bỏ qua"; markup plugin nào thì CSS plugin đó. Tắt một plugin chỉ mất chức năng của chính nó — xem hàng, giỏ hàng, COD vẫn chạy. Bản đồ trách nhiệm 7 plugin và cách kiểm tắt/bật: [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) Quy tắc số 5.
+
+**8. Frontend chỉ hiển thị dữ liệu backend cung cấp.** Giá, phí, tồn kho, quy tắc bắt buộc của form, thứ tự, đường dẫn, nội dung, tên shop, số sản phẩm/trang… đều lấy từ Store API / cấu hình Administration — không gán cứng, không tự tính trong Nuxt. Phép thử: người vận hành đổi trong Admin thì frontend đổi theo mà không cần deploy lại. Backend thiếu dữ liệu → bổ sung ở backend (cấu hình native → custom field → route Store API trong plugin), không "tạm" gán cứng ở frontend. Frontend chỉ quyết bố cục, style, chữ giao diện (i18n) và cách định dạng giá trị backend trả. Chi tiết: [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) Quy tắc số 6 · hiện trạng: [docs/15-headless.md](docs/15-headless.md) mục 8.
 
 Chi tiết và lý do: [docs/08-quy-tac-phat-trien.md](docs/08-quy-tac-phat-trien.md) · [docs/09-nguyen-tac-ky-thuat.md](docs/09-nguyen-tac-ky-thuat.md)
 

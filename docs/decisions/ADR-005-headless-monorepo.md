@@ -31,7 +31,7 @@ shopware-fashion-brand/
 
    Không tạo channel theo brand (vẫn là quy tắc cứng số 5).
 4. **Storefront Twig không còn phục vụ channel nào**, nhưng chưa gỡ `shopware/storefront` — `AcmeTheme`, `AcmeBrand` (controller `/brands`), `AcmePayment` (trang finish) còn phụ thuộc về mặt code. Gỡ là một ADR riêng sau khi xong H1–H8.
-5. **Plugin mở Store API, frontend vẽ UI.** Nghiệp vụ mới (trang brand, bảng size, …) viết thành route Store API trong plugin của nghiệp vụ đó; không đặt logic nghiệp vụ trong Nuxt.
+5. **Plugin mở Store API, frontend chỉ hiển thị dữ liệu backend cung cấp.** Nghiệp vụ mới (trang brand, bảng size, …) viết thành route Store API trong plugin của nghiệp vụ đó; không đặt logic nghiệp vụ, không gán cứng dữ liệu kinh doanh hay cấu hình trong Nuxt. Quy tắc cứng số 8 (CLAUDE.md), chi tiết [08-quy-tac-phat-trien.md](../08-quy-tac-phat-trien.md) Quy tắc số 6.
 6. **CSS: Tailwind CSS v4** (quyết định 18/10/2026, thay quyết định cùng ngày "cú pháp Tailwind trên UnoCSS"). Gỡ UnoCSS và `@shopware/unocss-design-tokens-layer`; chỉ giữ `@shopware/cms-base-layer` — cách Shopware hỗ trợ chính thức. Token màu, thang giá trị v3, icon `i-carbon-*` và 3 class tương thích cho layer nằm trong `frontend/app/assets/css/tailwind.css`. Lý do: hệ sinh thái (thư viện UI, IntelliSense, người biết dùng) lớn hơn hẳn. Chi phí: mỗi lần nâng cấp `cms-base-layer` phải kiểm class mới. Quy ước: [15-headless.md](../15-headless.md) mục 6.
 
 ## Hệ quả với bảy quy tắc cứng
