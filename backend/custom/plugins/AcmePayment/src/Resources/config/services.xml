@@ -10,9 +10,18 @@
             <argument type="service" id="Acme\Payment\Service\VietQrPayloadBuilder"/>
         </service>
 
-        <service id="Acme\Payment\Subscriber\CheckoutFinishSubscriber">
+        <service id="Acme\Payment\Service\BankTransferInfoProvider">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="Acme\Payment\Service\VietQrRenderer"/>
+        </service>
+
+        <service id="Acme\Payment\Core\Checkout\Payment\SalesChannel\BankTransferRoute" public="true">
+            <argument type="service" id="Shopware\Core\Checkout\Order\SalesChannel\OrderRoute"/>
+            <argument type="service" id="Acme\Payment\Service\BankTransferInfoProvider"/>
+        </service>
+
+        <service id="Acme\Payment\Subscriber\CheckoutFinishSubscriber">
+            <argument type="service" id="Acme\Payment\Service\BankTransferInfoProvider"/>
             <tag name="kernel.event_subscriber"/>
         </service>
     </services>

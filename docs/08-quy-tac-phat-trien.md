@@ -232,7 +232,7 @@ KHÔNG TỒN TẠI: Shopware\Core\Checkout\Payment\Cart\PaymentHandler\Synchrono
 
 Giới hạn: chỉ bắt tên **class**. Tên method, tham số, service id vẫn phải đọc trong `vendor/` và được test bắt (xem [13-chuan-phat-trien-plugin.md](13-chuan-phat-trien-plugin.md)).
 
-Chạy trước mỗi commit có đụng code plugin. Kết quả 14/10/2026 (sau đợt refactor theo [13](13-chuan-phat-trien-plugin.md)): 7 plugin Acme, 165 class, 0 class ma.
+Chạy trước mỗi commit có đụng code plugin. Kết quả 14/10/2026 (sau đợt refactor theo [13](13-chuan-phat-trien-plugin.md)): 7 plugin Acme, 165 class, 0 class ma. 21/10/2026: 8 plugin (thêm `AcmeHeadless`), 208 class, 0 class ma.
 
 ### Khi tìm mãi không thấy
 
@@ -323,10 +323,11 @@ grep -n "custom-field-set-renderer" vendor/shopware/administration/Resources/app
 |---|---|---|---|
 | `AcmeVietnam` | Thị trường VN: VND, VAT, quốc gia, 34 tỉnh/thành, vi-VN, **Việt hoá dữ liệu core** (danh mục gốc, nhãn sắp xếp, thời gian giao), channel headless, **tìm kiếm tiếng Việt** (cấu hình tìm kiếm vi-VN, gõ không dấu `đ→d`) | Tìm "dam" không còn ra "đầm" — từ có dấu vẫn tìm được. Cấu hình đã ghi vào entity core, cố ý không hoàn tác | Từ khoá gấp còn trong chỉ mục tới lần `dal:refresh:index` sau — vô hại |
 | `AcmeCatalog` | Cấu trúc catalog: thuộc tính, sinh biến thể, **canonical biến thể**, **custom field bảng size**, bộ sưu tập, template SEO URL | Lệnh `acme:catalog:variants` | Dữ liệu và template SEO là của core → vẫn chạy |
-| `AcmePayment` | Thanh toán: dọn phương thức, VietQR (QR + CSS của khối QR) | Phương thức VietQR (tự tắt khi plugin tắt) | COD, chuyển khoản là của core |
+| `AcmePayment` | Thanh toán: dọn phương thức, **tài khoản nhận + hướng dẫn chuyển khoản** (Store API theo đơn), VietQR (QR + CSS của khối QR) | Phương thức VietQR (tự tắt khi plugin tắt); khối thông tin chuyển khoản ở frontend ẩn (route 404) | COD, chuyển khoản là của core — đặt đơn vẫn được |
 | `AcmeShipping` | Vận chuyển nội địa: phí theo khu vực; sau này GHN/GHTK | Không gì — bảng phí là cấu hình core | Tách khỏi `AcmePayment` ngày 14/10/2026 |
 | `AcmeBrand` | Thương hiệu: phần mở rộng nhà sản xuất, `/brands`, SEO URL, sitemap, link brand ở trang sản phẩm | Trang `/brands` (404), thẻ "Thương hiệu" trong Admin | Nhà sản xuất, bộ lọc thương hiệu là của core → vẫn chạy |
 | `AcmeTheme` | **Chỉ hiển thị**: theme, SCSS, override Twig (gồm nút bảng size), ảnh hover, bật wishlist | Giao diện thương hiệu, nút bảng size | Core **chặn** tắt khi theme đang gán — đổi sang theme khác trước |
+| `AcmeHeadless` | Cấu hình hiển thị cho frontend headless mà core chưa đưa ra Store API: **logo** (Media), **quy tắc robots.txt** — gắn vào `/store-api/shop-settings` | Frontend về logo chữ (tên shop), robots.txt chỉ còn `User-agent: *` + `Allow: /` | Thêm 21/10/2026. Quy tắc robots là cấu hình core, giữ nguyên khi tắt |
 | `AcmeDemoData` | Dữ liệu demo | Nút nhập demo | Gỡ trước go-live |
 
 ### Điều kiện bắt buộc
@@ -363,6 +364,7 @@ php bin/console plugin:activate AcmeX
 | `AcmeShipping` | ✅ | ✅ | — |
 | `AcmeBrand` | ✅ | ✅ | `/brands`, `/brands/…` → 404 |
 | `AcmeDemoData` | ✅ | ✅ | — |
+| `AcmeHeadless` (kiểm 21/10) | ✅ | ✅ | Logo chữ thay ảnh, robots.txt mất quy tắc riêng của channel |
 | `AcmeTheme` (sau khi đổi sang theme Storefront) | ✅ | ✅ | Nút bảng size biến mất; link thương hiệu (`AcmeBrand`) vẫn còn |
 
 Chuyển logic đã làm cùng đợt: phí vận chuyển `AcmePayment` → `AcmeShipping` (bảng giá đang có giữ nguyên, cùng id); Việt hoá dữ liệu core `AcmeTheme` → `AcmeVietnam`; custom field bảng size `AcmeTheme` → `AcmeCatalog`; canonical biến thể `AcmeDemoData` → `AcmeCatalog`; CSS VietQR `AcmeTheme` → `AcmePayment`.

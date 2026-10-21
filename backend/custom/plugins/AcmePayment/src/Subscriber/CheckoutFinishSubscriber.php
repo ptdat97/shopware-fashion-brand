@@ -3,9 +3,8 @@
 namespace Acme\Payment\Subscriber;
 
 use Acme\Payment\AcmePayment;
-use Acme\Payment\Service\VietQrRenderer;
+use Acme\Payment\Service\BankTransferInfoProvider;
 use Acme\Payment\Struct\VietQrData;
-use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Shopware\Storefront\Page\Checkout\Finish\CheckoutFinishPageLoadedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -19,12 +18,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class CheckoutFinishSubscriber implements EventSubscriberInterface
 {
-    private const CONFIG_DOMAIN = 'AcmePayment.config.';
-
-    public function __construct(
-        private readonly SystemConfigService $systemConfigService,
-        private readonly VietQrRenderer $renderer
-    ) {
+    public function __construct(private readonly BankTransferInfoProvider $provider)
+    {
     }
 
     public static function getSubscribedEvents(): array
@@ -36,48 +31,21 @@ class CheckoutFinishSubscriber implements EventSubscriberInterface
 
     public function addVietQrToPage(CheckoutFinishPageLoadedEvent $event): void
     {
-        $order = $event->getPage()->getOrder();
+        $info = $this->provider->forOrder($event->getPage()->getOrder(), $event->getSalesChannelContext()->getSalesChannelId());
 
-        $transaction = $order->getTransactions()?->first();
-        $paymentMethod = $transaction?->getPaymentMethod();
-
-        if ($paymentMethod?->getTechnicalName() !== AcmePayment::VIETQR_TECHNICAL_NAME) {
+        // Template Twig chỉ có khối VietQR; "Chuyển khoản trước" chỉ có ở frontend headless.
+        if ($info->paymentMethodTechnicalName !== AcmePayment::VIETQR_TECHNICAL_NAME) {
             return;
         }
-
-        $salesChannelId = $event->getSalesChannelContext()->getSalesChannelId();
-
-        $bankBin = (string) $this->systemConfigService->get(self::CONFIG_DOMAIN . 'bankBin', $salesChannelId);
-        $accountNumber = (string) $this->systemConfigService->get(self::CONFIG_DOMAIN . 'accountNumber', $salesChannelId);
-        $accountHolder = (string) $this->systemConfigService->get(self::CONFIG_DOMAIN . 'accountHolder', $salesChannelId);
-        $prefix = (string) ($this->systemConfigService->get(self::CONFIG_DOMAIN . 'referencePrefix', $salesChannelId) ?: 'ANV');
-
-        // Chưa cấu hình tài khoản → hiện hướng dẫn thay vì QR sai.
-        if ($bankBin === '' || $accountNumber === '') {
-            $event->getPage()->addExtension(VietQrData::EXTENSION_NAME, new VietQrData(
-                qrDataUri: null,
-                accountNumber: '',
-                accountHolder: '',
-                bankBin: '',
-                reference: '',
-                amount: 0,
-                configured: false
-            ));
-
-            return;
-        }
-
-        $amount = (int) round($order->getAmountTotal());
-        $reference = $prefix . $order->getOrderNumber();
 
         $event->getPage()->addExtension(VietQrData::EXTENSION_NAME, new VietQrData(
-            qrDataUri: $this->renderer->renderDataUri($bankBin, $accountNumber, $amount, $reference),
-            accountNumber: $accountNumber,
-            accountHolder: $accountHolder,
-            bankBin: $bankBin,
-            reference: $reference,
-            amount: $amount,
-            configured: true
+            qrDataUri: $info->qrDataUri,
+            accountNumber: $info->accountNumber,
+            accountHolder: $info->accountHolder,
+            bankBin: $info->bankBin,
+            reference: $info->reference,
+            amount: (int) round($info->amount),
+            configured: $info->configured
         ));
     }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Nhận diện</title>
+        <title lang="en-GB">Identity</title>
+        <subtitle>Hiện ở đầu và chân trang của frontend. Chưa chọn ảnh thì frontend hiện tên shop (Settings → Basic information) dạng chữ.</subtitle>
+        <subtitle lang="en-GB">Shown in the frontend header and footer. Without an image the shop name is shown as text.</subtitle>
+
+        <component name="sw-media-field">
+            <name>logo</name>
+            <label>Logo</label>
+            <label lang="en-GB">Logo</label>
+            <helpText>Nên dùng SVG hoặc PNG nền trong suốt, cao tối thiểu 80px. Văn bản thay thế (alt) lấy từ thông tin của ảnh trong Media, trống thì dùng tên shop.</helpText>
+            <helpText lang="en-GB">SVG or transparent PNG, at least 80px high. Alt text comes from the media item, falling back to the shop name.</helpText>
+        </component>
+    </card>
+</config>

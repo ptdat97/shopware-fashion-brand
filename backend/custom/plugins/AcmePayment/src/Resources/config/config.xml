@@ -5,8 +5,8 @@
     <card>
         <title>Tài khoản nhận chuyển khoản</title>
         <title lang="en-GB">Bank account for transfers</title>
-        <subtitle>Thông tin này được nhúng vào mã QR. Khách quét bằng app ngân hàng sẽ thấy đúng số tài khoản và số tiền.</subtitle>
-        <subtitle lang="en-GB">This data is embedded in the QR code shown to customers.</subtitle>
+        <subtitle>Hiện cho khách trên trang cảm ơn khi chọn "Chuyển khoản trước" hoặc VietQR (VietQR nhúng thêm vào mã QR). Để trống số tài khoản thì khách chỉ thấy hướng dẫn bên dưới.</subtitle>
+        <subtitle lang="en-GB">Shown on the order confirmation page for bank transfer / VietQR (embedded in the QR code).</subtitle>
 
         <input-field type="single-select">
             <name>bankBin</name>
@@ -60,6 +60,20 @@
             <defaultValue>ANV</defaultValue>
             <helpText>Nội dung sẽ là "tiền tố + mã đơn hàng", ví dụ ANV10001. Chỉ dùng chữ và số không dấu — app ngân hàng loại bỏ ký tự đặc biệt.</helpText>
             <helpText lang="en-GB">Reference becomes "prefix + order number". Letters and digits only.</helpText>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Hướng dẫn cho khách</title>
+        <title lang="en-GB">Customer instructions</title>
+
+        <input-field type="textarea">
+            <name>transferInstruction</name>
+            <label>Hướng dẫn chuyển khoản</label>
+            <label lang="en-GB">Transfer instructions</label>
+            <defaultValue>Vui lòng chuyển khoản đúng số tiền và ghi đúng nội dung chuyển khoản để cửa hàng đối soát nhanh. Đơn hàng được chuẩn bị và giao sau khi cửa hàng nhận được tiền.</defaultValue>
+            <helpText>Hiện trên trang cảm ơn, ngay trên thông tin tài khoản. Xuống dòng được giữ nguyên.</helpText>
+            <helpText lang="en-GB">Shown on the order confirmation page above the account details. Line breaks are kept.</helpText>
         </input-field>
     </card>
 </config>

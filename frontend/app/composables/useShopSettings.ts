@@ -23,6 +23,10 @@ export function useShopSettings() {
     productsPerPage: computed(
       () => settings.value?.listing?.productsPerPage || undefined,
     ),
+    /** Administration → Extensions → Acme Frontend headless → Logo (null: chưa có / plugin tắt) */
+    logo: computed(
+      () => settings.value?.extensions?.acmeHeadless?.logo ?? null,
+    ),
     ready: result,
   };
 }

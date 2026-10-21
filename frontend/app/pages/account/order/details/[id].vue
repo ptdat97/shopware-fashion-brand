@@ -24,6 +24,12 @@ const pageTitle = computed(
       </p>
       <AccountPageHeader class="mb-14" :title="pageTitle" />
 
+      <!-- Khách có thể quay lại đơn để chuyển khoản sau -->
+      <CheckoutBankTransfer
+        :order-id="route.params.id as string"
+        class="mb-10"
+      />
+
       <AccountOrderDetailView :order-id="route.params.id as string" />
     </div>
   </NuxtLayout>

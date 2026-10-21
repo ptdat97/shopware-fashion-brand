@@ -17,7 +17,7 @@ use Shopware\Core\Framework\Plugin\Util\PluginIdProvider;
 use Shopware\Core\Framework\Uuid\Uuid;
 
 /**
- * Thanh toán cho thị trường Việt Nam: chuyển khoản VietQR.
+ * Thanh toán cho thị trường Việt Nam: thông tin chuyển khoản và VietQR.
  *
  * COD và chuyển khoản thường là phương thức của core, không thuộc plugin này. Plugin chỉ
  * thêm phương thức `acme_vietqr` (handler `PrePayment` của core) và mã QR chuẩn NAPAS trên
@@ -26,7 +26,9 @@ use Shopware\Core\Framework\Uuid\Uuid;
  *
  * Bề mặt công khai:
  * - Phương thức thanh toán technical name `acme_vietqr`
- * - Cấu hình `AcmePayment.config.{bankBin,accountNumber,accountHolder,referencePrefix}` (theo sales channel)
+ * - Cấu hình `AcmePayment.config.{bankBin,accountNumber,accountHolder,referencePrefix,transferInstruction}`
+ *   (theo sales channel) — tài khoản nhận dùng chung cho "Chuyển khoản trước" của core và VietQR
+ * - Store API `store-api.acme.payment.bank-transfer` (từ 1.3.0, frontend headless)
  * - Extension trang `acmeVietQr` trên `CheckoutFinishPage`, block Twig `page_checkout_finish_details`
  *
  * Tắt / gỡ (08-quy-tac-phat-trien.md, Quy tắc số 5):

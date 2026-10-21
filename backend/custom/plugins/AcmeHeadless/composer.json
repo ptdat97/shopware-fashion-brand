@@ -1,0 +1,33 @@
+{
+    "name": "acme/headless",
+    "description": "Cấu hình hiển thị cho frontend headless mà core chưa đưa ra Store API: logo, quy tắc robots.txt",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "version": "1.0.0",
+    "require": {
+        "shopware/core": "~6.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Acme\\Headless\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Acme\\Headless\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Acme\\Headless\\AcmeHeadless",
+        "label": {
+            "vi-VN": "Acme Frontend headless",
+            "en-GB": "Acme Headless frontend",
+            "de-DE": "Acme Headless frontend"
+        },
+        "description": {
+            "vi-VN": "Logo và quy tắc robots.txt cho frontend Nuxt, đọc qua /store-api/shop-settings.",
+            "en-GB": "Logo and robots.txt rules for the Nuxt frontend via /store-api/shop-settings.",
+            "de-DE": "Logo and robots.txt rules for the Nuxt frontend via /store-api/shop-settings."
+        }
+    }
+}

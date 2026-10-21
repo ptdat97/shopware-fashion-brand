@@ -191,6 +191,9 @@ const showPaymentAlert = computed(
         />
       </div>
 
+      <!-- Chuyển khoản: thấy tài khoản + nội dung ngay, không phải cuộn (như trang cảm ơn Twig) -->
+      <CheckoutBankTransfer :order-id="order.id" class="mb-10 lg:max-w-3xl" />
+
       <div class="flex flex-col lg:flex-row gap-10 lg:gap-20 justify-between">
         <div class="w-full lg:w-1/2 flex flex-col gap-10 order-2 lg:order-1">
           <section>

@@ -1,17 +1,26 @@
 <script setup lang="ts">
-// Logo dạng chữ — dùng tạm khi chưa có file logo thật (CLAUDE.md: "Chưa có file logo thật").
-// Chữ là TÊN SHOP do backend cung cấp (quy tắc cứng số 8, shop-settings → general.shopName),
-// in hoa bằng CSS. Kiểu chữ theo theme Twig AcmeTheme (.header-logo-wordmark).
-// Có logo thật thì thay nội dung bằng ảnh (L5 trong docs/15 mục 8), giữ nguyên chỗ dùng.
+// Logo do backend cung cấp (quy tắc cứng số 8): ảnh trong Media chọn ở cấu hình plugin
+// AcmeHeadless → shop-settings → extensions.acmeHeadless.logo. Chưa có ảnh (hoặc plugin
+// tắt) thì hiện TÊN SHOP dạng chữ (general.shopName), in hoa bằng CSS — kiểu chữ theo
+// theme Twig AcmeTheme (.header-logo-wordmark).
 defineProps<{
   inverse?: boolean;
 }>();
 
-const { shopName } = useShopSettings();
+const { shopName, logo } = useShopSettings();
 </script>
 
 <template>
+  <img
+    v-if="logo?.url"
+    :src="logo.url"
+    :alt="logo.translated?.alt || shopName"
+    class="block h-10 w-auto max-w-48 object-contain max-sm:h-8"
+    :class="{ 'brightness-0 invert': inverse }"
+    data-testid="header-logo-image"
+  />
   <span
+    v-else
     class="inline-block font-light uppercase leading-tight tracking-[0.22em] text-[1.75rem] max-sm:text-xl"
     :class="inverse ? 'text-white' : 'text-brand-primary'"
   >

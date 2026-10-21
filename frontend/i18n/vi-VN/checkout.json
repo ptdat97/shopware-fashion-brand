@@ -55,6 +55,18 @@
       "label": "Mã khuyến mãi",
       "apply": "Áp dụng",
       "added": "Đã áp dụng mã {code}"
+    },
+    "bankTransfer": {
+      "title": "Thông tin chuyển khoản",
+      "bank": "Ngân hàng",
+      "accountHolder": "Chủ tài khoản",
+      "accountNumber": "Số tài khoản",
+      "amount": "Số tiền",
+      "reference": "Nội dung chuyển khoản",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép {label}",
+      "qrAlt": "Mã VietQR để chuyển khoản",
+      "notConfigured": "Cửa hàng sẽ liên hệ với bạn để gửi thông tin tài khoản nhận tiền."
     }
   }
 }
