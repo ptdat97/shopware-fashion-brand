@@ -111,7 +111,19 @@ const { product } = useProduct(
   productResponse.configurator,
 );
 
-useCmsHead(product, { mainShopTitle: "Shopware Frontends Demo Store" });
+// Biến thể trỏ canonical về biến thể được chọn ở sản phẩm cha (canonicalProductId, Phase 4)
+// — không thì 64 URL biến thể tự nhận là trang chuẩn, cạnh tranh nhau trên công cụ tìm kiếm.
+const canonicalProductId = product.value.canonicalProductId;
+const { findProductSeoPath } = useProductSeoPath();
+const { data: canonicalPath } = await useAsyncData(
+  `productCanonical-${product.value.id}`,
+  () =>
+    canonicalProductId && canonicalProductId !== product.value.id
+      ? findProductSeoPath(canonicalProductId)
+      : Promise.resolve(null),
+);
+
+useCmsHead(product, { canonicalPath });
 </script>
 
 <template>

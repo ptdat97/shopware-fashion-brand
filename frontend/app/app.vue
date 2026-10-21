@@ -2,19 +2,19 @@
 import { getPrefix } from "#imports";
 import type { Schemas } from "#shopware";
 
+const { siteName } = useAppConfig();
+const shopwareOrigin = new URL(useRuntimeConfig().public.shopware.endpoint)
+  .origin;
+
 useHead({
-  // Tên nền tảng chưa chốt (CLAUDE.md) — tạm dùng ANIVELE như storefront Twig cũ.
-  // Meta description trang chủ chờ tên nền tảng (Phase 4).
-  title: "ANIVELE",
+  // Meta description trang chủ chờ tên nền tảng (Phase 4)
+  title: siteName,
   htmlAttrs: {
     lang: "vi",
   },
   link: [
-    {
-      rel: "preconnect",
-      // Update this to your CDN domain in production
-      href: "https://cdn.shopware.store",
-    },
+    // API và ảnh sản phẩm đều phục vụ từ backend Shopware
+    { rel: "preconnect", href: shopwareOrigin },
   ],
 });
 

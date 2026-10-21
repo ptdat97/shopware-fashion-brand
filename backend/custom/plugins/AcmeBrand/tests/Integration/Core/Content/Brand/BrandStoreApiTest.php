@@ -5,8 +5,10 @@ namespace Acme\Brand\Tests\Integration\Core\Content\Brand;
 use Acme\Brand\BrandCustomFields;
 use Acme\Brand\BrandException;
 use Acme\Brand\Seo\BrandStoreApiUrlRoute;
+use Acme\Brand\Sitemap\BrandUrlProvider;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
+use Shopware\Core\Content\Sitemap\Struct\Url;
 use Shopware\Core\Content\Test\Product\ProductBuilder;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
@@ -15,6 +17,7 @@ use Shopware\Core\Framework\Test\TestCaseBase\SalesChannelApiTestBehaviour;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Test\Stub\Framework\IdsCollection;
 use Shopware\Core\PlatformRequest;
+use Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -141,6 +144,20 @@ class BrandStoreApiTest extends TestCase
         ]);
         static::assertSame(BrandStoreApiUrlRoute::ROUTE_NAME, $resolved['elements'][0]['routeName'], 'Frontend tra SEO path ra route brand');
         static::assertSame($this->ids->get('alpha'), $resolved['elements'][0]['foreignKey']);
+    }
+
+    public function testSitemapListsHeadlessBrandUrlsOfActiveBrands(): void
+    {
+        $context = static::getContainer()->get(SalesChannelContextFactory::class)
+            ->create(Uuid::randomHex(), $this->ids->get('channel'));
+
+        $locs = array_map(
+            static fn (Url $url): string => $url->getLoc(),
+            static::getContainer()->get(BrandUrlProvider::class)->getUrls($context, 100)->getUrls()
+        );
+
+        static::assertContains('brands/brand-alpha', $locs, 'Channel headless lấy URL theo route Store API');
+        static::assertNotContains('brands/brand-gamma', $locs, 'Brand tắt không vào sitemap');
     }
 
     /**

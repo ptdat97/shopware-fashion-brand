@@ -50,7 +50,7 @@ const brands = computed(() => data.value?.brands ?? []);
 useBreadcrumbs([{ name: t("brand.list.title"), path: "/brands" }]);
 
 useHead({
-  title: `${t("brand.list.title")} | ANIVELE`,
+  title: `${t("brand.list.title")} | ${useAppConfig().siteName}`,
   meta: [{ name: "description", content: t("brand.list.metaDescription") }],
 });
 </script>

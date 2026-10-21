@@ -90,7 +90,7 @@ if (!categoryResponse.value) {
 }
 
 const { category } = useCategory(categoryResponse as Ref<Schemas["Category"]>);
-useCmsHead(category, { mainShopTitle: "Shopware Frontends Demo Store" });
+useCmsHead(category);
 
 const categoryName = computed(() =>
   getTranslatedProperty(category.value, "name"),

@@ -206,7 +206,7 @@ Một thay đổi plugin chỉ được coi là xong khi:
 
 | Plugin | Version | Test tự động | Ghi chú tuân thủ |
 |---|---|---|---|
-| `AcmeBrand` | 1.3.0 | 38 integration + unit | Đạt. Store API thương hiệu (API-02) + SEO URL headless; `BrandPageLoader` gọi lại route Store API. Route SEO storefront dùng `StorefrontFrameworkException` như route SEO của core (DATA-07); bản headless dùng `SeoException` của core — phần headless không phụ thuộc gói storefront. Test Store API gọi thẳng `HttpKernel::handle()` vì dự án không cài `symfony/browser-kit` |
+| `AcmeBrand` | 1.3.1 | 39 integration + unit | Đạt. Store API thương hiệu (API-02) + SEO URL headless + sitemap headless; `BrandPageLoader` gọi lại route Store API. Route SEO storefront dùng `StorefrontFrameworkException` như route SEO của core (DATA-07); bản headless dùng `SeoException` của core — phần headless không phụ thuộc gói storefront. Test Store API gọi thẳng `HttpKernel::handle()` vì dự án không cài `symfony/browser-kit` |
 | `AcmeCatalog` | 1.6.0 | 21 integration | Đạt. Template SEO headless (`is_headless`) theo đúng quy ước storefront (ADR-005). Nhóm thuộc tính native "Chất liệu" + custom field `acme_model_size` (ARCH-04). Logic sinh biến thể tách khỏi lệnh sang service `VariantGenerator` (ARCH-07), lỗi miền `CatalogException` (DATA-07), bỏ association nạp thừa (PERF-01) |
 | `AcmeShipping` | 1.0.0 | 3 integration | Đạt; test chạy một mình (TEST-03) |
 | `AcmeVietnam` | 1.3.0 | 21 integration + unit | Đạt. Tìm kiếm tiếng Việt (decorator analyzer/interpreter — EXT-01: core không có sự kiện ở bước này), channel headless, cấu hình tìm kiếm vi-VN. Test gọi migration trong transaction, **không** cài plugin vào DB test dùng chung (đổi tiền tệ, tắt quốc gia sẽ làm hỏng test plugin khác) |

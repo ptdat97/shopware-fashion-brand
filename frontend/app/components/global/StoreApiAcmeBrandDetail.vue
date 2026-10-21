@@ -125,7 +125,7 @@ useBreadcrumbs([
 ]);
 
 useHead({
-  title: `${detail.value.metaTitle} | ANIVELE`,
+  title: `${detail.value.metaTitle} | ${useAppConfig().siteName}`,
   meta: [
     { name: "description", content: detail.value.metaDescription },
     { name: "keywords", content: detail.value.metaKeywords },

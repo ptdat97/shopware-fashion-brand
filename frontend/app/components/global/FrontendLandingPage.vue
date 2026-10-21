@@ -42,12 +42,7 @@ if (!landingResponse.value) {
 const landingPage = landingResponse.value;
 
 useBreadcrumbs(getCmsBreadcrumbs(landingPage));
-useCmsHead(
-  computed(() => landingPage),
-  {
-    mainShopTitle: "Shopware Frontends Demo Store",
-  },
-);
+useCmsHead(computed(() => landingPage));
 </script>
 
 <template>

@@ -79,7 +79,7 @@ bin/console cache:clear && bin/console cache:clear:http
 | H4 | Bộ sưu tập `/collections/*`, `/collections/sale` | `AcmeCatalog` (SEO navigation) | ✅ (21/10) Không đúng như dự đoán ban đầu — Phase 4 chỉ đổi template SEO storefront, URL headless vẫn là `Dam/`, `Bo-suu-tap/Sale/`. `AcmeCatalog` 1.6.0: migration đưa template `store-api.category.detail` / `store-api.product.detail` về đúng bản storefront (dùng lại hằng số của 3 migration Phase 4). Frontend: `useSeoCanonicalRedirect` — URL cũ / sai hoa thường → 301 về canonical (giữ query), như `redirectToCanonicalUrl` của core. |
 | H5 | Card sản phẩm, swatch Màu × Size, buy box | `AcmeTheme` Twig | Override component `product/` của template. |
 | H6 | Trang cảm ơn: hướng dẫn chuyển khoản / VietQR | `AcmePayment` Twig | Đọc thông tin từ đơn hàng / Store API; VietQR đang tạm gác. COD chạy qua flow chuẩn. |
-| H7 | Canonical, meta, sitemap, robots | Core + `AcmeBrand` | 🔄 URL chữ thường + `/collections/` + 301 về canonical ✅ (cùng H4). Còn: canonical biến thể (link thẻ sản phẩm trỏ `…-01`), tiêu đề `"Shopware Frontends Demo Store"` trong `useCmsHead`, meta trang chủ, sitemap/robots từ domain frontend. |
+| H7 | Canonical, meta, sitemap, robots | Core + `AcmeBrand` | ✅ (21/10) URL chữ thường + `/collections/` + 301 (cùng H4). Canonical: bỏ query; biến thể trỏ về biến thể canonical (`canonicalProductId`, Phase 4) qua `useProductSeoPath`. Tiêu đề `"<trang> \| ANIVELE"` từ `app.config` `siteName` (một chỗ, chờ chốt tên nền tảng). Sitemap + robots.txt phục vụ ở domain frontend (mục 7). `AcmeBrand` 1.3.1: URL brand vào sitemap của channel headless. Còn: meta trang chủ — chờ tên nền tảng |
 | H8 | Phí ship theo khu vực, VAT, khuyến mãi brand | `AcmeShipping`, Rule Builder | Không đổi — tính trong cart backend, frontend chỉ hiển thị. |
 
 Xong H1–H8 + e2e COD → đánh giá gỡ storefront Twig (ADR riêng).
@@ -133,3 +133,21 @@ Kiểm chứng khi chuyển: chụp 5 trang × desktop/mobile trước và sau, 
 **Khi nâng cấp `cms-base-layer`:** class kiểu UnoCSS mới trong layer sẽ không có CSS — lỗi im lặng, không báo khi build. Chụp lại các trang chính trước/sau nâng cấp và so điểm ảnh (`magick compare -metric RMSE`), đọc changelog của layer; class lạ thì thêm `@utility` tương thích vào `tailwind.css`.
 
 Editor: extension **Tailwind CSS IntelliSense** (VS Code) nhận cấu hình v4 trong file CSS.
+
+## 7. Sitemap & robots.txt (H7)
+
+Frontend phục vụ ở **domain của nó** (server route Nitro trong `frontend/server/routes/`):
+
+| Đường dẫn | Nguồn |
+|---|---|
+| `/sitemap.xml` | Chỉ mục — liệt kê file qua `GET /store-api/sitemap`, đổi URL file sang `/sitemap/…` của frontend |
+| `/sitemap/salesChannel-…/….xml.gz` | Proxy `store-api.sitemap.file` của core (core tự kiểm file thuộc đúng channel; route chặn đường dẫn lạ trước khi gọi) |
+| `/robots.txt` | Sinh động (dòng `Sitemap:` cần URL tuyệt đối theo domain). Chặn `/account`, `/checkout`, `/wishlist`, `/search` |
+
+Nội dung sitemap do **core** sinh cho channel headless (type API + domain external storefront) — URL trang đã theo domain frontend. Kiểm 21/10: 23 URL = trang chủ, 12 sản phẩm (bản canonical, không 64 biến thể), 7 danh mục/bộ sưu tập, 3 brand; mọi URL trả 200.
+
+Vận hành:
+
+- Sitemap làm mới bằng scheduled task (`core.sitemap.sitemapRefreshStrategy = 2`, mỗi giờ) → production phải chạy `bin/console scheduled-task:run` và worker `messenger:consume`. Sinh ngay: `bin/console sitemap:generate`.
+- Trang `/brands` (trang tổng) không thuộc entity nào nên không tự vào sitemap — thêm ở Administration → Settings → Sitemap → **Custom URLs** (cấu hình native, không cần code).
+- Nếu chạy frontend sau CDN: `/sitemap*` và `/robots.txt` đã đặt `cache-control` (1 giờ / 1 ngày).

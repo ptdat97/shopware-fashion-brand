@@ -28,23 +28,27 @@ export function useCmsHead(
   entity: Ref<CmsPageEntity> | ComputedRef<CmsPageEntity>,
   options?: {
     mainShopTitle?: string;
+    /** Đường dẫn canonical khác trang hiện tại — vd. biến thể trỏ về biến thể canonical */
+    canonicalPath?: Ref<string | null | undefined>;
   },
 ): void {
   const unrefEntity = unref(entity);
   const route = useRoute();
   const requestUrl = useRequestURL();
-  const canonicalUrl = computed(() => {
-    const url = new URL(route.fullPath, requestUrl.origin);
-    url.hash = "";
-    return url.href;
-  });
+  const mainShopTitle = options?.mainShopTitle ?? useAppConfig().siteName;
+  // Không giữ query: mỗi cách sắp xếp / lọc / UTM không phải một trang chuẩn riêng
+  const canonicalUrl = computed(
+    () =>
+      new URL(options?.canonicalPath?.value ?? route.path, requestUrl.origin)
+        .href,
+  );
   // get title and meta tags available in the Shopware instance
   const { title: metaTitle, meta } = useCmsMeta(unrefEntity);
 
   const title = computed(() => {
     const title = metaTitle.value;
-    if (options?.mainShopTitle) {
-      return `${title} | ${options.mainShopTitle}`;
+    if (mainShopTitle) {
+      return `${title} | ${mainShopTitle}`;
     }
     return title;
   });
