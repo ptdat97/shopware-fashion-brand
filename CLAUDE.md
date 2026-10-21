@@ -16,7 +16,7 @@ Lệnh JS chạy ở gốc repo: `pnpm install`, `pnpm dev` (http://localhost:30
 
 **CSS frontend: Tailwind CSS v4** (`@tailwindcss/vite`, không còn UnoCSS). Cấu hình và màu thương hiệu ở `frontend/app/assets/css/tailwind.css` (`@theme`); icon `i-carbon-*` qua `frontend/tailwind/carbon-icons.mjs`. Nâng cấp `@shopware/cms-base-layer` → kiểm class mới của layer + so ảnh. Quy ước: [docs/15-headless.md](docs/15-headless.md) mục 6.
 
-Nghiệp vụ mới viết thành **route Store API trong plugin**, frontend chỉ vẽ UI; không đặt logic nghiệp vụ trong Nuxt. Tuỳ biến UI qua override component / Nuxt layer, không patch `node_modules/@shopware/*`. Storefront Twig `anivele` vẫn chạy song song tới khi frontend đủ chức năng (H1–H8 trong docs/15).
+Nghiệp vụ mới viết thành **route Store API trong plugin**, frontend chỉ vẽ UI; không đặt logic nghiệp vụ trong Nuxt. Tuỳ biến UI qua override component / Nuxt layer, không patch `node_modules/@shopware/*`. Storefront Twig không còn phục vụ channel nào (channel `anivele` đã xoá); gói `shopware/storefront` còn giữ tới khi xong H1–H8 (docs/15) vì code plugin còn phụ thuộc.
 
 ## Bảy quy tắc cứng
 

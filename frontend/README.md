@@ -13,10 +13,10 @@ pnpm dev                                  # http://localhost:3000
 pnpm lint && pnpm typecheck && pnpm build
 ```
 
-| Thư mục | Nội dung |
-|---|---|
+| Thư mục                       | Nội dung                                                   |
+| ----------------------------- | ---------------------------------------------------------- |
 | `app/assets/css/tailwind.css` | Toàn bộ cấu hình Tailwind v4: token màu, tương thích layer |
-| `tailwind/carbon-icons.mjs` | Plugin icon `i-carbon-*` |
-| `app/components/cms/` | Override component của `@shopware/cms-base-layer` |
-| `app/components/global/` | Component trang theo SEO URL (`FrontendDetailPage`…) |
-| `i18n/vi-VN/` | Bản dịch — ngôn ngữ duy nhất |
+| `tailwind/carbon-icons.mjs`   | Plugin icon `i-carbon-*`                                   |
+| `app/components/cms/`         | Override component của `@shopware/cms-base-layer`          |
+| `app/components/global/`      | Component trang theo SEO URL (`FrontendDetailPage`…)       |
+| `i18n/vi-VN/`                 | Bản dịch — ngôn ngữ duy nhất                               |
