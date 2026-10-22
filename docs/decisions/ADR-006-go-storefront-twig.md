@@ -1,7 +1,7 @@
 # ADR-006: Gỡ storefront Twig (`shopware/storefront`)
 
-**Trạng thái:** 🟡 Đề xuất — 21/10/2026, chờ chủ dự án duyệt
-**Quyết định đề xuất:** gỡ gói `shopware/storefront` khỏi `backend/`, cùng mọi code Twig/SCSS/controller storefront trong plugin. Làm theo **5 bước ở mục "Kế hoạch"**, mỗi bước một commit và kiểm được riêng; bước cuối mới gỡ gói. Frontend Nuxt (ADR-005) đã thay toàn bộ giao diện khách hàng.
+**Trạng thái:** ✅ Đã duyệt — 22/10/2026 (đề xuất 21/10). Chủ dự án thêm: phần còn cần thiết có thể chuyển sang plugin khác.
+**Quyết định:** gỡ gói `shopware/storefront` khỏi `backend/`, cùng mọi code Twig/SCSS/controller storefront trong plugin. Làm theo **5 bước ở mục "Kế hoạch"**, mỗi bước một commit và kiểm được riêng; bước cuối mới gỡ gói. Frontend Nuxt (ADR-005) đã thay toàn bộ giao diện khách hàng.
 
 ## Bối cảnh
 
@@ -27,13 +27,13 @@ Phụ thuộc **ngoài code plugin**, dễ bị bỏ sót:
 
 ## Kế hoạch (mỗi bước một commit)
 
-| Bước | Việc | Kiểm |
-|---|---|---|
-| 1 | **Email:** migration (trong `AcmeHeadless`) thay `rawUrl('frontend.account.order.single.page', …)` bằng `salesChannel.domains\|first.url ~ '/account/order/' ~ order.deepLinkCode` trong các mẫu của core. Chỉ thay mẫu còn đúng nguyên văn của core; mẫu người vận hành đã sửa thì ghi log, không ghi đè (MIG-03) | Gửi thử email xác nhận đơn (Admin → mẫu email → gửi thử); link mở đúng trang đơn trên frontend |
-| 2 | **Chuyển phần `AcmeTheme` mà frontend còn dùng:** `ListingMediaSubscriber` và cấu hình wishlist sang `AcmeHeadless` (dữ liệu hiển thị cho frontend) | Ảnh rê chuột trên thẻ sản phẩm vẫn có, chụp ảnh trước/sau; wishlist vẫn bật |
-| 3 | **`AcmeBrand` 2.0.0, `AcmePayment` 2.0.0:** xoá `src/Storefront/`, Twig, SCSS, snippet `storefront.*`, `BrandPageSeoUrlRoute` (SEO `frontend.*`), `CheckoutFinishSubscriber`, `VietQrData`. Major vì bỏ bề mặt công khai (REL-01) | Test plugin đạt; Store API brand và chuyển khoản không đổi (so JSON trước/sau) |
-| 4 | **Gỡ `AcmeTheme`:** `plugin:uninstall` rồi xoá thư mục | Quy tắc 7: xem hàng, giỏ, COD vẫn chạy |
-| 5 | **Gỡ gói:** backup → `composer remove shopware/storefront` → `cache:clear` → chạy toàn bộ test plugin, e2e COD + chuyển khoản, đăng ký tài khoản, quên mật khẩu, đăng ký nhận tin; kiểm `seo_url`/sitemap channel Headless không đổi | Lệnh "class ma" (docs/08) sạch với 0 tham chiếu `Shopware\Storefront` |
+| Bước | Việc | Kiểm | Tiến độ |
+|---|---|---|---|
+| 1 | **Email:** migration (trong `AcmeHeadless`) thay các lời gọi `rawUrl('frontend.account.order.single.*', …)` bằng phép nối chuỗi trên `salesChannel.domains\|first.url`. Chỉ thay đúng đoạn `rawUrl(...)` nguyên văn của core; phần người vận hành đã sửa giữ nguyên (MIG-03) | Gửi thử email xác nhận đơn (Admin → mẫu email → gửi thử); link mở đúng trang đơn trên frontend | ✅ 22/10 — `AcmeHeadless` 1.1.0 `Migration1792666425MailTemplateFrontendUrls`: thay cả 3 route storefront trong mẫu email (trang đơn, tài liệu dễ đọc, tải sản phẩm số) bằng phép nối chuỗi cho ra **đúng y URL cũ** (test so thẳng với `rawUrl` khi còn storefront; mọi mẫu biên dịch được). Local: 0 mẫu còn `rawUrl` |
+| 2 | **Chuyển phần `AcmeTheme` mà frontend còn dùng:** `ListingMediaSubscriber` và cấu hình wishlist sang `AcmeHeadless` (dữ liệu hiển thị cho frontend) | Ảnh rê chuột trên thẻ sản phẩm vẫn có, chụp ảnh trước/sau; wishlist vẫn bật |  |
+| 3 | **`AcmeBrand` 2.0.0, `AcmePayment` 2.0.0:** xoá `src/Storefront/`, Twig, SCSS, snippet `storefront.*`, `BrandPageSeoUrlRoute` (SEO `frontend.*`), `CheckoutFinishSubscriber`, `VietQrData`. Major vì bỏ bề mặt công khai (REL-01) | Test plugin đạt; Store API brand và chuyển khoản không đổi (so JSON trước/sau) |  |
+| 4 | **Gỡ `AcmeTheme`:** `plugin:uninstall` rồi xoá thư mục | Quy tắc 7: xem hàng, giỏ, COD vẫn chạy |  |
+| 5 | **Gỡ gói:** backup → `composer remove shopware/storefront` → `cache:clear` → chạy toàn bộ test plugin, e2e COD + chuyển khoản, đăng ký tài khoản, quên mật khẩu, đăng ký nhận tin; kiểm `seo_url`/sitemap channel Headless không đổi | Lệnh "class ma" (docs/08) sạch với 0 tham chiếu `Shopware\Storefront` |  |
 
 Có thể dừng sau bước bất kỳ mà hệ thống vẫn chạy. Bước 1–2 có giá trị ngay cả khi không gỡ gói: email không còn phụ thuộc storefront, và tính năng frontend không còn nằm trong một plugin theme.
 
