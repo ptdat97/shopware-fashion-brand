@@ -11,5 +11,9 @@
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="media.repository"/>
         </service>
+
+        <service id="Acme\Headless\Subscriber\ListingMediaSubscriber">
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>
