@@ -25,6 +25,7 @@ Nền tảng bán lẻ thời trang **nhiều thương hiệu trên một websit
 | **Kiến trúc đa thương hiệu** | **[12-da-thuong-hieu.md](12-da-thuong-hieu.md)** |
 | MB6 — khảo sát ERP/PIM, đa kho, bảng size theo brand | [14-mb6-khao-sat.md](14-mb6-khao-sat.md) |
 | **Headless — chạy frontend, công nghệ, việc cần chuyển** | **[15-headless.md](15-headless.md)** |
+| Khảo sát dự án nguồn mở để đẩy nhanh phát triển | [16-khao-sat-nguon-mo.md](16-khao-sat-nguon-mo.md) |
 
 ## Theo chủ đề
 
