@@ -3,7 +3,6 @@
 namespace Acme\Brand\Core\Content\Brand\DataAbstractionLayer;
 
 use Acme\Brand\Core\Content\Brand\BrandDefinition;
-use Acme\Brand\Seo\BrandPageSeoUrlRoute;
 use Acme\Brand\Seo\BrandStoreApiUrlRoute;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
@@ -17,7 +16,7 @@ use Shopware\Core\Framework\Plugin\Exception\DecorationPatternException;
 use Shopware\Core\Framework\Uuid\Uuid;
 
 /**
- * Sinh SEO URL `/brands/{slug}` qua cơ chế indexing của core — cùng cách
+ * Sinh SEO URL `/brands/{slug}` (channel headless) qua cơ chế indexing của core — cùng cách
  * `LandingPageIndexer` của core cập nhật URL landing page.
  *
  * Nhờ vậy không cần lệnh riêng: ghi brand/nhà sản xuất là URL tự cập nhật, và
@@ -82,8 +81,6 @@ class BrandIndexer extends EntityIndexer
 
         $ids = array_values(array_unique($ids));
 
-        // Storefront (Twig) và headless (Store API) — mỗi route tự bỏ qua khi không có template
-        $this->seoUrlUpdater->update(BrandPageSeoUrlRoute::ROUTE_NAME, $ids);
         $this->seoUrlUpdater->update(BrandStoreApiUrlRoute::ROUTE_NAME, $ids);
     }
 

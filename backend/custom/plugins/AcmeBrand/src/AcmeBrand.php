@@ -11,7 +11,8 @@ use Shopware\Core\Framework\Plugin\Context\UninstallContext;
  *
  * - bảng `acme_brand` (1–1): mã brand UNIQUE, trạng thái, nổi bật, thứ tự, banner, layout
  * - custom field dịch được trên nhà sản xuất cho meta SEO (`BrandCustomFields`)
- * - trang storefront /brands, /brands/{slug}, SEO URL, sitemap
+ * - Store API thương hiệu (danh sách, chi tiết, listing), SEO URL `/brands/{slug}` cho
+ *   channel headless, sitemap. Trang storefront Twig đã bỏ ở 2.0.0 (ADR-006)
  *
  * Mọi thứ khác (tên, mô tả, logo, gán brand cho sản phẩm, bộ lọc, khuyến mãi, đơn hàng)
  * là của core — xem docs/decisions/ADR-003-mo-hinh-thuong-hieu.md.

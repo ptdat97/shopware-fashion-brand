@@ -20,12 +20,6 @@
             <tag name="shopware.dal.exception_handler"/>
         </service>
 
-        <!-- MB3: storefront thương hiệu -->
-        <service id="Acme\Brand\Seo\BrandPageSeoUrlRoute">
-            <argument type="service" id="Shopware\Core\Content\Product\Aggregate\ProductManufacturer\ProductManufacturerDefinition"/>
-            <tag name="shopware.seo_url.route"/>
-        </service>
-
         <!-- SEO URL qua cơ chế indexing của core (như LandingPageIndexer) — dal:refresh:index phủ luôn -->
         <service id="Acme\Brand\Core\Content\Brand\DataAbstractionLayer\BrandIndexer">
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Dbal\Common\IteratorFactory"/>
@@ -40,7 +34,7 @@
             <tag name="shopware.sitemap_url_provider"/>
         </service>
 
-        <!-- H2: Store API thương hiệu — frontend headless và trang Twig dùng chung -->
+        <!-- H2: Store API thương hiệu cho frontend headless -->
         <service id="Acme\Brand\Core\Content\Brand\SalesChannel\ActiveBrandLoader">
             <argument type="service" id="product_manufacturer.repository"/>
         </service>
@@ -62,23 +56,6 @@
         <service id="Acme\Brand\Seo\BrandStoreApiUrlRoute">
             <argument type="service" id="Shopware\Core\Content\Product\Aggregate\ProductManufacturer\ProductManufacturerDefinition"/>
             <tag name="shopware.entity.seo_url.route"/>
-        </service>
-
-        <service id="Acme\Brand\Storefront\Page\Brand\BrandPageLoader">
-            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
-            <argument type="service" id="Acme\Brand\Core\Content\Brand\SalesChannel\BrandListRoute"/>
-            <argument type="service" id="Acme\Brand\Core\Content\Brand\SalesChannel\BrandRoute"/>
-            <argument type="service" id="Acme\Brand\Core\Content\Brand\SalesChannel\BrandListingRoute"/>
-            <argument type="service" id="Acme\Brand\Core\Content\Brand\SalesChannel\ActiveBrandLoader"/>
-            <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="translator"/>
-        </service>
-
-        <service id="Acme\Brand\Storefront\Controller\BrandController" public="true">
-            <argument type="service" id="Acme\Brand\Storefront\Page\Brand\BrandPageLoader"/>
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
         </service>
     </services>
 </container>

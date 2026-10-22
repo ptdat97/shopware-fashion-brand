@@ -10,7 +10,7 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 /**
  * Dựng thông tin chuyển khoản cho một đơn từ cấu hình plugin (theo sales channel).
- * Dùng chung cho Store API (frontend headless) và trang cảm ơn Twig.
+ * Dùng cho Store API (frontend headless).
  *
  * Áp dụng cho "Chuyển khoản trước" của core và VietQR — cùng handler PrePayment, cùng
  * tài khoản nhận; VietQR có thêm mã QR.

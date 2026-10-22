@@ -5,5 +5,4 @@
         https://symfony.com/schema/routing/routing-1.0.xsd">
 
     <import resource="../../Core/Content/Brand/SalesChannel/*Route.php" type="attribute"/>
-    <import resource="../../Storefront/Controller/*Controller.php" type="attribute"/>
 </routes>

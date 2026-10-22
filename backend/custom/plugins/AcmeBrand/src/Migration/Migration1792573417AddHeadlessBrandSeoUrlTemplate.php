@@ -2,7 +2,6 @@
 
 namespace Acme\Brand\Migration;
 
-use Acme\Brand\Seo\BrandPageSeoUrlRoute;
 use Acme\Brand\Seo\BrandStoreApiUrlRoute;
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Defaults;
@@ -41,7 +40,7 @@ class Migration1792573417AddHeadlessBrandSeoUrlTemplate extends MigrationStep
             'sales_channel_id' => null,
             'route_name' => BrandStoreApiUrlRoute::ROUTE_NAME,
             'entity_name' => 'product_manufacturer',
-            'template' => BrandPageSeoUrlRoute::DEFAULT_TEMPLATE,
+            'template' => BrandStoreApiUrlRoute::DEFAULT_TEMPLATE,
             'is_valid' => 1,
             'is_headless' => 1,
             'created_at' => (new \DateTimeImmutable())->format(Defaults::STORAGE_DATE_TIME_FORMAT),

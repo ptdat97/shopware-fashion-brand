@@ -2,20 +2,19 @@
 
 namespace Acme\Brand\Sitemap;
 
-use Acme\Brand\Seo\BrandPageSeoUrlRoute;
 use Acme\Brand\Seo\BrandStoreApiUrlRoute;
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Content\Product\Aggregate\ProductManufacturer\ProductManufacturerEntity;
 use Shopware\Core\Content\Sitemap\Provider\AbstractUrlProvider;
 use Shopware\Core\Content\Sitemap\Struct\Url;
 use Shopware\Core\Content\Sitemap\Struct\UrlResult;
-use Shopware\Core\Defaults;
 use Shopware\Core\Framework\DataAbstractionLayer\Doctrine\FetchModeHelper;
 use Shopware\Core\Framework\Plugin\Exception\DecorationPatternException;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
 /**
- * Đưa trang `/brands/{slug}` của brand đang hoạt động vào sitemap.
+ * Đưa trang `/brands/{slug}` của brand đang hoạt động vào sitemap của channel headless
+ * (URL theo route Store API — ADR-005; từ 2.0.0 không còn bản storefront Twig).
  *
  * Brand chưa có SEO URL thì bỏ qua thay vì ghi đường dẫn kỹ thuật `/brand/{id}` —
  * chạy `bin/console dal:refresh:index --only=acme_brand.indexer` để sinh.
@@ -57,7 +56,7 @@ class BrandUrlProvider extends AbstractUrlProvider
 
         /** @var array<string, array{seo_path_info: string}> $seoUrls */
         $seoUrls = FetchModeHelper::groupUnique(
-            $this->getSeoUrls(array_column($brands, 'id'), $this->routeName($context), $context, $this->connection)
+            $this->getSeoUrls(array_column($brands, 'id'), BrandStoreApiUrlRoute::ROUTE_NAME, $context, $this->connection)
         );
 
         $urls = [];
@@ -77,17 +76,5 @@ class BrandUrlProvider extends AbstractUrlProvider
         }
 
         return new UrlResult($urls, \count($brands) === $limit ? (int) $offset + $limit : null);
-    }
-
-    /**
-     * Channel headless (type API, có domain external storefront) có URL brand riêng theo route
-     * Store API (ADR-005) — giống ProductUrlProvider của core. Không dùng EntityRouteResolver
-     * của core vì lớp đó @internal.
-     */
-    private function routeName(SalesChannelContext $context): string
-    {
-        return $context->getSalesChannel()->getTypeId() === Defaults::SALES_CHANNEL_TYPE_API
-            ? BrandStoreApiUrlRoute::ROUTE_NAME
-            : BrandPageSeoUrlRoute::ROUTE_NAME;
     }
 }

@@ -19,9 +19,9 @@ use Shopware\Core\Framework\Uuid\Uuid;
 /**
  * Thanh toán cho thị trường Việt Nam: thông tin chuyển khoản và VietQR.
  *
- * COD và chuyển khoản thường là phương thức của core, không thuộc plugin này. Plugin chỉ
- * thêm phương thức `acme_vietqr` (handler `PrePayment` của core) và mã QR chuẩn NAPAS trên
- * trang cảm ơn. Đăng ký payment method theo mẫu của swag/paypal (PaymentMethodInstaller):
+ * COD và chuyển khoản thường là phương thức của core, không thuộc plugin này. Plugin thêm
+ * phương thức `acme_vietqr` (handler `PrePayment` của core) và thông tin chuyển khoản theo đơn
+ * (tài khoản nhận, nội dung CK, hướng dẫn, mã QR chuẩn NAPAS) qua Store API. Đăng ký payment method theo mẫu của swag/paypal (PaymentMethodInstaller):
  * upsert entity trước, upsert bản dịch sau.
  *
  * Bề mặt công khai:
@@ -29,7 +29,8 @@ use Shopware\Core\Framework\Uuid\Uuid;
  * - Cấu hình `AcmePayment.config.{bankBin,accountNumber,accountHolder,referencePrefix,transferInstruction}`
  *   (theo sales channel) — tài khoản nhận dùng chung cho "Chuyển khoản trước" của core và VietQR
  * - Store API `store-api.acme.payment.bank-transfer` (từ 1.3.0, frontend headless)
- * - Extension trang `acmeVietQr` trên `CheckoutFinishPage`, block Twig `page_checkout_finish_details`
+ * - Đã bỏ ở 2.0.0 (ADR-006): extension `acmeVietQr` của trang cảm ơn Twig và block
+ *   `page_checkout_finish_details` — dùng Store API ở trên
  *
  * Tắt / gỡ (08-quy-tac-phat-trien.md, Quy tắc số 5):
  * - Tắt: phương thức VietQR bị tắt, khách không chọn được; COD và đơn cũ không ảnh hưởng.
@@ -94,7 +95,7 @@ class AcmePayment extends Plugin
             // Handler "Chuyển khoản trước" của core: không redirect, giao dịch giữ "open"
             // chờ đối soát — đúng hành vi VietQR cần. Bản handler tự viết trước 1.1.0 giống
             // hệt từng dòng, nên đã bỏ (08-quy-tac-phat-trien.md, Quy tắc số 4). Phần riêng
-            // của VietQR chỉ là mã QR trên trang cảm ơn (CheckoutFinishSubscriber).
+            // của VietQR chỉ là mã QR trong thông tin chuyển khoản (BankTransferInfoProvider).
             'handlerIdentifier' => PrePayment::class,
             'technicalName' => self::VIETQR_TECHNICAL_NAME,
             'name' => 'Chuyển khoản QR (VietQR)',

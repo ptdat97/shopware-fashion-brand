@@ -16,22 +16,28 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\System\SalesChannel\SalesChannelEntity;
 
 /**
- * SEO URL thương hiệu cho channel headless (type API) — bản "store-api" của
- * BrandPageSeoUrlRoute, theo cùng cơ chế core dùng cho sản phẩm/danh mục
- * (ProductStoreApiUrlRoute…): tag `shopware.entity.seo_url.route`, template
- * `seo_url_template.is_headless = 1`, URL chỉ sinh cho domain external storefront.
+ * SEO URL thương hiệu `/brands/{slug}` cho channel headless (type API), theo cùng cơ chế
+ * core dùng cho sản phẩm/danh mục (ProductStoreApiUrlRoute…): tag
+ * `shopware.entity.seo_url.route`, template `seo_url_template.is_headless = 1`, URL chỉ
+ * sinh cho domain external storefront.
+ *
+ * Slug của thương hiệu chính là bản ghi `seo_url` này — không lưu cột slug riêng (ADR-003).
+ * Chỉ sinh URL cho brand đang hoạt động.
  *
  * seo_url.pathInfo trỏ về route Store API BrandRoute (`/store-api/acme/brand/{id}`);
  * frontend tra SEO path → routeName `store-api.acme.brand.detail` + foreignKey.
  *
- * Cài thêm SeoUrlRouteInterface để template dùng biến `manufacturer` như bản storefront
- * (mặc định core đặt tên biến theo entity: `productManufacturer`).
+ * Cài thêm SeoUrlRouteInterface để template dùng biến `manufacturer` (mặc định core đặt tên
+ * biến theo entity: `productManufacturer`). Bản storefront Twig (`frontend.acme.brand.page`)
+ * đã bỏ ở 2.0.0 — ADR-006.
  *
  * @internal
  */
 class BrandStoreApiUrlRoute implements EntitySeoUrlRouteInterface, SeoUrlRouteInterface
 {
     final public const ROUTE_NAME = BrandRoute::ROUTE_NAME;
+
+    final public const DEFAULT_TEMPLATE = 'brands/{{ manufacturer.translated.name|lower }}';
 
     public function __construct(private readonly ProductManufacturerDefinition $manufacturerDefinition)
     {
@@ -42,7 +48,7 @@ class BrandStoreApiUrlRoute implements EntitySeoUrlRouteInterface, SeoUrlRouteIn
         return new SeoUrlRouteConfig(
             $this->manufacturerDefinition,
             self::ROUTE_NAME,
-            BrandPageSeoUrlRoute::DEFAULT_TEMPLATE,
+            self::DEFAULT_TEMPLATE,
             true,
             'manufacturerId'
         );
