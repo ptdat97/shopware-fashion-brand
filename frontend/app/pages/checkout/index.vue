@@ -55,6 +55,20 @@ const {
 
 const isUserSession = computed(() => isLoggedIn.value || isGuestSession.value);
 
+// Các PATCH /context đang chạy (chọn thanh toán / vận chuyển, tỉnh). Đăng ký khách vãng lai
+// sao chép ngữ cảnh sang token mới ngay khi bắt đầu — PATCH chưa xong thì lựa chọn mất: khách
+// chọn "Chuyển khoản trước", bấm đặt hàng ngay, đơn thành COD (Playwright bắt được 22/10/2026,
+// khoảng 1/8 lần chạy; mạng di động chậm còn dễ gặp hơn).
+const pendingContextUpdates = new Set<Promise<unknown>>();
+function trackContextUpdate<T>(update: Promise<T>): Promise<T> {
+  pendingContextUpdates.add(update);
+  update.finally(() => pendingContextUpdates.delete(update)).catch(() => {});
+  return update;
+}
+async function settleContextUpdates() {
+  await Promise.allSettled([...pendingContextUpdates]);
+}
+
 // Khách vãng lai chưa có địa chỉ trong ngữ cảnh → backend tính phí ship theo ngữ cảnh mặc định
 // (chưa có tỉnh): khách Hà Nội thấy 35.000 ₫ trong khi đơn tính 25.000 ₫ (H8). Báo quốc gia /
 // tỉnh vừa chọn lên ngữ cảnh rồi tải lại giỏ — phí do backend tính lại (quy tắc cứng số 8).
@@ -64,12 +78,14 @@ watch(
   async ([countryId, countryStateId]) => {
     if (isUserSession.value || !countryId) return;
     try {
-      await apiClient.invoke("updateContext patch /context", {
-        body: {
-          countryId,
-          ...(countryStateId ? { countryStateId } : {}),
-        },
-      });
+      await trackContextUpdate(
+        apiClient.invoke("updateContext patch /context", {
+          body: {
+            countryId,
+            ...(countryStateId ? { countryStateId } : {}),
+          },
+        }),
+      );
       await refreshCart();
     } catch (error) {
       console.error(
@@ -168,6 +184,11 @@ async function updateCustomerDetails() {
 }
 
 async function saveCustomerDetails() {
+  // Lựa chọn của khách trên màn hình — nguồn đúng, kể cả khi PATCH trước đó chưa kịp ghi
+  const chosenPaymentMethod = selectedPaymentMethod.value;
+  const chosenShippingMethod = selectedShippingMethod.value;
+  await settleContextUpdates();
+
   if (isUserSession.value) {
     await updateCustomerDetails();
   } else {
@@ -192,6 +213,21 @@ async function saveCustomerDetails() {
     getShippingMethods({ forceReload: true }),
     getPaymentMethods({ forceReload: true }),
   ]);
+
+  // Ngữ cảnh mới sau đăng ký có thể mang phương thức mặc định (COD) — áp lại lựa chọn của
+  // khách nếu vẫn hợp lệ. Backend từ chối (phương thức không còn khả dụng) thì giữ của ngữ cảnh.
+  if (
+    chosenPaymentMethod &&
+    sessionSelectedPaymentMethod.value?.id !== chosenPaymentMethod
+  ) {
+    await setPaymentMethod({ id: chosenPaymentMethod }).catch(() => {});
+  }
+  if (
+    chosenShippingMethod &&
+    sessionSelectedShippingMethod.value?.id !== chosenShippingMethod
+  ) {
+    await setShippingMethod({ id: chosenShippingMethod }).catch(() => {});
+  }
 
   if (sessionSelectedPaymentMethod.value) {
     selectedPaymentMethod.value = sessionSelectedPaymentMethod.value.id;
@@ -241,11 +277,11 @@ async function handlePlaceOrder() {
 }
 
 function handleChangeShippingMethod(id: string) {
-  setShippingMethod({ id });
+  trackContextUpdate(setShippingMethod({ id }));
 }
 
 function handleChangePaymentMethod(id: string) {
-  setPaymentMethod({ id });
+  trackContextUpdate(setPaymentMethod({ id }));
 }
 
 onMounted(() => {
