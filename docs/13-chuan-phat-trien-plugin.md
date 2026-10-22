@@ -202,16 +202,17 @@ Một thay đổi plugin chỉ được coi là xong khi:
 
 ---
 
-## 16. Hiện trạng tuân thủ (14/10/2026, sau đợt refactor)
+## 16. Hiện trạng tuân thủ (14/10/2026, sau đợt refactor — cập nhật 22/10/2026)
 
 | Plugin | Version | Test tự động | Ghi chú tuân thủ |
 |---|---|---|---|
-| `AcmeBrand` | 1.3.1 | 39 integration + unit | Đạt. Store API thương hiệu (API-02) + SEO URL headless + sitemap headless; `BrandPageLoader` gọi lại route Store API. Route SEO storefront dùng `StorefrontFrameworkException` như route SEO của core (DATA-07); bản headless dùng `SeoException` của core — phần headless không phụ thuộc gói storefront. Test Store API gọi thẳng `HttpKernel::handle()` vì dự án không cài `symfony/browser-kit` |
+| `AcmeBrand` | 2.0.0 | 32 integration + unit | Đạt. 2.0.0 (22/10): bỏ toàn bộ phần storefront Twig (ADR-006), xoá SEO URL route storefront bằng migration. Store API thương hiệu (API-02) + SEO URL headless + sitemap headless; `BrandPageLoader` gọi lại route Store API. Route SEO storefront dùng `StorefrontFrameworkException` như route SEO của core (DATA-07); bản headless dùng `SeoException` của core — phần headless không phụ thuộc gói storefront. Test Store API gọi thẳng `HttpKernel::handle()` vì dự án không cài `symfony/browser-kit` |
 | `AcmeCatalog` | 1.7.0 | 23 integration | Thứ tự giá trị thuộc tính đồng bộ mọi ngôn ngữ (chỉ nhóm còn mặc định — MIG-03). Đạt. Template SEO headless (`is_headless`) theo đúng quy ước storefront (ADR-005). Nhóm thuộc tính native "Chất liệu" + custom field `acme_model_size` (ARCH-04). Logic sinh biến thể tách khỏi lệnh sang service `VariantGenerator` (ARCH-07), lỗi miền `CatalogException` (DATA-07), bỏ association nạp thừa (PERF-01) |
 | `AcmeShipping` | 1.0.0 | 3 integration | Đạt; test chạy một mình (TEST-03) |
-| `AcmeVietnam` | 1.4.0 | 24 integration + unit | Đạt. Tìm kiếm tiếng Việt (decorator analyzer/interpreter — EXT-01: core không có sự kiện ở bước này), channel headless, cấu hình tìm kiếm vi-VN, SĐT bắt buộc ở địa chỉ (sửa khoá sai của Phase 0), trạng thái đơn tiếng Việt. Test gọi migration trong transaction, **không** cài plugin vào DB test dùng chung (đổi tiền tệ, tắt quốc gia sẽ làm hỏng test plugin khác) |
-| `AcmePayment` | 1.1.1 | 5 unit | Đạt. Payload VietQR so với chuỗi sinh bằng cài đặt CRC độc lập. Test bắt được lỗi thật: `iconv` trên macOS xoá "Đơ" khỏi nội dung chuyển khoản → đổi sang `UnicodeString::ascii()` |
-| `AcmeTheme` | 1.1.0 | 2 unit + ảnh chụp | Đạt. Namespace đổi sang `Acme\Theme\` (STR-01 · [ADR-004](decisions/ADR-004-namespace-acme-theme.md)). Bảng size lọc qua `sw_sanitize` (SEC-03) |
+| `AcmeVietnam` | 1.5.0 | 25 integration + unit | Đạt. 1.5.0 (22/10): bỏ domain giữ chỗ `default.headless*` để link email trỏ domain frontend. Tìm kiếm tiếng Việt (decorator analyzer/interpreter — EXT-01: core không có sự kiện ở bước này), channel headless, cấu hình tìm kiếm vi-VN, SĐT bắt buộc ở địa chỉ (sửa khoá sai của Phase 0), trạng thái đơn tiếng Việt. Test gọi migration trong transaction, **không** cài plugin vào DB test dùng chung (đổi tiền tệ, tắt quốc gia sẽ làm hỏng test plugin khác) |
+| `AcmePayment` | 2.0.0 | 12 unit | Đạt. Store API thông tin chuyển khoản (1.3.0); 2.0.0 bỏ trang cảm ơn Twig (ADR-006). Payload VietQR so với chuỗi sinh bằng cài đặt CRC độc lập. Test bắt được lỗi thật: `iconv` trên macOS xoá "Đơ" khỏi nội dung chuyển khoản → đổi sang `UnicodeString::ascii()` |
+| ~~`AcmeTheme`~~ | — | — | **Đã gỡ 22/10/2026** (ADR-006). `ListingMediaSubscriber` + wishlist chuyển sang `AcmeHeadless` (MIG-06) |
+| `AcmeHeadless` | 1.2.0 | 15 integration | Đạt. Decorate `shop-settings` (API-02): logo, robots; migration robots, link email (so thẳng với `rawUrl` của core), wishlist — không ghi đè giá trị người vận hành (MIG-03) |
 | `AcmeDemoData` | 1.2.1 | 13 unit | `position` giá trị thuộc tính ghi vào từng bản dịch (field dịch được của core). Lỗi miền `DemoDataException` kế thừa `HttpException`, mã `ACME_DEMO_DATA__*` (DATA-07). Chất liệu ghi bằng thuộc tính native thay cho custom field không ai định nghĩa. Còn: importer chưa có integration test |
 
 Đợt refactor 14/10 còn sửa trên mọi plugin: `composer.json` đủ trường (STR-03: `require shopware/core ~6.7`, nhãn và mô tả `vi-VN`, `autoload-dev`), docblock class plugin ghi bề mặt công khai và hành vi tắt/gỡ (STR-06), `@internal` cho controller/command (STR-07), khoá snippet `acme-theme.*`, `acme-payment.*` (STR-02).
@@ -220,7 +221,7 @@ Một thay đổi plugin chỉ được coi là xong khi:
 
 | Chỗ | Quy tắc | Lý do giữ |
 |---|---|---|
-| `Acme\Theme\Migration\Migration1786166716EnableWishlist` ghi đè giá trị wishlist đã có | MIG-03 | Migration đã chạy — MIG-04 cấm sửa. Hiện giá trị là `true`, đúng ý kinh doanh |
+| ~~`Acme\Theme\Migration\Migration1786166716EnableWishlist` ghi đè giá trị wishlist đã có~~ ✅ 22/10: thay bằng migration của `AcmeHeadless` không ghi đè | MIG-03 | Migration đã chạy — MIG-04 cấm sửa. Hiện giá trị là `true`, đúng ý kinh doanh |
 | `Migration1786157044VietnamMarketBaseline` ném `\RuntimeException` khi thiếu quốc gia VN | DATA-07 | Migration đã chạy (MIG-04); lỗi chỉ xảy ra khi DB core hỏng, không phải lỗi nghiệp vụ |
 
 **Nợ kỹ thuật cấp dự án:**

@@ -52,7 +52,7 @@ const coverAlt = computed(() => {
 
 const isOnSale = computed(() => isProductOnSale(props.product));
 
-// Ảnh thứ hai (khác ảnh bìa) — association media do AcmeTheme nạp vào listing
+// Ảnh thứ hai (khác ảnh bìa) — association media do AcmeHeadless nạp vào listing
 const hoverMedia = computed(() => {
   const coverMediaId = props.product?.cover?.mediaId;
   return (

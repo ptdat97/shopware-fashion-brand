@@ -1,5 +1,7 @@
 # Runbook: Tạo theme thương hiệu
 
+> 🗄️ **Lưu trữ** — theme Twig đã gỡ 22/10/2026 ([ADR-006](../decisions/ADR-006-go-storefront-twig.md)). Không dùng runbook này cho frontend Nuxt.
+
 > Chỉ bắt đầu sau khi đã chốt xong VND — xem [01-cau-hinh-vnd.md](01-cau-hinh-vnd.md) để hiểu lý do.
 >
 > ✅ Đã thực hiện: theme `AcmeTheme`, xem [../02-theme.md](../02-theme.md).

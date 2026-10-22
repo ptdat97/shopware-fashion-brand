@@ -1,5 +1,7 @@
 # Theme thương hiệu
 
+> 🗄️ **Lưu trữ.** Theme Twig `AcmeTheme` đã gỡ ngày 22/10/2026 ([ADR-006](decisions/ADR-006-go-storefront-twig.md)). Giao diện hiện tại là frontend Nuxt: [15-headless.md](15-headless.md) mục 6. Quy tắc "chụp ảnh kiểm chứng" ở dưới vẫn áp dụng.
+
 > ✅ **Đã thực hiện giai đoạn 1** (08/08/2026) — plugin `AcmeTheme`. Tài liệu này giữ nguyên phần lý do và nguyên tắc; phần "đã kiểm chứng" bổ sung ở cuối.
 
 Hướng đã chốt: **tự xây theme riêng kế thừa Storefront mặc định**.
