@@ -49,7 +49,7 @@ Một dự án chỉ được đề xuất khi đạt đủ cả bốn điều:
 
 ## 3. Lộ trình đề xuất
 
-1. **Playwright:** chuyển kiểm chứng H6, H8, ADR-006 thành test e2e. Mọi việc sau này đều nhanh hơn vì kiểm lại bằng một lệnh.
+1. ✅ (22/10) **Playwright** — 11 test trong `frontend/tests/e2e`, `pnpm test:e2e` ([15-headless.md](15-headless.md) mục 9).
 2. **Mailpit + Mail Archive + Template Mail**, rồi làm mẫu email tiếng Việt và kiểm bằng email thật.
 3. **FroshTools**, sau đó **shopware-cli + deployment-helper** trong lúc chuẩn bị go-live ([06-golive.md](06-golive.md)).
 4. Phần còn lại cài khi tới việc tương ứng.

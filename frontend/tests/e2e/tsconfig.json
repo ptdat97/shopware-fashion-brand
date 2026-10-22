@@ -1,0 +1,13 @@
+{
+  // Kiểm kiểu cho test Playwright — `nuxi typecheck` không quét tests/ và playwright.config.ts
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["./**/*.ts", "../../playwright.config.ts"]
+}

@@ -12,7 +12,7 @@ frontend/   Nuxt 4 + Shopware Frontends (Vue Starter Template) — pnpm
 docs/       tài liệu chung
 ```
 
-Lệnh JS chạy ở gốc repo: `pnpm install`, `pnpm dev` (http://localhost:3000), `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm generate-types`. Node theo `.nvmrc` (22.x — template yêu cầu `>=22.22.3`).
+Lệnh JS chạy ở gốc repo: `pnpm install`, `pnpm dev` (http://localhost:3000), `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm generate-types`, `pnpm test:e2e` (Playwright, đặt đơn thật trên DB local — [docs/15-headless.md](docs/15-headless.md) mục 9). Node theo `.nvmrc` (22.x — template yêu cầu `>=22.22.3`).
 
 **CSS frontend: Tailwind CSS v4** (`@tailwindcss/vite`, không còn UnoCSS). Cấu hình và màu thương hiệu ở `frontend/app/assets/css/tailwind.css` (`@theme`); icon `i-carbon-*` qua `frontend/tailwind/carbon-icons.mjs`. Nâng cấp `@shopware/cms-base-layer` → kiểm class mới của layer + so ảnh. Quy ước: [docs/15-headless.md](docs/15-headless.md) mục 6.
 
@@ -70,6 +70,7 @@ Cách làm: [docs/runbook/06-tao-plugin.md](docs/runbook/06-tao-plugin.md)
 git status --short backend/vendor/                                  # phải rỗng
 git --no-pager diff backend/composer.json backend/composer.lock     # chỉ đổi khi cài plugin bên thứ ba
 pnpm lint && pnpm typecheck                                         # khi sửa frontend/
+pnpm test:e2e && pnpm --filter frontend typecheck:e2e               # khi sửa giao diện / Store API mà frontend dùng
 ```
 
 ## Tiến độ
@@ -87,7 +88,7 @@ pnpm lint && pnpm typecheck                                         # khi sửa 
 >
 > ⚠️ **Dữ liệu demo không tự nhập khi cài plugin.** Bấm nút tại Administration → Extensions → Acme Demo Data → Configure, hoặc chạy `php bin/console acme:demo:seed`. Chạy lại không nhân bản dữ liệu. Xem [docs/runbook/05-demo-data.md](docs/runbook/05-demo-data.md).
 
-**Sửa giao diện thì phải chụp ảnh kiểm chứng** (storefront Twig hoặc frontend Nuxt), không tin `curl`/`grep` — xem [docs/02-theme.md](docs/02-theme.md).
+**Sửa giao diện thì phải kiểm bằng trình duyệt thật** — `pnpm test:e2e` (Playwright, docs/15 mục 9) + chụp ảnh khi đổi bố cục; không tin `curl`/`grep`.
 
 - **Phase MB** (đa thương hiệu) 🔄 — MB0 ✅: ADR-003 đã duyệt, DB local dựng lại, kinh doanh đã chốt — Anivele là *một* brand, brand tắt chỉ ẩn trang brand (sản phẩm vẫn bán), SKU mã brand 3 ký tự (`ANV-1001-01`), dev dùng brand demo giả định. Tên nền tảng chưa chốt
 

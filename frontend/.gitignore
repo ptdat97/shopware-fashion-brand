@@ -24,3 +24,8 @@ logs
 .env.*
 !.env.example
 !.env.template
+
+# Kết quả Playwright
+/test-results
+/playwright-report
+/blob-report

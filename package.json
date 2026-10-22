@@ -11,6 +11,7 @@
     "build": "pnpm --filter frontend build",
     "lint": "pnpm --filter frontend lint",
     "typecheck": "pnpm --filter frontend typecheck",
-    "generate-types": "pnpm --filter frontend generate-types"
+    "generate-types": "pnpm --filter frontend generate-types",
+    "test:e2e": "pnpm --filter frontend test:e2e"
   }
 }

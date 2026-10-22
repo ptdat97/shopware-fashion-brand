@@ -197,3 +197,29 @@ Quy tắc cứng số 8 (CLAUDE.md), chi tiết [08-quy-tac-phat-trien.md](08-qu
 | L6 | Múi giờ `Asia/Ho_Chi_Minh` ở trang cảm ơn | Store API không trả múi giờ shop | Chấp nhận — một thị trường VN; ghi lại nếu mở thị trường khác |
 
 **Chưa rà:** các cấu hình `shop-settings` khác mà template có thể đang bỏ qua — `cart.showDeliveryTime`, `cart.wishlistEnabled`, `cart.showTosCheckbox`, `listing.allowBuyInListing`, `loginRegistration.requireDataProtectionCheckbox`… Rà khi làm tới từng màn hình tương ứng.
+
+## 9. Kiểm thử e2e (Playwright)
+
+Từ 22/10/2026 các kiểm chứng giao diện (trước đây là script CDP rời) nằm trong `frontend/tests/e2e/`, chạy trên **dữ liệu thật** của backend local:
+
+```bash
+pnpm test:e2e                          # gốc repo — tự bật `pnpm dev` nếu chưa chạy
+pnpm test:e2e --ui                     # xem từng bước
+pnpm test:e2e checkout --project mobile
+```
+
+| File | Kiểm |
+|---|---|
+| `seo.spec.ts` | robots.txt ghép đúng quy tắc backend trả (L4), sitemap theo domain frontend (H7) |
+| `catalog.spec.ts` | Logo từ backend (L5), ảnh rê chuột trên thẻ (H5 — `AcmeHeadless`), trang brand (H2), thêm vào giỏ từ trang sản phẩm |
+| `checkout.spec.ts` | COD giỏ 2 brand (tổng tiền trước = sau khi đặt, đúng phương thức, không có khối chuyển khoản), Chuyển khoản trước (khối thông tin chuyển khoản; khổ 390px không tràn ngang), **chọn thanh toán rồi đặt ngay khi mạng chậm** (hồi quy — xem dưới), phí ship theo tỉnh (H8 — tự bỏ qua khi không có sản phẩm dưới 500.000 ₫), mã khuyến mãi sai (câu lỗi của backend) |
+
+Nguyên tắc:
+
+- **Không gán cứng SKU.** Biến thể còn hàng tìm qua Store API lúc chạy (`support/storeApi.ts`). Giỏ hàng dựng qua Store API rồi gắn cookie `sw-context-token`; phần cần kiểm (form, thanh toán, trang cảm ơn) đi qua giao diện.
+- **Chờ hydrate:** mở trang bằng `gotoHydrated()`. Bấm khi HTML SSR vừa hiện thì nút chưa có sự kiện — đo được: nút "Thêm vào giỏ" không gửi request nào.
+- **Test đặt đơn thật:** mỗi lần chạy tạo 2–3 đơn và trừ tồn kho trong DB local. Email khách dạng `e2e-…@example.com` để lọc. Không chạy trên production.
+- Dùng Chrome cài sẵn (`channel: "chrome"`). CI: `PLAYWRIGHT_CHANNEL=""` + `pnpm exec playwright install chromium`.
+- **Lỗi thật Playwright bắt được (22/10):** khách chọn "Chuyển khoản trước" rồi bấm đặt hàng khi `PATCH /context` chưa xong → đăng ký khách vãng lai sao chép ngữ cảnh cũ sang token mới, mất lựa chọn → **đơn thành COD** (khoảng 1/8 lần chạy; mạng di động chậm còn dễ hơn). Sửa ở `pages/checkout/index.vue`: chờ các cập nhật ngữ cảnh đang chạy trước khi đăng ký, sau đăng ký áp lại lựa chọn của khách. Test hồi quy làm chậm PATCH 1,5 giây: lỗi trên code cũ (đơn #10047 thành COD), đạt trên code mới.
+- Đã thử ngược 22/10: tắt `AcmeHeadless` → test ảnh rê chuột **lỗi**, logo về tên shop dạng chữ (test vẫn đạt — đúng hành vi dự phòng), robots tự bỏ qua.
+- Kiểm kiểu cho test: `pnpm --filter frontend typecheck:e2e` (`nuxi typecheck` không quét `tests/`).
