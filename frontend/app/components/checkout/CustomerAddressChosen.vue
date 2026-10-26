@@ -10,7 +10,7 @@ const { address } = defineProps<{
   >
     <div>
       <div class="text-surface-on-surface text-base">
-        {{ address.firstName }} {{ address.lastName }}
+        {{ address.lastName }} {{ address.firstName }}
       </div>
       <div class="text-surface-on-surface text-base">
         {{ address.street }}

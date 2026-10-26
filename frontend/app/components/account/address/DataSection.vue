@@ -8,7 +8,7 @@ defineProps<{
 <template>
   <div class="flex flex-col gap-2">
     <SharedDataTextRow>
-      {{ address.firstName }} {{ address.lastName }}
+      {{ address.lastName }} {{ address.firstName }}
     </SharedDataTextRow>
 
     <SharedDataTextRow>
