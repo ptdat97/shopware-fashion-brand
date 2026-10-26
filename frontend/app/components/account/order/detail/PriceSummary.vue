@@ -34,10 +34,16 @@ defineProps<{
         }}</span>
         <span class="text-sm text-surface-on-surface">
           <SharedPrice
+            v-if="shippingCosts"
             :value="shippingCosts"
             class="text-surface-on-surface font-normal"
             data-testid="order-shipping"
-        /></span>
+          />
+          <!-- 0 ₫ = miễn phí (AcmeShipping) — cùng cách hiển thị với giỏ hàng -->
+          <span v-else data-testid="order-shipping">{{
+            $t("checkout.freeShipping")
+          }}</span></span
+        >
       </div>
 
       <div

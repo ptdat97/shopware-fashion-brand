@@ -29,7 +29,15 @@ const {
   shippingAddress,
   statusTechnicalName,
   getMediaFile,
-} = useOrderDetails(props.orderId);
+} = useOrderDetails(props.orderId, {
+  // Tên quốc gia + tỉnh/thành cho khối địa chỉ (dùng lại CheckoutOrderAddress của trang cảm ơn)
+  addresses: { associations: { country: {}, countryState: {} } },
+  deliveries: {
+    associations: {
+      shippingOrderAddress: { associations: { country: {}, countryState: {} } },
+    },
+  },
+});
 
 const { pushSuccess, pushError } = useNotifications();
 const { t } = useI18n();
@@ -48,17 +56,19 @@ const lineItems = computed<Array<Schemas["OrderLineItem"]>>(
   () => order.value?.lineItems || [],
 );
 
-const { browserLocale } = useShopwareContext();
+const { locale } = useI18n();
 
-const formatDate = (date: string) => {
-  return new Intl.DateTimeFormat(browserLocale, {
+// Ngôn ngữ của shop + giờ Việt Nam cố định (như trang cảm ơn) — không theo trình duyệt. Dùng
+// orderDateTime: orderDate chỉ có ngày (00:00 UTC) nên hiện "7:00" cho mọi đơn.
+const formatDate = (date: string) =>
+  new Intl.DateTimeFormat(locale.value, {
     year: "numeric",
     month: "numeric",
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
+    timeZone: "Asia/Ho_Chi_Minh",
   }).format(new Date(date));
-};
 
 const isLoading = ref(false);
 const isChangePaymentModalOpen = ref(false);
@@ -172,7 +182,7 @@ const handleDownload = async (mediaId: string, fileName: string) => {
             <p class="text-sm text-surface-on-surface-variant">
               {{
                 $t("account.orderDetails.placedOn", {
-                  d: formatDate(order.orderDate),
+                  d: formatDate(order.orderDateTime),
                 })
               }}
             </p>

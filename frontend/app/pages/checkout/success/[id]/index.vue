@@ -260,10 +260,18 @@ const showPaymentAlert = computed(
                     $t("checkout.shippingPriceLabel")
                   }}</span>
                   <SharedPrice
+                    v-if="shippingCosts"
                     :value="shippingCosts"
                     class="text-surface-on-surface font-normal"
                     data-testid="order-shipping"
                   />
+                  <!-- 0 ₫ = miễn phí — cùng cách hiển thị với giỏ hàng -->
+                  <span
+                    v-else
+                    class="text-surface-on-surface font-normal"
+                    data-testid="order-shipping"
+                    >{{ $t("checkout.freeShipping") }}</span
+                  >
                 </div>
               </div>
               <div class="pt-4 flex justify-between">
