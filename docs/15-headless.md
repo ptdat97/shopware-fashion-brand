@@ -212,7 +212,7 @@ pnpm test:e2e checkout --project mobile
 |---|---|
 | `seo.spec.ts` | robots.txt ghép đúng quy tắc backend trả (L4), sitemap theo domain frontend (H7) |
 | `catalog.spec.ts` | Logo từ backend (L5), ảnh rê chuột trên thẻ (H5 — `AcmeHeadless`), trang brand (H2), thêm vào giỏ từ trang sản phẩm |
-| `checkout.spec.ts` | COD giỏ 2 brand (tổng tiền trước = sau khi đặt, đúng phương thức, không có khối chuyển khoản), Chuyển khoản trước (khối thông tin chuyển khoản; khổ 390px không tràn ngang), **chọn thanh toán rồi đặt ngay khi mạng chậm** (hồi quy — xem dưới), phí ship theo tỉnh (H8 — tự bỏ qua khi không có sản phẩm dưới 500.000 ₫), mã khuyến mãi sai (câu lỗi của backend) |
+| `checkout.spec.ts` | COD giỏ 2 brand (tổng tiền trước = sau khi đặt, đúng phương thức, không có khối chuyển khoản), Chuyển khoản trước (khối thông tin chuyển khoản; khổ 390px không tràn ngang), **chọn thanh toán rồi đặt ngay khi mạng chậm** (hồi quy — xem dưới), **khách vãng lai mở đơn từ link email bằng email + SĐT** (cần Mailpit), email xác nhận đơn tiếng Việt (đọc từ Mailpit), phí ship theo tỉnh (H8 — tự bỏ qua khi không có sản phẩm dưới 500.000 ₫), mã khuyến mãi sai (câu lỗi của backend) |
 
 Nguyên tắc:
 

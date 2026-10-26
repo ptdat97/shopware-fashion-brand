@@ -14,5 +14,17 @@
                  decorates="Shopware\Core\Content\Product\SearchKeyword\ProductSearchTermInterpreter">
             <argument type="service" id=".inner"/>
         </service>
+
+        <!-- Khách vãng lai mở đơn từ email bằng email + SĐT (đơn VN không có mã bưu chính) -->
+        <service id="Acme\Vietnam\Checkout\Order\GuestPhoneOrderRoute"
+                 decorates="Shopware\Core\Checkout\Order\SalesChannel\OrderRoute"
+                 public="true">
+            <argument type="service" id=".inner"/>
+            <argument type="service" id="order.repository"/>
+            <argument type="service" id="shopware.rate_limiter"/>
+            <argument type="service" id="Shopware\Core\Checkout\Customer\SalesChannel\AccountService"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
+            <argument>%shopware.order.deep_link.expire_days%</argument>
+        </service>
     </services>
 </container>

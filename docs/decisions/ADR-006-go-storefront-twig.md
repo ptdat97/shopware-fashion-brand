@@ -55,7 +55,7 @@ Có thể dừng sau bước bất kỳ mà hệ thống vẫn chạy. Bước 1
 ## Phát hiện khi làm (22/10/2026)
 
 - ✅ **Link trong email trỏ domain giữ chỗ.** Channel Headless có hai domain; domain đầu là `default.headless0` do core tạo (Migration1620820321…). Mẫu email lấy `salesChannel.domains|first.url` → link "xem đơn" là `default.headless0/account/order/…` — hỏng từ trước bước 1 (bước 1 giữ nguyên URL nên giữ luôn lỗi). Sửa: `AcmeVietnam` 1.5.0 xoá domain giữ chỗ khi channel đã có domain frontend thật. Kiểm: email xác nhận đơn #10017 (log `mail.sent`) chứa `http://localhost:3000/account/order/…`.
-- ⚠️ **Khách vãng lai không mở được đơn từ email.** Trang `/account/order/{deepLinkCode}` bắt xác minh email **+ mã bưu chính**; core (`OrderRoute::checkGuestAuth`) từ chối khi đơn không có mã bưu chính — mà đơn VN không có (Phase 0, H6). Có từ thời storefront Twig. Chưa sửa — cần quyết định yếu tố xác minh thứ hai (đề xuất: SĐT, đã bắt buộc).
+- ✅ (26/10, `AcmeVietnam` 1.7.0 — [04](../04-thi-truong-vn.md) mục 9: xác minh bằng email + SĐT) ~~**Khách vãng lai không mở được đơn từ email.**~~ Trang `/account/order/{deepLinkCode}` bắt xác minh email **+ mã bưu chính**; core (`OrderRoute::checkGuestAuth`) từ chối khi đơn không có mã bưu chính — mà đơn VN không có (Phase 0, H6). Có từ thời storefront Twig. Chưa sửa — cần quyết định yếu tố xác minh thứ hai (đề xuất: SĐT, đã bắt buộc).
 - ✅ (26/10, `AcmeVietnam` 1.6.0 — [04](../04-thi-truong-vn.md) mục 8) ~~**Email đơn hàng còn tiếng Anh**~~ ("Order confirmation"): channel vi-VN nhưng mẫu email chưa có bản vi-VN. Chưa sửa.
 
 ## Phương án đã loại

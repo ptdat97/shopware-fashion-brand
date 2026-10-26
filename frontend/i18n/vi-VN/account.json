@@ -32,10 +32,11 @@
       "total": "Tổng cộng",
       "backToList": "Quay lại danh sách đơn hàng",
       "authOrderTitle": "Xác minh đơn hàng",
-      "authOrderText": "Vui lòng nhập email và mã bưu chính đã dùng khi đặt hàng.",
+      "authOrderText": "Vui lòng nhập email và số điện thoại đã dùng khi đặt hàng.",
       "authOrderButton": "Xác minh đơn hàng",
       "emailPlaceholder": "Địa chỉ email",
-      "postalCodePlaceholder": "Mã bưu chính"
+      "postalCodePlaceholder": "Mã bưu chính",
+      "phoneNumberPlaceholder": "Số điện thoại đặt hàng"
     },
     "menu": {
       "header": "Tài khoản của bạn",
@@ -159,7 +160,7 @@
       "signUpSuccess": "Cảm ơn bạn đã đăng ký! Bạn sẽ nhận được email xác nhận trong ít phút. Bấm vào liên kết trong email để hoàn tất.",
       "verificationLinkInvalid": "Liên kết xác minh không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu gửi lại email xác nhận.",
       "orderSuccessNoOrder": "Không tìm thấy đơn hàng.",
-      "orderWrongData": "Email hoặc mã bưu chính không đúng. Vui lòng thử lại.",
+      "orderWrongData": "Email hoặc số điện thoại không khớp với đơn hàng. Vui lòng thử lại.",
       "paymentMethodChanged": "Đã đổi phương thức thanh toán.",
       "productsAdded": "Đã thêm sản phẩm vào giỏ hàng.",
       "loginRequired": "Cần đăng nhập để xem trang này. Đang chuyển tới trang đăng nhập."

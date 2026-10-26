@@ -14,7 +14,9 @@ const { t } = useI18n();
 
 const orderAuthState = reactive({
   email: "",
-  postalCode: "",
+  // Đơn VN không có mã bưu chính — xác minh khách vãng lai bằng SĐT đặt hàng (AcmeVietnam
+  // GuestPhoneOrderRoute; core chỉ nhận mã bưu chính)
+  phoneNumber: "",
 });
 
 const { pushError } = useNotifications();
@@ -25,7 +27,7 @@ const getOrderData = async () => {
     const result = await apiClient.invoke("readOrder post /order", {
       body: {
         email: orderAuthState.email,
-        zipcode: orderAuthState.postalCode,
+        phoneNumber: orderAuthState.phoneNumber,
         login: true,
         filter: [
           {
@@ -120,12 +122,12 @@ const authOrder = async () => {
           </div>
           <div class="sm:w-2/5">
             <FormInputField
-              id="deep-link-postal-code"
-              v-model="orderAuthState.postalCode"
-              type="text"
-              :label="$t('account.order.postalCodePlaceholder')"
-              :placeholder="$t('account.order.postalCodePlaceholder')"
-              autocomplete="postal-code"
+              id="deep-link-phone-number"
+              v-model="orderAuthState.phoneNumber"
+              type="tel"
+              :label="$t('account.order.phoneNumberPlaceholder')"
+              :placeholder="$t('account.order.phoneNumberPlaceholder')"
+              autocomplete="tel"
             />
           </div>
         </div>

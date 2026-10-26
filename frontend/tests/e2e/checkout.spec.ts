@@ -206,4 +206,62 @@ test.describe("Thanh toán", () => {
       page.getByTestId("notification-element-message").first(),
     ).toContainText("SAI123");
   });
+
+  test("khách vãng lai mở đơn từ link trong email bằng email + SĐT", async ({
+    page,
+    context,
+    request,
+    baseURL,
+    browser,
+  }, testInfo) => {
+    // Đơn VN không có mã bưu chính — core không cho khách vãng lai mở đơn; AcmeVietnam
+    // GuestPhoneOrderRoute xác minh bằng SĐT đặt hàng
+    test.skip(
+      !(await isMailpitAvailable(request)),
+      "Cần Mailpit để lấy link trong email",
+    );
+    const [variant] = await findInStockVariants(request);
+    await prepareCart(request, context, baseURL!, [variant!]);
+
+    await gotoHydrated(page, "/checkout");
+    const email = await fillGuestForm(page, "Hà Nội");
+    await choosePayment(page, "Thanh toán khi nhận hàng");
+    await placeOrder(page);
+
+    const mail = await waitForMail(request, email);
+    const orderUrl = mail.text.match(
+      /(https?:\/\/\S+\/account\/order\/[\w-]+)/,
+    )?.[1];
+    expect(orderUrl, "email phải có link xem đơn").toBeTruthy();
+
+    // Thiết bị khác: không có phiên của khách
+    const fresh = await browser.newContext({ baseURL });
+    const guest = await fresh.newPage();
+    await gotoHydrated(guest, new URL(orderUrl!).pathname);
+    await expect(guest.locator("#deep-link-phone-number")).toBeVisible();
+
+    await guest.locator("#deep-link-email").fill(email);
+    await guest.locator("#deep-link-phone-number").fill("0900000000");
+    await guest.getByRole("button", { name: /xác minh/i }).click();
+    await expect(
+      guest.getByTestId("notification-element-message").first(),
+    ).toContainText("không khớp");
+
+    // SĐT có mã quốc gia, khoảng trắng — vẫn khớp 0987654321
+    await guest.locator("#deep-link-phone-number").fill("+84 987 654 321");
+    await guest.getByRole("button", { name: /xác minh/i }).click();
+    await expect(guest.locator("main")).toContainText("Tóm tắt đơn hàng");
+    await expect(guest.locator("main")).toContainText(
+      "Thanh toán khi nhận hàng",
+    );
+    // Địa chỉ có tên "Họ Tên" + SĐT; giờ đặt theo giờ VN (orderDate cũ luôn hiện 7:00)
+    await expect(guest.locator("main")).toContainText("Trần Bình");
+    await expect(guest.locator("main")).toContainText("0987654321");
+    await expect(guest.locator("main")).not.toContainText(" 7:00 ");
+    await guest.screenshot({
+      path: testInfo.outputPath("guest-order.png"),
+      fullPage: true,
+    });
+    await fresh.close();
+  });
 });

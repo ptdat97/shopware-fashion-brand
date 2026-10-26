@@ -111,4 +111,6 @@ pnpm test:e2e && pnpm --filter frontend typecheck:e2e               # khi sửa 
 
 Email tiếng Việt ✅ (26/10) — 16 mẫu (`AcmeVietnam` 1.6.0), thông tin chuyển khoản trong email (`AcmePayment` 2.1.0), Mailpit local, họ tên hiển thị "Họ Tên" ở frontend.
 
-Tiếp theo: khách vãng lai mở đơn từ email (core đòi mã bưu chính — đơn VN không có), quyết định bước 5 ADR-006. Song song: **MB6 — sẵn sàng mở rộng** (ERP/PIM qua Admin API/App, đa kho, bảng size theo brand × danh mục) — phần lớn là thiết kế, chờ nhu cầu thật. Báo cáo khảo sát ✅ [docs/14-mb6-khao-sat.md](docs/14-mb6-khao-sat.md) (14/10), chờ quyết định ở mục 5. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+Khách vãng lai mở đơn từ email bằng email + SĐT ✅ (26/10, `AcmeVietnam` 1.7.0 — core chỉ nhận mã bưu chính, đơn VN không có); trang chi tiết đơn: giờ VN, địa chỉ đủ, "Miễn phí" ship.
+
+Tiếp theo: quyết định bước 5 ADR-006 (language pack), chuẩn bị go-live ([docs/06-golive.md](docs/06-golive.md): FroshTools, Mail Archive, shopware-cli + deployment-helper — docs/16). Song song: **MB6 — sẵn sàng mở rộng** (ERP/PIM qua Admin API/App, đa kho, bảng size theo brand × danh mục) — phần lớn là thiết kế, chờ nhu cầu thật. Báo cáo khảo sát ✅ [docs/14-mb6-khao-sat.md](docs/14-mb6-khao-sat.md) (14/10), chờ quyết định ở mục 5. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).

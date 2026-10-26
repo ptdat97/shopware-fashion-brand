@@ -4,6 +4,7 @@
  *   backend/custom/plugins/AcmeBrand/src/Core/Content/Brand/SalesChannel/*Route.php
  *   backend/custom/plugins/AcmePayment/src/Core/Checkout/Payment/SalesChannel/BankTransferRoute.php
  *   backend/custom/plugins/AcmeHeadless/src/System/SalesChannel/HeadlessShopSettings.php
+ *   backend/custom/plugins/AcmeVietnam/src/Checkout/Order/GuestPhoneOrderRoute.php
  */
 import type {
   components,
@@ -11,6 +12,8 @@ import type {
 } from "@shopware/api-client/store-api-types";
 
 type CoreSchemas = components["schemas"];
+
+type CoreReadOrderOperation = CoreOperations["readOrder post /order"];
 
 type CoreShopSettingsOperation =
   CoreOperations["getShopSettings get /shop-settings"];
@@ -139,5 +142,11 @@ export type operations = {
     };
     response: AcmeBankTransfer;
     responseCode: 200;
+  };
+  /** Đơn hàng — thêm `phoneNumber`: khách vãng lai xác minh bằng email + SĐT (AcmeVietnam) */
+  "readOrder post /order": Omit<CoreReadOrderOperation, "body"> & {
+    body?: NonNullable<CoreReadOrderOperation["body"]> & {
+      phoneNumber?: string;
+    };
   };
 };

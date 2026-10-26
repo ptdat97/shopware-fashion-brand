@@ -171,6 +171,14 @@ Trước đây cả 45 mẫu email của core chỉ có tiếng Anh — khách V
 - **Chuyển khoản:** `AcmePayment` 2.1.0 gắn biến `acmeBankTransfer` vào email có đơn chuyển khoản → email xác nhận / nhắc thanh toán / đổi phương thức hiện tài khoản nhận, số tiền, nội dung CK (cùng nguồn với trang cảm ơn).
 - **Kiểm:** Mailpit local (`brew services start mailpit`, `MAILER_DSN=smtp://127.0.0.1:1025` trong `backend/.env.local`, xem http://127.0.0.1:8025). Test e2e COD đọc email từ Mailpit (tiêu đề, lời chào, SĐT, link domain frontend).
 
+## 9. Khách vãng lai xem đơn bằng email + SĐT ✅ (26/10/2026)
+
+Link "Xem đơn hàng" trong email mở `/account/order/{deepLinkCode}`. Khách vãng lai phải xác minh; core chỉ nhận **email + mã bưu chính** và từ chối khi đơn không có mã bưu chính — đơn VN không có (mục 4), nên trước đây khách vãng lai **không bao giờ** mở được đơn của mình.
+
+`AcmeVietnam` 1.7.0 — `GuestPhoneOrderRoute` decorate `/store-api/order`: chưa đăng nhập + có deepLinkCode + gửi `email` và `phoneNumber` + đơn của khách vãng lai không có mã bưu chính → so email và SĐT thanh toán (chuẩn hoá: `+84 987 654 321` = `0987654321`), cùng giới hạn số lần thử (`guest_login`) và thời hạn link với core, đúng thì đăng nhập phiên khách và trả đơn. Mọi trường hợp khác đi thẳng vào core. Frontend: form xác minh hỏi "Số điện thoại đặt hàng" thay cho mã bưu chính.
+
+Kiểm (Playwright): đặt đơn → lấy link trong email (Mailpit) → mở ở trình duyệt khác không có phiên → SĐT sai bị từ chối, SĐT có mã quốc gia mở được đơn.
+
 ## Thứ tự thực hiện
 
 1. Tạo VND, đặt mặc định, sửa `decimal_precision = 0`
