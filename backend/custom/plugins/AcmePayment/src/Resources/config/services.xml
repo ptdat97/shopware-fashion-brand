@@ -20,5 +20,10 @@
             <argument type="service" id="Acme\Payment\Service\BankTransferInfoProvider"/>
         </service>
 
+
+        <service id="Acme\Payment\Subscriber\BankTransferMailSubscriber">
+            <argument type="service" id="Acme\Payment\Service\BankTransferInfoProvider"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>

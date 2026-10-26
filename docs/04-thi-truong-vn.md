@@ -161,6 +161,16 @@ Kết quả (Store API `search`): `dam` 0 → 7 · `dam den` 7, đầm đen xế
 >
 > ⚠️ **Nếu bật OpenSearch** (`SHOPWARE_ES_ENABLED=1`): hai decorator không áp cho đường OpenSearch. Phải cấu hình analyzer có `asciifolding` (gấp cả "đ") cho vi-VN.
 
+## 8. Email tiếng Việt ✅ (26/10/2026)
+
+Trước đây cả 45 mẫu email của core chỉ có tiếng Anh — khách VN nhận "Order confirmation". `AcmeVietnam` 1.6.0 thêm **bản dịch vi-VN** (dữ liệu native `mail_template_translation`) cho 16 mẫu khách hay nhận: xác nhận đơn, nhắc thanh toán, đã nhận / huỷ thanh toán, đơn đang xử lý / hoàn tất / bị huỷ, đang giao / huỷ giao, đổi phương thức thanh toán, đăng ký tài khoản, quên / đã đổi mật khẩu, form liên hệ, đăng ký nhận tin (2 mẫu). 29 mẫu còn lại (B2B, sản phẩm số, đánh giá, đổi trả…) vẫn tiếng Anh.
+
+- **Nguồn:** `AcmeVietnam/src/Resources/mail-templates/vi-VN/<technical name>/{html,plain}.twig` + `templates.json` (tiêu đề, mô tả). Sinh bằng `python3 tools/generate-mail-templates.py` — khối dùng chung (bảng đơn hàng, khối chuyển khoản) viết một lần trong script.
+- **Nạp:** migration chỉ thêm khi mẫu chưa có bản vi-VN — sửa tiếp trong Administration → Settings → Email templates không bị ghi đè. Đổi file sau khi đã nạp → cần migration mới.
+- **Nội dung theo VN:** chào "Họ Tên", giờ VN (`22:19, 26/10/2026`), địa chỉ có tỉnh/thành + SĐT, đơn COD ghi số tiền trả khi nhận, "Miễn phí" ship, bỏ đoạn mã số VAT châu Âu. Người gửi = tên shop (Settings → Basic information), không phải tên sales channel "Headless".
+- **Chuyển khoản:** `AcmePayment` 2.1.0 gắn biến `acmeBankTransfer` vào email có đơn chuyển khoản → email xác nhận / nhắc thanh toán / đổi phương thức hiện tài khoản nhận, số tiền, nội dung CK (cùng nguồn với trang cảm ơn).
+- **Kiểm:** Mailpit local (`brew services start mailpit`, `MAILER_DSN=smtp://127.0.0.1:1025` trong `backend/.env.local`, xem http://127.0.0.1:8025). Test e2e COD đọc email từ Mailpit (tiêu đề, lời chào, SĐT, link domain frontend).
+
 ## Thứ tự thực hiện
 
 1. Tạo VND, đặt mặc định, sửa `decimal_precision = 0`

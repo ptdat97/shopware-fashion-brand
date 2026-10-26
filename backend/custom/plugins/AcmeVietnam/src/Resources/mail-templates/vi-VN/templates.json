@@ -1,0 +1,66 @@
+{
+    "order_confirmation_mail": {
+        "subject": "Xác nhận đơn hàng #{{ order.orderNumber }}",
+        "description": "Xác nhận đơn hàng"
+    },
+    "order_transaction.state.paid": {
+        "subject": "Đã nhận thanh toán đơn hàng #{{ order.orderNumber }}",
+        "description": "Đã nhận thanh toán"
+    },
+    "order_transaction.state.reminded": {
+        "subject": "Nhắc thanh toán đơn hàng #{{ order.orderNumber }}",
+        "description": "Nhắc thanh toán"
+    },
+    "order.state.in_progress": {
+        "subject": "Đơn hàng #{{ order.orderNumber }} đang được xử lý",
+        "description": "Đơn hàng đang xử lý"
+    },
+    "order.state.completed": {
+        "subject": "Đơn hàng #{{ order.orderNumber }} đã hoàn tất",
+        "description": "Đơn hàng hoàn tất"
+    },
+    "order.state.cancelled": {
+        "subject": "Đơn hàng #{{ order.orderNumber }} đã bị huỷ",
+        "description": "Đơn hàng bị huỷ"
+    },
+    "order_delivery.state.shipped": {
+        "subject": "Đơn hàng #{{ order.orderNumber }} đang được giao",
+        "description": "Đã giao cho đơn vị vận chuyển"
+    },
+    "order_delivery.state.cancelled": {
+        "subject": "Giao hàng đơn #{{ order.orderNumber }} đã bị huỷ",
+        "description": "Huỷ giao hàng"
+    },
+    "order_transaction.state.cancelled": {
+        "subject": "Thanh toán đơn hàng #{{ order.orderNumber }} đã bị huỷ",
+        "description": "Huỷ thanh toán"
+    },
+    "order.payment_method.changed": {
+        "subject": "Đã đổi phương thức thanh toán đơn hàng #{{ order.orderNumber }}",
+        "description": "Đổi phương thức thanh toán"
+    },
+    "customer_register": {
+        "subject": "Chào mừng bạn đến với {{ config('core.basicInformation.shopName') ?: salesChannel.translated.name }}",
+        "description": "Xác nhận đăng ký tài khoản"
+    },
+    "customer.recovery.request": {
+        "subject": "Đặt lại mật khẩu tài khoản {{ config('core.basicInformation.shopName') ?: salesChannel.translated.name }}",
+        "description": "Khôi phục mật khẩu"
+    },
+    "customer.password.changed": {
+        "subject": "Mật khẩu tài khoản đã được thay đổi",
+        "description": "Đã đổi mật khẩu"
+    },
+    "contact_form": {
+        "subject": "Liên hệ mới từ website: {{ contactFormData.subject }}",
+        "description": "Nhận liên hệ từ website"
+    },
+    "newsletterDoubleOptIn": {
+        "subject": "Xác nhận đăng ký nhận tin",
+        "description": "Xác nhận đăng ký nhận tin"
+    },
+    "newsletterRegister": {
+        "subject": "Đăng ký nhận tin thành công",
+        "description": "Đăng ký nhận tin thành công"
+    }
+}

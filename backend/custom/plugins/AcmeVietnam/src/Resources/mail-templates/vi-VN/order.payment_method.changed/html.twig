@@ -1,0 +1,38 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+{% set orderUrl = salesChannel.domains|first.url|trim('/', 'right') ~ '/account/order/' ~ order.deepLinkCode %}
+{% set orderDate = order.orderDateTime|format_datetime(pattern='HH:mm, dd/MM/yyyy', locale='vi', timezone='Asia/Ho_Chi_Minh') %}
+{% set currencyIsoCode = order.currency.isoCode %}
+<div style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.5; color:#1f1f1f;">
+    <p>Chào {{ order.orderCustomer.lastName }} {{ order.orderCustomer.firstName }},</p>
+    <p>Phương thức thanh toán của đơn hàng <strong>#{{ order.orderNumber }}</strong> đã được đổi sang: <strong>{{ order.transactions.last.paymentMethod.translated.name }}</strong>.</p>
+    {% if acmeBankTransfer is defined and acmeBankTransfer.applicable %}
+        <div style="border:1px solid #d9cfc1; padding:12px 16px; margin:16px 0;">
+            <strong style="font-size:15px;">Thông tin chuyển khoản</strong><br>
+            {% if acmeBankTransfer.instruction %}<span style="color:#555;">{{ acmeBankTransfer.instruction|nl2br }}</span><br>{% endif %}
+            {% if acmeBankTransfer.configured %}
+                <br>
+                Ngân hàng: <strong>{{ acmeBankTransfer.bankName }}</strong><br>
+                Chủ tài khoản: <strong>{{ acmeBankTransfer.accountHolder }}</strong><br>
+                Số tài khoản: <strong>{{ acmeBankTransfer.accountNumber }}</strong><br>
+                Số tiền: <strong>{{ acmeBankTransfer.amount|currency(currencyIsoCode) }}</strong><br>
+                Nội dung chuyển khoản: <strong>{{ acmeBankTransfer.reference }}</strong>
+            {% else %}
+                Cửa hàng sẽ liên hệ với bạn để gửi thông tin tài khoản nhận tiền.
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if a11yDocuments is defined and a11yDocuments is not empty %}
+        <p>
+            Bản tài liệu dễ đọc (HTML) của đơn hàng:<br>
+            {% for a11y in a11yDocuments %}
+                {% set documentLink = (salesChannel.domains|first.url|trim('/', 'right') ~ '/account/order/document/' ~ a11y.documentId ~ '/' ~ a11y.deepLinkCode ~ '/' ~ a11y.fileExtension) %}
+                — <a href="{{ documentLink }}" target="_blank">{{ documentLink }}</a><br>
+            {% endfor %}
+        </p>
+    {% endif %}
+    <p>
+        Xem đơn hàng: <a href="{{ orderUrl }}">{{ orderUrl }}</a><br>
+        Cần hỗ trợ, bạn chỉ cần trả lời email này.
+    </p>
+    <p>Trân trọng,<br>{{ shop }}</p>
+</div>

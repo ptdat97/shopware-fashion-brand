@@ -1,0 +1,8 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+<div style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.5; color:#1f1f1f;">
+    <p>Chào {{ newsletterRecipient.lastName }} {{ newsletterRecipient.firstName }},</p>
+    <p>Cảm ơn bạn đã quan tâm bản tin của {{ shop }}. Bấm vào liên kết sau để xác nhận đăng ký:</p>
+    <p><a href="{{ url }}">Xác nhận đăng ký nhận tin</a></p>
+    <p>Nếu bạn không đăng ký, hãy bỏ qua email này.</p>
+    <p>Trân trọng,<br>{{ shop }}</p>
+</div>

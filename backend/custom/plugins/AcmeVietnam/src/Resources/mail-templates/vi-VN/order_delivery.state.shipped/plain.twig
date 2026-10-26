@@ -1,0 +1,14 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+{% set orderUrl = salesChannel.domains|first.url|trim('/', 'right') ~ '/account/order/' ~ order.deepLinkCode %}
+{% set orderDate = order.orderDateTime|format_datetime(pattern='HH:mm, dd/MM/yyyy', locale='vi', timezone='Asia/Ho_Chi_Minh') %}
+{% set currencyIsoCode = order.currency.isoCode %}
+Chào {{ order.orderCustomer.lastName }} {{ order.orderCustomer.firstName }},
+
+Đơn hàng #{{ order.orderNumber }} (đặt lúc {{ orderDate }}) đã chuyển sang trạng thái: {{ order.deliveries.first.stateMachineState.translated.name }}.
+Đơn hàng đã được giao cho đơn vị vận chuyển. Bạn để ý điện thoại để nhận hàng nhé.{% if order.transactions.last.paymentMethod.technicalName == 'payment_cashpayment' %} Vui lòng chuẩn bị {{ order.price.totalPrice|currency(currencyIsoCode) }} để thanh toán khi nhận hàng.{% endif %}
+
+Xem đơn hàng: {{ orderUrl }}
+Cần hỗ trợ, bạn chỉ cần trả lời email này.
+
+Trân trọng,
+{{ shop }}

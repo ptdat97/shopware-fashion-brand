@@ -50,7 +50,7 @@ Một dự án chỉ được đề xuất khi đạt đủ cả bốn điều:
 ## 3. Lộ trình đề xuất
 
 1. ✅ (22/10) **Playwright** — 12 test trong `frontend/tests/e2e`, `pnpm test:e2e` ([15-headless.md](15-headless.md) mục 9).
-2. **Mailpit + Mail Archive + Template Mail**, rồi làm mẫu email tiếng Việt và kiểm bằng email thật.
+2. ✅ (26/10) **Mailpit** + mẫu email tiếng Việt ([04-thi-truong-vn.md](04-thi-truong-vn.md) mục 8). Template Mail **không dùng**: bản dịch mẫu email theo ngôn ngữ là tính năng sẵn của core (quy tắc 6) — nạp bằng migration, nội dung là file trong git. Mail Archive: cài khi chuẩn bị go-live (tra cứu / gửi lại email cho CSKH).
 3. **FroshTools**, sau đó **shopware-cli + deployment-helper** trong lúc chuẩn bị go-live ([06-golive.md](06-golive.md)).
 4. Phần còn lại cài khi tới việc tương ứng.
 

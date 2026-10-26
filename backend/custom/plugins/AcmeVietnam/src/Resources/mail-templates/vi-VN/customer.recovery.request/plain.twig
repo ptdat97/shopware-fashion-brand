@@ -1,0 +1,10 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+Chào {{ customerRecovery.customer.lastName }} {{ customerRecovery.customer.firstName }},
+
+Bạn vừa yêu cầu đặt lại mật khẩu tài khoản tại {{ shop }}. Mở liên kết sau để đặt mật khẩu mới (có hiệu lực trong 2 giờ):
+{{ resetUrl }}
+
+Nếu bạn không yêu cầu, hãy bỏ qua email này — mật khẩu sẽ không thay đổi.
+
+Trân trọng,
+{{ shop }}

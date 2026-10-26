@@ -1,0 +1,36 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+{% set orderUrl = salesChannel.domains|first.url|trim('/', 'right') ~ '/account/order/' ~ order.deepLinkCode %}
+{% set orderDate = order.orderDateTime|format_datetime(pattern='HH:mm, dd/MM/yyyy', locale='vi', timezone='Asia/Ho_Chi_Minh') %}
+{% set currencyIsoCode = order.currency.isoCode %}
+Chào {{ order.orderCustomer.lastName }} {{ order.orderCustomer.firstName }},
+
+Đơn hàng #{{ order.orderNumber }} (đặt lúc {{ orderDate }}) chưa được thanh toán qua {{ order.transactions.last.paymentMethod.translated.name }}. Đơn hàng sẽ được chuẩn bị ngay khi cửa hàng nhận được tiền.
+{% if acmeBankTransfer is defined and acmeBankTransfer.applicable %}
+THÔNG TIN CHUYỂN KHOẢN
+{% if acmeBankTransfer.instruction %}{{ acmeBankTransfer.instruction }}
+{% endif %}{% if acmeBankTransfer.configured %}Ngân hàng: {{ acmeBankTransfer.bankName }}
+Chủ tài khoản: {{ acmeBankTransfer.accountHolder }}
+Số tài khoản: {{ acmeBankTransfer.accountNumber }}
+Số tiền: {{ acmeBankTransfer.amount|currency(currencyIsoCode) }}
+Nội dung chuyển khoản: {{ acmeBankTransfer.reference }}
+{% else %}Cửa hàng sẽ liên hệ với bạn để gửi thông tin tài khoản nhận tiền.
+{% endif %}
+{% endif %}
+{% for lineItem in order.lineItems %}
+- {{ lineItem.label|u.wordwrap(80) }}{% if lineItem.payload.productNumber is defined %} ({{ lineItem.payload.productNumber }}){% endif %} × {{ lineItem.quantity }} = {{ lineItem.totalPrice|currency(currencyIsoCode) }}
+{% endfor %}
+{% for shippingCost in order.deliveries %}Phí vận chuyển: {% if shippingCost.shippingCosts.totalPrice > 0 %}{{ shippingCost.shippingCosts.totalPrice|currency(currencyIsoCode) }}{% else %}Miễn phí{% endif %}
+{% endfor %}Tổng cộng: {{ order.price.totalPrice|currency(currencyIsoCode) }}
+{% for calculatedTax in order.price.calculatedTaxes %}{% if order.taxStatus is same as('net') %}Chưa gồm{% else %}Đã gồm{% endif %} VAT {{ calculatedTax.taxRate }}%: {{ calculatedTax.tax|currency(currencyIsoCode) }}
+{% endfor %}
+{% if order.transactions is defined and order.transactions is not empty %}Thanh toán: {{ order.transactions.last.paymentMethod.translated.name }}
+{% endif %}{% set delivery = order.deliveries.first %}{% if delivery %}Vận chuyển: {{ delivery.shippingMethod.translated.name }}
+{% endif %}{% set address = delivery ? delivery.shippingOrderAddress : order.addresses.get(order.billingAddressId) %}{% if address %}
+Giao đến: {{ address.lastName }} {{ address.firstName }}{% if address.phoneNumber %} — {{ address.phoneNumber }}{% endif %}
+{{ address.street }}, {{ address.city }}{% if address.countryState %}, {{ address.countryState.translated.name }}{% endif %}, {{ address.country.translated.name }}
+{% endif %}
+Xem đơn hàng: {{ orderUrl }}
+Cần hỗ trợ, bạn chỉ cần trả lời email này.
+
+Trân trọng,
+{{ shop }}

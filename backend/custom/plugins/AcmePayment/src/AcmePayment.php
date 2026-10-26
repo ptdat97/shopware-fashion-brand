@@ -29,6 +29,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
  * - Cấu hình `AcmePayment.config.{bankBin,accountNumber,accountHolder,referencePrefix,transferInstruction}`
  *   (theo sales channel) — tài khoản nhận dùng chung cho "Chuyển khoản trước" của core và VietQR
  * - Store API `store-api.acme.payment.bank-transfer` (từ 1.3.0, frontend headless)
+ * - Biến `acmeBankTransfer` trong dữ liệu email có đơn chuyển khoản (từ 2.1.0)
  * - Đã bỏ ở 2.0.0 (ADR-006): extension `acmeVietQr` của trang cảm ơn Twig và block
  *   `page_checkout_finish_details` — dùng Store API ở trên
  *

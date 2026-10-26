@@ -1,0 +1,23 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+{% set orderUrl = salesChannel.domains|first.url|trim('/', 'right') ~ '/account/order/' ~ order.deepLinkCode %}
+{% set orderDate = order.orderDateTime|format_datetime(pattern='HH:mm, dd/MM/yyyy', locale='vi', timezone='Asia/Ho_Chi_Minh') %}
+{% set currencyIsoCode = order.currency.isoCode %}
+<div style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.5; color:#1f1f1f;">
+    <p>Chào {{ order.orderCustomer.lastName }} {{ order.orderCustomer.firstName }},</p>
+    <p>Đơn hàng <strong>#{{ order.orderNumber }}</strong> (đặt lúc {{ orderDate }}) đã chuyển sang trạng thái: <strong>{{ order.stateMachineState.translated.name }}</strong>.</p>
+    <p>Cảm ơn bạn đã mua sắm tại {{ shop }}. Hẹn gặp lại bạn!</p>
+    {% if a11yDocuments is defined and a11yDocuments is not empty %}
+        <p>
+            Bản tài liệu dễ đọc (HTML) của đơn hàng:<br>
+            {% for a11y in a11yDocuments %}
+                {% set documentLink = (salesChannel.domains|first.url|trim('/', 'right') ~ '/account/order/document/' ~ a11y.documentId ~ '/' ~ a11y.deepLinkCode ~ '/' ~ a11y.fileExtension) %}
+                — <a href="{{ documentLink }}" target="_blank">{{ documentLink }}</a><br>
+            {% endfor %}
+        </p>
+    {% endif %}
+    <p>
+        Xem đơn hàng: <a href="{{ orderUrl }}">{{ orderUrl }}</a><br>
+        Cần hỗ trợ, bạn chỉ cần trả lời email này.
+    </p>
+    <p>Trân trọng,<br>{{ shop }}</p>
+</div>

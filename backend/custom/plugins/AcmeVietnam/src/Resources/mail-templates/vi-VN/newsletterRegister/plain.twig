@@ -1,0 +1,7 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+Chào {{ newsletterRecipient.lastName }} {{ newsletterRecipient.firstName }},
+
+Bạn đã đăng ký nhận bản tin của {{ shop }} thành công. Cảm ơn bạn!
+
+Trân trọng,
+{{ shop }}

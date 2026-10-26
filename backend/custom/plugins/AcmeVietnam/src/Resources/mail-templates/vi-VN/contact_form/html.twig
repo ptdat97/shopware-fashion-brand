@@ -1,0 +1,12 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+<div style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.5; color:#1f1f1f;">
+    <p>Có tin nhắn mới gửi qua form liên hệ.</p>
+    <p>
+        Họ tên: {{ contactFormData.lastName }} {{ contactFormData.firstName }}<br>
+        Email: {{ contactFormData.email }}<br>
+        Điện thoại: {{ contactFormData.phone }}<br>
+        Tiêu đề: {{ contactFormData.subject }}
+    </p>
+    <p>{{ contactFormData.comment|nl2br }}</p>
+    <p>Trân trọng,<br>{{ shop }}</p>
+</div>

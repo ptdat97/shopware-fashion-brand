@@ -1,0 +1,23 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+{% set orderUrl = salesChannel.domains|first.url|trim('/', 'right') ~ '/account/order/' ~ order.deepLinkCode %}
+{% set orderDate = order.orderDateTime|format_datetime(pattern='HH:mm, dd/MM/yyyy', locale='vi', timezone='Asia/Ho_Chi_Minh') %}
+{% set currencyIsoCode = order.currency.isoCode %}
+Chào {{ order.orderCustomer.lastName }} {{ order.orderCustomer.firstName }},
+
+Phương thức thanh toán của đơn hàng #{{ order.orderNumber }} đã được đổi sang: {{ order.transactions.last.paymentMethod.translated.name }}.
+{% if acmeBankTransfer is defined and acmeBankTransfer.applicable %}
+THÔNG TIN CHUYỂN KHOẢN
+{% if acmeBankTransfer.instruction %}{{ acmeBankTransfer.instruction }}
+{% endif %}{% if acmeBankTransfer.configured %}Ngân hàng: {{ acmeBankTransfer.bankName }}
+Chủ tài khoản: {{ acmeBankTransfer.accountHolder }}
+Số tài khoản: {{ acmeBankTransfer.accountNumber }}
+Số tiền: {{ acmeBankTransfer.amount|currency(currencyIsoCode) }}
+Nội dung chuyển khoản: {{ acmeBankTransfer.reference }}
+{% else %}Cửa hàng sẽ liên hệ với bạn để gửi thông tin tài khoản nhận tiền.
+{% endif %}
+{% endif %}
+Xem đơn hàng: {{ orderUrl }}
+Cần hỗ trợ, bạn chỉ cần trả lời email này.
+
+Trân trọng,
+{{ shop }}

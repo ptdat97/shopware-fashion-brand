@@ -1,0 +1,12 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+Có tin nhắn mới gửi qua form liên hệ.
+
+Họ tên: {{ contactFormData.lastName }} {{ contactFormData.firstName }}
+Email: {{ contactFormData.email }}
+Điện thoại: {{ contactFormData.phone }}
+Tiêu đề: {{ contactFormData.subject }}
+
+{{ contactFormData.comment }}
+
+Trân trọng,
+{{ shop }}

@@ -1,0 +1,6 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+<div style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:1.5; color:#1f1f1f;">
+    <p>Chào {{ customer.lastName }} {{ customer.firstName }},</p>
+    <p>Cảm ơn bạn đã tạo tài khoản tại {{ shop }}. Bạn đăng nhập bằng email <strong>{{ customer.email }}</strong> và mật khẩu đã chọn; có thể đổi mật khẩu bất cứ lúc nào trong mục Tài khoản.</p>
+    <p>Trân trọng,<br>{{ shop }}</p>
+</div>

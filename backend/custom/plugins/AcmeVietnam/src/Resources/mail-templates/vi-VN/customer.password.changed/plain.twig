@@ -1,0 +1,7 @@
+{% set shop = config('core.basicInformation.shopName') ?: salesChannel.translated.name %}
+Chào {{ customer.lastName }} {{ customer.firstName }},
+
+Mật khẩu tài khoản của bạn tại {{ shop }} vừa được thay đổi. Nếu không phải bạn thực hiện, hãy trả lời email này ngay.
+
+Trân trọng,
+{{ shop }}

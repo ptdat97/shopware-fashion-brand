@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { isMailpitAvailable, waitForMail } from "./support/mailpit";
 import { gotoHydrated } from "./support/page";
 import {
   findInStockVariants,
@@ -13,14 +14,16 @@ import {
  */
 const digits = (text: string) => text.replace(/\D/g, "");
 
-async function fillGuestForm(page: Page, province: string) {
-  await page.locator("#email").fill(`e2e-${Date.now()}@example.com`);
+async function fillGuestForm(page: Page, province: string): Promise<string> {
+  const email = `e2e-${Date.now()}@example.com`;
+  await page.locator("#email").fill(email);
   await page.locator("#first-name").fill("Bình");
   await page.locator("#last-name").fill("Trần");
   await page.locator("#phone-number").fill("0987654321");
   await page.locator("#street").fill("45 Ngõ Thử, Phường Thử");
   await page.locator("#city").fill("Quận Thử");
   await page.locator("#state").selectOption({ label: province });
+  return email;
 }
 
 async function choosePayment(page: Page, name: string) {
@@ -55,13 +58,13 @@ test.describe("Thanh toán", () => {
     await prepareCart(request, context, baseURL!, variants);
 
     await gotoHydrated(page, "/checkout");
-    await fillGuestForm(page, "Hà Nội");
+    const email = await fillGuestForm(page, "Hà Nội");
     await choosePayment(page, "Thanh toán khi nhận hàng");
     const totalBefore = digits(
       await page.getByTestId("cart-total").innerText(),
     );
 
-    await placeOrder(page);
+    const orderNumber = await placeOrder(page);
 
     expect(digits(await page.getByTestId("order-total").innerText())).toBe(
       totalBefore,
@@ -73,6 +76,16 @@ test.describe("Thanh toán", () => {
       "Thanh toán khi nhận hàng",
     );
     await expect(page.getByTestId("bank-transfer")).toHaveCount(0);
+
+    // Email xác nhận đơn tiếng Việt (AcmeVietnam), link trỏ domain frontend (ADR-006)
+    if (await isMailpitAvailable(request)) {
+      const mail = await waitForMail(request, email);
+      expect(mail.subject).toBe(`Xác nhận đơn hàng #${orderNumber}`);
+      expect(mail.text).toContain("Chào Trần Bình,");
+      expect(mail.text).toContain("Bạn thanh toán");
+      expect(mail.text).toContain("0987654321");
+      expect(mail.text).toContain(`${baseURL}/account/order/`);
+    }
   });
 
   test("Chuyển khoản trước — thông tin chuyển khoản từ backend @mobile", async ({
