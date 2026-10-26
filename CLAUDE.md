@@ -53,7 +53,7 @@ APP_URL   http://shopware-fashion-brand.test   (Herd symlink → backend/)
 Store API http://shopware-fashion-brand.test/store-api/
 Frontend  http://localhost:3000                (pnpm dev)
 Database  mysql://root@127.0.0.1:3306/shopware
-Shopware  6.7.15.1 · PHP 8.4 · MySQL 9.7.2 (DBngin — bản riêng, dùng chung cổng 3306 với dự án khác: chỉ bật một bản) · Node 22 · pnpm 12
+Shopware  6.7.15.1 · PHP 8.4 · MySQL 8.4.7 LTS (DBngin, cổng 3306 — ADR-001; backup bằng `/Users/Shared/DBngin/mysql/8.4.7_arm64/bin/mysqldump`, không dùng `mysqldump` 8.0.33 mặc định) · Node 22 · pnpm 12
 Mailpit   http://127.0.0.1:8025               (brew services start mailpit — MAILER_DSN trong backend/.env.local; email không ra ngoài)
 ```
 
@@ -115,6 +115,6 @@ Khách vãng lai mở đơn từ email bằng email + SĐT ✅ (26/10, `AcmeViet
 
 Chuẩn bị go-live (26/10): FroshTools + Mail Archive (composer), quy trình build/deploy bằng `shopware/deployment-helper` — [docs/runbook/07-deploy.md](docs/runbook/07-deploy.md), cấu hình `backend/.config/shopware-project.yml`.
 
-> ⚠️ **DB local đang chạy MySQL 9.7.2**, trái [ADR-001](docs/decisions/ADR-001-mysql.md) (8.0.33). Backup phải dùng `mysqldump` cùng major: `/Users/Shared/DBngin/mysql/9.7.2_arm64/bin/mysqldump`.
+MySQL 8.4 LTS ✅ (26/10) — local chuyển 9.7.2 → 8.4.7, 133 test PHP + 12 e2e đạt ([ADR-001](docs/decisions/ADR-001-mysql.md) mục cập nhật).
 
-Tiếp theo: quyết định MySQL local (9.7.2 hay về 8.0.33), bước 5 ADR-006 (language pack), hạ tầng go-live (domain, HTTPS, SMTP thật — docs/06). Song song: **MB6 — sẵn sàng mở rộng** (ERP/PIM qua Admin API/App, đa kho, bảng size theo brand × danh mục) — phần lớn là thiết kế, chờ nhu cầu thật. Báo cáo khảo sát ✅ [docs/14-mb6-khao-sat.md](docs/14-mb6-khao-sat.md) (14/10), chờ quyết định ở mục 5. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).
+Tiếp theo: đo tốc độ trên mobile (build production + Lighthouse), bước 5 ADR-006 (language pack), hạ tầng go-live (domain, HTTPS, SMTP thật — docs/06). Song song: **MB6 — sẵn sàng mở rộng** (ERP/PIM qua Admin API/App, đa kho, bảng size theo brand × danh mục) — phần lớn là thiết kế, chờ nhu cầu thật. Báo cáo khảo sát ✅ [docs/14-mb6-khao-sat.md](docs/14-mb6-khao-sat.md) (14/10), chờ quyết định ở mục 5. Phase 4 (marketing & vận hành) làm sau. Xem [docs/01-roadmap.md](docs/01-roadmap.md).

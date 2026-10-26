@@ -39,7 +39,7 @@ Biến môi trường bắt buộc trên server (không commit — `backend/.env
 | Biến | Ghi chú |
 |---|---|
 | `APP_ENV=prod`, `APP_SECRET` | `APP_SECRET` mới — giá trị local coi như đã lộ (06-golive) |
-| `DATABASE_URL` | User riêng có mật khẩu, MySQL **8.0 / 8.4** ([ADR-001](../decisions/ADR-001-mysql.md)) |
+| `DATABASE_URL` | User riêng có mật khẩu, **MySQL 8.4 LTS** ([ADR-001](../decisions/ADR-001-mysql.md) — 8.0 đã hết hỗ trợ 30/04/2026) |
 | `APP_URL` | URL backend (Admin + Store API) |
 | `ACME_FRONTEND_URL` | Domain frontend — migration `AcmeVietnam` tạo domain external storefront cho channel `Headless` |
 | `MAILER_DSN` | SMTP thật. Local dùng Mailpit (`smtp://127.0.0.1:1025`) |

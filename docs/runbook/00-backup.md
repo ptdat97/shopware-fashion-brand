@@ -4,14 +4,14 @@
 
 ## Phiên bản công cụ
 
-Đã kiểm chứng trên máy hiện tại (26/07/2026):
+Từ 26/10/2026 server là **MySQL 8.4.7** ([ADR-001](../decisions/ADR-001-mysql.md), mục cập nhật). `mysqldump` mặc định trong PATH vẫn là bản **8.0.33** của DBngin — **không dùng**; gọi đúng client cùng phiên bản:
 
-```
-mysqldump  Ver 8.0.33 for macos13 on arm64
-Server version: 8.0.33
+```bash
+MYSQL_BIN=/Users/Shared/DBngin/mysql/8.4.7_arm64/bin
+$MYSQL_BIN/mysqldump --version   # mysqldump  Ver 8.4.7
 ```
 
-> ✅ **Client và server cùng phiên bản 8.0.33.** Đây là điều kiện bắt buộc: `mysqldump` lệch major version so với server tạo ra bản dump không đáng tin. Lý do chọn 8.0.33: [../decisions/ADR-001-mysql.md](../decisions/ADR-001-mysql.md).
+> ⚠️ **Client và server phải cùng phiên bản (ít nhất cùng major).** `mysqldump` lệch major so với server tạo ra bản dump không đáng tin. Các lệnh dưới viết `mysqldump` / `mysql` — thay bằng `$MYSQL_BIN/mysqldump`, `$MYSQL_BIN/mysql`.
 
 Dù vậy nguyên tắc vẫn giữ nguyên: **backup chưa từng được khôi phục thử thì không phải backup.** Xem mục test khôi phục bên dưới.
 
