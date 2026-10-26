@@ -76,6 +76,8 @@ const loginModal = inject<{
   open: (options?: { onSuccess?: () => void | Promise<void> }) => void;
 } | null>("loginModal", null);
 
+const { wishlistEnabled } = useShopSettings();
+
 function handleWishlistClick() {
   if (isLoggedIn.value || !loginModal) {
     props.toggleWishlist();
@@ -139,7 +141,8 @@ function handleWishlistClick() {
       </div>
     </div>
 
-    <client-only>
+    <!-- Ẩn khi người vận hành tắt wishlist (Settings → Cart) — quy tắc cứng số 8 -->
+    <client-only v-if="wishlistEnabled">
       <SwIconButton
         type="secondary"
         :aria-label="

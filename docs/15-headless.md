@@ -180,6 +180,7 @@ Quy tắc cứng số 8 (CLAUDE.md), chi tiết [08-quy-tac-phat-trien.md](08-qu
 | Tìm kiếm không dấu | Backend (`AcmeVietnam`) |
 | Trạng thái đơn, thời gian giao | Bản dịch trong DB (`AcmeVietnam`) |
 | Sitemap | Core sinh, frontend chỉ proxy |
+| Độ dài mật khẩu tối thiểu, bật/tắt wishlist | `shop-settings` → `loginRegistration.passwordMinLength`, `cart.wishlistEnabled` (L7, L9) |
 | Quy tắc robots.txt, logo | `AcmeHeadless` qua shop-settings (L4, L5) |
 | Thông tin chuyển khoản: tài khoản, số tiền, nội dung CK, hướng dẫn, QR | `AcmePayment` 1.3.0 — `GET /store-api/acme/payment/bank-transfer/{orderId}` |
 | Mã khuyến mãi: áp/không áp, câu lỗi, số tiền giảm | Giỏ hàng core (`addPromotionCode`, `translatedMessage` của lỗi — H8) |
@@ -196,7 +197,17 @@ Quy tắc cứng số 8 (CLAUDE.md), chi tiết [08-quy-tac-phat-trien.md](08-qu
 | L5 | ✅ (21/10) ~~Ảnh logo chưa có nguồn cho headless~~ | Ảnh trong **Media** của Shopware (`backend/public/media`), chọn ở Administration → Extensions → **Acme Frontend headless** → Logo | `extensions.acmeHeadless.logo` của shop-settings; `LayoutLogo` hiện ảnh (alt = alt của media, trống thì tên shop), footer đảo màu trắng; chưa chọn ảnh / plugin tắt → chữ tên shop như cũ |
 | L6 | Múi giờ `Asia/Ho_Chi_Minh` ở trang cảm ơn | Store API không trả múi giờ shop | Chấp nhận — một thị trường VN; ghi lại nếu mở thị trường khác |
 
-**Chưa rà:** các cấu hình `shop-settings` khác mà template có thể đang bỏ qua — `cart.showDeliveryTime`, `cart.wishlistEnabled`, `cart.showTosCheckbox`, `listing.allowBuyInListing`, `loginRegistration.requireDataProtectionCheckbox`… Rà khi làm tới từng màn hình tương ứng.
+### Rà `shop-settings` (26/10/2026)
+
+Template và `cms-base-layer` không đọc cấu hình nào trong `cart`, `listing`, `loginRegistration` (trừ SĐT — H6) và tự gán cứng vài quy tắc form.
+
+| # | Cấu hình | Trước | Sau |
+|---|---|---|---|
+| L7 | `loginRegistration.passwordMinLength` | ✅ Gán cứng 8 ở đăng ký, tạo tài khoản khi thanh toán, đổi mật khẩu | Đọc từ backend (`useShopSettings().passwordMinLength`) |
+| L8 | (không có ở backend) | ✅ Địa chỉ ≥ 3 ký tự, mật khẩu đăng nhập ≥ 3 ký tự — quy tắc tự chế | Bỏ — chỉ còn "bắt buộc"; đăng nhập đúng/sai do backend kiểm |
+| L9 | `cart.wishlistEnabled` | ✅ Nút yêu thích ở header và trên thẻ sản phẩm luôn hiện | Ẩn khi tắt. Đã thử: tắt → 0/0 nút, bật lại → 1 + 7 (đổi bằng `system:config:set … --json` — thiếu `--json` thì lưu chuỗi `"false"`, backend hiểu là bật) |
+| L10 | `listing.showReview`, `markAsNew`, `cart.showDeliveryTime`, `cart.showTosCheckbox`, `showCustomerComment`, `loginRegistration.requireDataProtectionCheckbox`, `showSalutation` | Frontend không đọc. **Giá trị hiện tại khớp** những gì frontend đang hiện (đánh giá: bật; ô điều khoản / ghi chú / đồng ý dữ liệu: tắt), nên chưa sai | Làm khi người vận hành cần đổi — phần lớn nằm trong component của layer, phải override (mục 5) |
+| — | `cart.maxQuantity` | Không cần: số lượng tối đa của từng sản phẩm do core tính sẵn (`calculatedMaxPurchase`) | — |
 
 ## 9. Kiểm thử e2e (Playwright)
 

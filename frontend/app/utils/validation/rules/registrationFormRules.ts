@@ -9,6 +9,8 @@ export function registrationFormRules(
   countryId: Ref<string>,
   countryHasStates: Ref<boolean>,
   fields: AddressFieldFlags,
+  /** loginRegistration.passwordMinLength của backend */
+  passwordMinLength: Ref<number>,
 ) {
   const { required, minLength, email, requiredIf } = customValidators();
 
@@ -29,15 +31,15 @@ export function registrationFormRules(
     },
     password: {
       required,
-      minLength: minLength(8),
+      minLength: minLength(unref(passwordMinLength)),
     },
     billingAddress: {
       company: {
         required: requiredIf(() => unref(accountType) === "business"),
       },
+      // Chỉ bắt buộc — backend không đặt độ dài tối thiểu cho địa chỉ (quy tắc cứng số 8)
       street: {
         required,
-        minLength: minLength(3),
       },
       zipcode: {
         required: requiredIf(() => fields.postalCodeRequired.value),

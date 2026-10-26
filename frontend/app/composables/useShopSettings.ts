@@ -27,6 +27,14 @@ export function useShopSettings() {
     logo: computed(
       () => settings.value?.extensions?.acmeHeadless?.logo ?? null,
     ),
+    /** Settings → Login & registration → Độ dài mật khẩu tối thiểu (0: chưa tải — không kiểm) */
+    passwordMinLength: computed(
+      () => settings.value?.loginRegistration?.passwordMinLength ?? 0,
+    ),
+    /** Settings → Cart → Bật danh sách yêu thích (chưa tải → ẩn, tránh hiện rồi biến mất) */
+    wishlistEnabled: computed(
+      () => settings.value?.cart?.wishlistEnabled ?? false,
+    ),
     ready: result,
   };
 }

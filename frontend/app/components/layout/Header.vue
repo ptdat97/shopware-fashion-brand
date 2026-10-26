@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const { count: cartCount } = useCart();
 const { count: wishlistCount } = useWishlist();
+const { wishlistEnabled } = useShopSettings();
 const { isLoggedIn } = useUser();
 const { push } = useRouter();
 const sideMenuController = useSideMenuModal();
@@ -109,7 +110,8 @@ watch(
                 </Transition>
               </ClientOnly>
             </div>
-            <ClientOnly>
+            <!-- Ẩn khi người vận hành tắt wishlist (Settings → Cart) — quy tắc cứng số 8 -->
+            <ClientOnly v-if="wishlistEnabled">
               <NuxtLink
                 data-testid="header-wishlist-button"
                 :to="formatLink('/wishlist')"

@@ -132,6 +132,7 @@ const { r$ } = useRegle(
     computed(() => state.billingAddress.countryId),
     countryHasStates,
     addressFields,
+    useShopSettings().passwordMinLength,
   ),
 );
 const invokeSubmit = async () => {

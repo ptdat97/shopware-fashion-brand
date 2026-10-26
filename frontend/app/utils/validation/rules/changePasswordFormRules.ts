@@ -5,12 +5,15 @@ export function changePasswordFormRules(
   state: Ref<
     operations["changePassword post /account/change-password"]["body"]
   >,
+  /** loginRegistration.passwordMinLength của backend */
+  passwordMinLength: Ref<number>,
 ) {
   const { required, minLength, sameAs } = customValidators();
-  return {
+  // computed: luật đổi theo cấu hình backend khi shop-settings tải xong
+  return computed(() => ({
     newPassword: {
       required,
-      minLength: minLength(8),
+      minLength: minLength(unref(passwordMinLength)),
     },
     newPasswordConfirm: {
       required,
@@ -19,5 +22,5 @@ export function changePasswordFormRules(
     password: {
       required,
     },
-  };
+  }));
 }

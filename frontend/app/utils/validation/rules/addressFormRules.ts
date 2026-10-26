@@ -12,7 +12,7 @@ export function addressFormRules(
   countryHasStates: Ref<boolean>,
   fields: AddressFieldFlags,
 ) {
-  const { required, minLength, requiredIf } = customValidators();
+  const { required, requiredIf } = customValidators();
 
   return computed(() => ({
     salutationId: {
@@ -25,9 +25,9 @@ export function addressFormRules(
     lastName: {
       required,
     },
+    // Chỉ bắt buộc — backend không đặt độ dài tối thiểu cho địa chỉ (quy tắc cứng số 8)
     street: {
       required,
-      minLength: minLength(3),
     },
     zipcode: {
       required: requiredIf(() => fields.postalCodeRequired.value),

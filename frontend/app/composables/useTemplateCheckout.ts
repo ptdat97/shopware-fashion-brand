@@ -47,6 +47,7 @@ export function useTemplateCheckout(): UseTemplateCheckoutReturn {
     phoneNumber: "",
   });
 
+  const { passwordMinLength } = useShopSettings();
   const { phoneNumberRequired, postalCodeRequired } = useAddressFieldSettings(
     () => billingAddress.value.countryId,
   );
@@ -69,9 +70,9 @@ export function useTemplateCheckout(): UseTemplateCheckoutReturn {
     lastName: {
       required,
     },
+    // Chỉ bắt buộc — backend không đặt độ dài tối thiểu cho địa chỉ (quy tắc cứng số 8)
     street: {
       required,
-      minLength: minLength(3),
     },
     zipcode: {
       required: requiredIf(() => postalCodeRequired.value),
@@ -98,7 +99,8 @@ export function useTemplateCheckout(): UseTemplateCheckoutReturn {
     password: createAccount.value
       ? {
           required,
-          minLength: minLength(8),
+          // Độ dài tối thiểu do backend cấu hình (Settings → Login & registration)
+          minLength: minLength(passwordMinLength.value),
         }
       : {},
   }));

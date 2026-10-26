@@ -18,7 +18,10 @@ const state = ref<
   password: "",
 });
 
-const { r$ } = useRegle(state, changePasswordFormRules(state));
+const { r$ } = useRegle(
+  state,
+  changePasswordFormRules(state, useShopSettings().passwordMinLength),
+);
 
 async function handleSubmit() {
   await r$.$validate();
