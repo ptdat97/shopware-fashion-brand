@@ -27,7 +27,9 @@ Shopware Store (api.shopware.com) đã được thử tra cứu nhưng API trả
 | AcmeBrand | 1.2.0 | Active | 0 | Plugin tự viết — thương hiệu (Phase MB) |
 | AcmeTheme | 1.0.0 | Active | 0 | Plugin tự viết — chỉ hiển thị: theme, template (Phase 3) |
 | AcmeDemoData | 1.0.0 | Active | 0 | Plugin tự viết — **gỡ trước khi go-live**, thay bằng hàng thật |
-| SwagLanguagePack | dev-master | Active | 1 | Theo dõi bản release ổn định hỗ trợ 6.7 để chuyển sang |
+| SwagLanguagePack | dev-master | Active | 1 | Theo dõi bản release ổn định hỗ trợ 6.7 để chuyển sang. Phụ thuộc `shopware/storefront` — chặn bước 5 ADR-006 |
+| FroshTools | 3.16.0 | Active | 1 | Cài 26/10/2026 (composer). Sức khoẻ hệ thống, hàng đợi, log, scheduled task trong Admin. Không cần storefront |
+| FroshPlatformMailArchive | 3.8.0 | Active | 1 | Cài 26/10/2026 (composer). Lưu email đã gửi để tra cứu / gửi lại; tự dọn theo scheduled task. Không cần storefront |
 
 > Mỗi plugin một nghiệp vụ và độc lập nhau — bản đồ trách nhiệm: [08-quy-tac-phat-trien.md](08-quy-tac-phat-trien.md) Quy tắc số 5.
 >

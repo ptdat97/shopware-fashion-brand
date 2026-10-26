@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "58defc641025f1b9001814d722c9288e",
+    "content-hash": "38b6baabddc6fd0e0d7a5692541f1f2e",
     "packages": [
         {
             "name": "async-aws/core",
@@ -999,6 +999,51 @@
                 "source": "https://github.com/defuse/php-encryption/tree/v2.4.0"
             },
             "time": "2023-06-19T06:10:36+00:00"
+        },
+        {
+            "name": "digilist/dependency-graph",
+            "version": "v0.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/digilist/dependency-graph.git",
+                "reference": "e3ac7146fc56c60196c1bee936f0048e3d6d07dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/digilist/dependency-graph/zipball/e3ac7146fc56c60196c1bee936f0048e3d6d07dd",
+                "reference": "e3ac7146fc56c60196c1bee936f0048e3d6d07dd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^10 || ^11"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Digilist\\DependencyGraph\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Markus Fasselt",
+                    "email": "markus.fasselt@gmail.com"
+                }
+            ],
+            "description": "Dependency Graph Resolver in PHP",
+            "support": {
+                "issues": "https://github.com/digilist/dependency-graph/issues",
+                "source": "https://github.com/digilist/dependency-graph/tree/v0.4.3"
+            },
+            "time": "2026-03-10T08:05:15+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -2001,6 +2046,140 @@
             "time": "2025-10-28T10:28:17+00:00"
         },
         {
+            "name": "frosh/mail-platform-archive",
+            "version": "3.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfShopware/FroshPlatformMailArchive.git",
+                "reference": "49999756b09848cb994ce8c8e7cc74aae3cf5d3e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfShopware/FroshPlatformMailArchive/zipball/49999756b09848cb994ce8c8e7cc74aae3cf5d3e",
+                "reference": "49999756b09848cb994ce8c8e7cc74aae3cf5d3e",
+                "shasum": ""
+            },
+            "require": {
+                "shopware/core": "~6.6.0 || ~6.7.0",
+                "zbateson/mail-mime-parser": "^3.0.6"
+            },
+            "conflict": {
+                "frosh/tools": "<2.1.3"
+            },
+            "require-dev": {
+                "frosh/tools": ">2.1.3"
+            },
+            "type": "shopware-platform-plugin",
+            "extra": {
+                "label": {
+                    "de-DE": "Mail Archive",
+                    "en-GB": "Mail Archive"
+                },
+                "description": {
+                    "de-DE": "Mit diesem Plugin erhalten Sie ein einfaches durchsuchbares Archiv für E-Mails, die aus Shopware versendet werden. Die E-Mails sind erreichbar: Einstellungen/Erweiterungen/Main Archiv.",
+                    "en-GB": "With this plugin you get a simple searchable archive for emails that are sent from Shopware. The e-mails can be found via the menu path Settings/Extensions/Main Archive.."
+                },
+                "plugin-icon": "src/Resources/config/plugin.png",
+                "supportLink": {
+                    "de-DE": "https://github.com/FriendsOfShopware/FroshPlatformMailArchive/issues",
+                    "en-GB": "https://github.com/FriendsOfShopware/FroshPlatformMailArchive/issues"
+                },
+                "manufacturerLink": {
+                    "de-DE": "https://github.com/FriendsOfShopware/FroshPlatformMailArchive",
+                    "en-GB": "https://github.com/FriendsOfShopware/FroshPlatformMailArchive"
+                },
+                "shopware-plugin-class": "Frosh\\MailArchive\\FroshPlatformMailArchive"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Frosh\\MailArchive\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "FriendsOfShopware",
+                    "homepage": "https://friendsofshopware.de"
+                }
+            ],
+            "description": "Mail Archive",
+            "keywords": [
+                "archive",
+                "mail"
+            ],
+            "support": {
+                "issues": "https://github.com/FriendsOfShopware/FroshPlatformMailArchive/issues",
+                "source": "https://github.com/FriendsOfShopware/FroshPlatformMailArchive/tree/3.8.0"
+            },
+            "time": "2026-10-23T08:06:25+00:00"
+        },
+        {
+            "name": "frosh/tools",
+            "version": "3.16.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfShopware/FroshTools.git",
+                "reference": "9fb0acc8c347ceb8a68a83902fb82e9771e9cf30"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfShopware/FroshTools/zipball/9fb0acc8c347ceb8a68a83902fb82e9771e9cf30",
+                "reference": "9fb0acc8c347ceb8a68a83902fb82e9771e9cf30",
+                "shasum": ""
+            },
+            "require": {
+                "shopware/core": "~6.6.0 || ~6.7.0",
+                "symfony/var-dumper": "^6.0 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "shopware/elasticsearch": "~6.6.0 || ~6.7.0"
+            },
+            "type": "shopware-platform-plugin",
+            "extra": {
+                "label": {
+                    "de-DE": "Tools",
+                    "en-GB": "Tools"
+                },
+                "description": {
+                    "de-DE": "Die kostenlose Shopware 6 App beinhaltet mehrere Werkzeuge um den Shop besser zu verwalten. Optimierter Cache Manager, Log Viewer um die Logeinträge zu sehen oder Tasks auszuführen.",
+                    "en-GB": "The free Shopware 6 app include several tools to manage the store much better like a cache manager, log viewer to see the log entries, run the tasks or see the system status."
+                },
+                "supportLink": {
+                    "de-DE": "https://github.com/FriendsOfShopware/FroshTools/issues",
+                    "en-GB": "https://github.com/FriendsOfShopware/FroshTools/issues"
+                },
+                "manufacturerLink": {
+                    "de-DE": "https://github.com/FriendsOfShopware/FroshTools",
+                    "en-GB": "https://github.com/FriendsOfShopware/FroshTools"
+                },
+                "shopware-plugin-class": "Frosh\\Tools\\FroshTools"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Frosh\\Tools\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "FriendsOfShopware",
+                    "homepage": "https://friendsofshopware.com"
+                }
+            ],
+            "description": "Provides some basic things for managing the Shopware Installation",
+            "support": {
+                "issues": "https://github.com/FriendsOfShopware/FroshTools/issues",
+                "source": "https://github.com/FriendsOfShopware/FroshTools/tree/3.16.0"
+            },
+            "time": "2026-10-26T04:51:36+00:00"
+        },
+        {
             "name": "goetas-webservices/xsd2php-runtime",
             "version": "0.2.18",
             "source": {
@@ -2874,6 +3053,67 @@
                 }
             ],
             "time": "2025-11-01T09:38:14+00:00"
+        },
+        {
+            "name": "laravel/serializable-closure",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/serializable-closure.git",
+                "reference": "2d5869a838bbcf37e0d8b0568fc41914e81374b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/2d5869a838bbcf37e0d8b0568fc41914e81374b5",
+                "reference": "2d5869a838bbcf37e0d8b0568fc41914e81374b5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+                "nesbot/carbon": "^2.67|^3.0",
+                "pestphp/pest": "^2.36|^3.0|^4.0",
+                "phpstan/phpstan": "^2.0",
+                "symfony/var-dumper": "^6.2.0|^7.0.0|^8.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\SerializableClosure\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Nuno Maduro",
+                    "email": "nuno@laravel.com"
+                }
+            ],
+            "description": "Laravel Serializable Closure provides an easy and secure way to serialize closures in PHP.",
+            "keywords": [
+                "closure",
+                "laravel",
+                "serializable"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/serializable-closure/issues",
+                "source": "https://github.com/laravel/serializable-closure"
+            },
+            "time": "2026-09-22T14:32:34+00:00"
         },
         {
             "name": "lcobucci/jwt",
@@ -4497,6 +4737,134 @@
                 "source": "https://github.com/lhapaipai/vite-bundle/tree/v8.2.4"
             },
             "time": "2026-03-22T11:41:50+00:00"
+        },
+        {
+            "name": "php-di/invoker",
+            "version": "2.3.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-DI/Invoker.git",
+                "reference": "3c1ddfdef181431fbc4be83378f6d036d59e81e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-DI/Invoker/zipball/3c1ddfdef181431fbc4be83378f6d036d59e81e1",
+                "reference": "3c1ddfdef181431fbc4be83378f6d036d59e81e1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.3",
+                "psr/container": "^1.0|^2.0"
+            },
+            "require-dev": {
+                "athletic/athletic": "~0.1.8",
+                "mnapoli/hard-mode": "~0.3.0",
+                "phpunit/phpunit": "^9.0 || ^10 || ^11 || ^12"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Invoker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Generic and extensible callable invoker",
+            "homepage": "https://github.com/PHP-DI/Invoker",
+            "keywords": [
+                "callable",
+                "dependency",
+                "dependency-injection",
+                "injection",
+                "invoke",
+                "invoker"
+            ],
+            "support": {
+                "issues": "https://github.com/PHP-DI/Invoker/issues",
+                "source": "https://github.com/PHP-DI/Invoker/tree/2.3.7"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/mnapoli",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-08-30T10:22:22+00:00"
+        },
+        {
+            "name": "php-di/php-di",
+            "version": "7.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-DI/PHP-DI.git",
+                "reference": "f88054cc052e40dbe7b383c8817c19442d480352"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-DI/PHP-DI/zipball/f88054cc052e40dbe7b383c8817c19442d480352",
+                "reference": "f88054cc052e40dbe7b383c8817c19442d480352",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/serializable-closure": "^1.0 || ^2.0",
+                "php": ">=8.0",
+                "php-di/invoker": "^2.0",
+                "psr/container": "^1.1 || ^2.0"
+            },
+            "provide": {
+                "psr/container-implementation": "^1.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3",
+                "friendsofphp/proxy-manager-lts": "^1",
+                "mnapoli/phpunit-easymock": "^1.3",
+                "phpunit/phpunit": "^9.6 || ^10 || ^11",
+                "vimeo/psalm": "^5|^6"
+            },
+            "suggest": {
+                "friendsofphp/proxy-manager-lts": "Install it if you want to use lazy injection (version ^1)"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "DI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The dependency injection container for humans",
+            "homepage": "https://php-di.org/",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interop",
+                "dependency injection",
+                "di",
+                "ioc",
+                "psr11"
+            ],
+            "support": {
+                "issues": "https://github.com/PHP-DI/PHP-DI/issues",
+                "source": "https://github.com/PHP-DI/PHP-DI/tree/7.1.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/mnapoli",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/php-di/php-di",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-08-16T11:10:48+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -6603,6 +6971,73 @@
                 "wiki": "https://developer.shopware.com"
             },
             "time": "2026-10-02T15:20:20+00:00"
+        },
+        {
+            "name": "shopware/deployment-helper",
+            "version": "0.1.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shopware/deployment-helper.git",
+                "reference": "b7f50babe7298b5ed4f46cb7d7d63c036b49b5ec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shopware/deployment-helper/zipball/b7f50babe7298b5ed4f46cb7d7d63c036b49b5ec",
+                "reference": "b7f50babe7298b5ed4f46cb7d7d63c036b49b5ec",
+                "shasum": ""
+            },
+            "require": {
+                "digilist/dependency-graph": ">=0.4.1",
+                "doctrine/dbal": "^3.0 || ^4.0",
+                "ext-dom": "*",
+                "ext-pdo": "*",
+                "php": ">=8.2",
+                "symfony/config": "^7.0 || ^6.0",
+                "symfony/console": "^7.0 || ^6.0",
+                "symfony/dependency-injection": "^7.0 || ^6.0",
+                "symfony/dotenv": "^7.0 || ^6.0",
+                "symfony/event-dispatcher": "^7.0 || ^6.0",
+                "symfony/filesystem": "^7.0 || ^6.0",
+                "symfony/finder": "^7.0 || ^6.0",
+                "symfony/http-client": "^7.0 || ^6.0",
+                "symfony/process": "^7.0 || ^6.4",
+                "symfony/yaml": "^7.0 || ^6.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "v3.94.2",
+                "phpstan/extension-installer": "1.4.3",
+                "phpstan/phpstan": "2.1.40",
+                "phpstan/phpstan-deprecation-rules": "2.0.4",
+                "phpstan/phpstan-phpunit": "2.0.16",
+                "phpstan/phpstan-strict-rules": "2.0.10",
+                "phpstan/phpstan-symfony": "2.0.15",
+                "phpunit/phpunit": "~11.3",
+                "symfony/var-dumper": "^7.0 || ^6.0",
+                "zalas/phpunit-globals": "^3.3"
+            },
+            "bin": [
+                "bin/shopware-deployment-helper"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Shopware\\Deployment\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Shopware deployment tools",
+            "keywords": [
+                "deployment",
+                "shopware"
+            ],
+            "support": {
+                "issues": "https://github.com/shopware/deployment-helper/issues",
+                "source": "https://github.com/shopware/deployment-helper/tree/0.1.10"
+            },
+            "time": "2026-09-28T05:15:56+00:00"
         },
         {
             "name": "shopware/elasticsearch",
@@ -9799,6 +10234,90 @@
                 }
             ],
             "time": "2026-04-10T16:19:22+00:00"
+        },
+        {
+            "name": "symfony/polyfill-iconv",
+            "version": "v1.43.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-iconv.git",
+                "reference": "254724d95fe01b679cd97d88786e9623ee00bfb7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-iconv/zipball/254724d95fe01b679cd97d88786e9623ee00bfb7",
+                "reference": "254724d95fe01b679cd97d88786e9623ee00bfb7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "provide": {
+                "ext-iconv": "*"
+            },
+            "suggest": {
+                "ext-iconv": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Iconv\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for the Iconv extension",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "iconv",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-iconv/tree/v1.43.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-09-29T06:25:14+00:00"
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
@@ -13210,6 +13729,214 @@
                 "source": "https://github.com/webmozarts/assert/tree/2.5.0"
             },
             "time": "2026-10-05T23:14:19+00:00"
+        },
+        {
+            "name": "zbateson/mail-mime-parser",
+            "version": "3.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zbateson/mail-mime-parser.git",
+                "reference": "768ed0bf7a0ab0efbd78e7d34b7fa04bc603b830"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zbateson/mail-mime-parser/zipball/768ed0bf7a0ab0efbd78e7d34b7fa04bc603b830",
+                "reference": "768ed0bf7a0ab0efbd78e7d34b7fa04bc603b830",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/psr7": "^2.5",
+                "php": ">=8.0",
+                "php-di/php-di": "^6.0|^7.0",
+                "psr/log": "^1|^2|^3",
+                "zbateson/mb-wrapper": "^2.0",
+                "zbateson/stream-decorators": "^2.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "*",
+                "monolog/monolog": "^2|^3",
+                "phpstan/phpstan": "*",
+                "phpunit/phpunit": "^9.6"
+            },
+            "suggest": {
+                "ext-iconv": "For best support/performance",
+                "ext-mbstring": "For best support/performance"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZBateson\\MailMimeParser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Zaahid Bateson"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/zbateson/mail-mime-parser/graphs/contributors"
+                }
+            ],
+            "description": "MIME email message parser",
+            "homepage": "https://mail-mime-parser.org",
+            "keywords": [
+                "MimeMailParser",
+                "email",
+                "mail",
+                "mailparse",
+                "mime",
+                "mimeparse",
+                "parser",
+                "php-imap"
+            ],
+            "support": {
+                "docs": "https://mail-mime-parser.org/#usage-guide",
+                "issues": "https://github.com/zbateson/mail-mime-parser/issues",
+                "source": "https://github.com/zbateson/mail-mime-parser"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/zbateson",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-09-28T20:32:29+00:00"
+        },
+        {
+            "name": "zbateson/mb-wrapper",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zbateson/mb-wrapper.git",
+                "reference": "50a14c0c9537f978a61cde9fdc192a0267cc9cff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zbateson/mb-wrapper/zipball/50a14c0c9537f978a61cde9fdc192a0267cc9cff",
+                "reference": "50a14c0c9537f978a61cde9fdc192a0267cc9cff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0",
+                "symfony/polyfill-iconv": "^1.9",
+                "symfony/polyfill-mbstring": "^1.9"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "*",
+                "phpstan/phpstan": "*",
+                "phpunit/phpunit": "^9.6|^10.0"
+            },
+            "suggest": {
+                "ext-iconv": "For best support/performance",
+                "ext-mbstring": "For best support/performance"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZBateson\\MbWrapper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Zaahid Bateson"
+                }
+            ],
+            "description": "Wrapper for mbstring with fallback to iconv for encoding conversion and string manipulation",
+            "keywords": [
+                "charset",
+                "encoding",
+                "http",
+                "iconv",
+                "mail",
+                "mb",
+                "mb_convert_encoding",
+                "mbstring",
+                "mime",
+                "multibyte",
+                "string"
+            ],
+            "support": {
+                "issues": "https://github.com/zbateson/mb-wrapper/issues",
+                "source": "https://github.com/zbateson/mb-wrapper/tree/2.0.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/zbateson",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-12-20T22:05:33+00:00"
+        },
+        {
+            "name": "zbateson/stream-decorators",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zbateson/stream-decorators.git",
+                "reference": "32a2a62fb0f26313395c996ebd658d33c3f9c4e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zbateson/stream-decorators/zipball/32a2a62fb0f26313395c996ebd658d33c3f9c4e5",
+                "reference": "32a2a62fb0f26313395c996ebd658d33c3f9c4e5",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/psr7": "^2.5",
+                "php": ">=8.0",
+                "zbateson/mb-wrapper": "^2.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "*",
+                "phpstan/phpstan": "*",
+                "phpunit/phpunit": "^9.6|^10.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZBateson\\StreamDecorators\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Zaahid Bateson"
+                }
+            ],
+            "description": "PHP psr7 stream decorators for mime message part streams",
+            "keywords": [
+                "base64",
+                "charset",
+                "decorators",
+                "mail",
+                "mime",
+                "psr7",
+                "quoted-printable",
+                "stream",
+                "uuencode"
+            ],
+            "support": {
+                "issues": "https://github.com/zbateson/stream-decorators/issues",
+                "source": "https://github.com/zbateson/stream-decorators/tree/2.1.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/zbateson",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-04-29T21:42:39+00:00"
         },
         {
             "name": "zircote/swagger-php",

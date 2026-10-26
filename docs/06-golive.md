@@ -6,13 +6,16 @@ Các mục đánh dấu 🔴 là **chặn go-live** — không được bỏ qua
 
 - [ ] 🔴 **HTTPS thật.** Hiện `APP_URL=http://shopware.test` là môi trường local. Cần domain thật + chứng chỉ SSL. Không có HTTPS thì không được nhận thanh toán.
 - [x] ✅ **MySQL** — đã migrate 9.7.1 → 8.0.33, nằm trong ma trận hỗ trợ. Xem [decisions/ADR-001-mysql.md](decisions/ADR-001-mysql.md)
+- [ ] 🔴 **MySQL local đang là 9.7.2** (phát hiện 26/10/2026 — DB `shopware` nằm trên server 9.7.2 của DBngin, trái ADR-001). Production phải dùng 8.0 / 8.4; `mysqldump` phải cùng major với server (backup bằng client 8.0.33 trên server 9.7.2 là đúng rủi ro ADR-001 nêu — 26/10 đã tạo thêm bản bằng client 9.7.2, 258/258 bảng). Quyết định: đưa local về 8.0.33 hay giữ 9.7.2 cho dev
 - [ ] 🔴 **Backup tự động, lưu khác máy chủ, đã test khôi phục thật** — xem [runbook/00-backup.md](runbook/00-backup.md)
-- [ ] 🔴 **Mail server thật.** Chưa cấu hình. Không có mail thì khách không nhận được xác nhận đơn hàng.
+- [ ] 🔴 **Mail server thật.** Chưa cấu hình (`MAILER_DSN`). Không có mail thì khách không nhận được xác nhận đơn hàng. Local dùng Mailpit; mẫu email đã có tiếng Việt ([04](04-thi-truong-vn.md) mục 8)
+- [x] ✅ **Quy trình build + deploy** — [runbook/07-deploy.md](runbook/07-deploy.md): `shopware/deployment-helper` (cài/cập nhật plugin, chỉ mục, xoá cache), cấu hình `backend/.config/shopware-project.yml`
 - [ ] `APP_ENV=prod` và `APP_DEBUG=0`
 - [ ] 🔴 **Đổi `APP_SECRET`** — giá trị hiện tại đã nằm trong file làm việc, coi như đã lộ
 - [ ] Đặt mật khẩu cho user database (hiện `root` không mật khẩu)
-- [ ] Cấu hình cron/message queue chạy nền
+- [ ] Cấu hình cron/message queue chạy nền (`messenger:consume`, `scheduled-task:run` — [runbook/07-deploy.md](runbook/07-deploy.md) mục 2)
 - [ ] Giám sát uptime và cảnh báo lỗi
+- [x] ✅ **FroshTools** (sức khoẻ hệ thống, hàng đợi, log, scheduled task trong Admin) và **Mail Archive** (lưu email đã gửi — CSKH tra cứu / gửi lại) — cài 26/10/2026 bằng composer
 
 ## Bảo mật
 

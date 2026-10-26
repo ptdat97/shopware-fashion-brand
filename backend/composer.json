@@ -4,8 +4,11 @@
     "require": {
         "composer-runtime-api": "^2.0",
         "endroid/qr-code": "^6.0",
+        "frosh/mail-platform-archive": "^3.8",
+        "frosh/tools": "^3.16",
         "shopware/administration": "*",
         "shopware/core": "v6.7.15.1",
+        "shopware/deployment-helper": "^0.1.10",
         "shopware/elasticsearch": "*",
         "shopware/storefront": "*",
         "swag/language-pack": "dev-master",

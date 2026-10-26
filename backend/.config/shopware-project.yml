@@ -1,0 +1,20 @@
+# Deploy backend bằng shopware/deployment-helper: `vendor/bin/shopware-deployment-helper run`
+# Quy trình build + deploy: docs/runbook/07-deploy.md
+deployment:
+  extension-management:
+    # Cài / cập nhật mọi plugin trong custom/plugins và plugin cài bằng composer (Frosh…)
+    # theo version trong composer.json của plugin — thay các bước "plugin:update X" ghi tay
+    enabled: true
+    overrides:
+      # Dữ liệu demo — không cài trên staging / production (docs/06-golive.md, mục Dữ liệu)
+      AcmeDemoData:
+        state: ignore
+
+  one-time-tasks:
+    # Chỉ mục (SEO URL brand/bộ sưu tập, tìm kiếm không dấu…) sau lần cài đầu — mỗi id chạy một lần
+    - id: initial-dal-refresh-index
+      script: '%php.bin% bin/console dal:refresh:index'
+
+  cache:
+    # cache:clear không xoá HTTP cache (CLAUDE.md) — đổi code / template thì phải xoá cả hai
+    always_clear: true
